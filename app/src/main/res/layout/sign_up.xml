@@ -73,7 +73,7 @@
             tools:ignore="SpeakableTextPresentCheck,SpeakableTextPresentCheck,TouchTargetSizeCheck,TouchTargetSizeCheck" />
     </com.google.android.material.textfield.TextInputLayout>
     <Button
-        android:id="@+id/sign_up_btn"
+        android:id="@+id/login_btn"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
 
@@ -96,42 +96,42 @@
         android:text="@string/or_text"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/sign_up_btn" />
+        app:layout_constraintTop_toBottomOf="@id/login_btn" />
 
 
-    <androidx.appcompat.widget.AppCompatButton
+    <ImageButton
         android:id="@+id/googleBtn"
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:layout_marginStart="15dp"
         android:layout_marginTop="25dp"
         android:background="@drawable/rounded_button"
-        android:drawableLeft="@drawable/google_icon"
-        app:layout_constraintStart_toStartOf="@id/sign_up_btn"
+        android:src="@drawable/google_icon"
+        app:layout_constraintStart_toStartOf="@id/login_btn"
         app:layout_constraintTop_toBottomOf="@id/or_txt_view"
         tools:ignore="SpeakableTextPresentCheck" />
 
-    <androidx.appcompat.widget.AppCompatButton
+    <ImageButton
         android:id="@+id/facebookBtn"
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:layout_marginTop="25dp"
         android:background="@drawable/rounded_button"
-        android:drawableLeft="@drawable/facebook_icon"
+        android:src="@drawable/facebook_icon"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/or_txt_view"
         tools:ignore="SpeakableTextPresentCheck" />
 
-    <androidx.appcompat.widget.AppCompatButton
+    <ImageButton
         android:id="@+id/instaBtn"
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:layout_marginTop="25dp"
         android:layout_marginEnd="10dp"
         android:background="@drawable/rounded_button"
-        android:drawableLeft="@drawable/instagram_icon"
-        app:layout_constraintEnd_toEndOf="@id/sign_up_btn"
+        android:src="@drawable/instagram_icon"
+        app:layout_constraintEnd_toEndOf="@id/login_btn"
         app:layout_constraintTop_toBottomOf="@id/or_txt_view"
         tools:ignore="SpeakableTextPresentCheck" />
 

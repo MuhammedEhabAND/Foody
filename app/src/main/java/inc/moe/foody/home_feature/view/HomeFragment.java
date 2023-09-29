@@ -13,8 +13,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.facebook.shimmer.ShimmerFrameLayout;
+
 import java.util.List;
-import java.util.Random;
 
 import inc.moe.foody.R;
 import inc.moe.foody.home_feature.presenter.HomePresenter;
@@ -27,6 +28,8 @@ import inc.moe.foody.network.MealClient;
 public class HomeFragment extends Fragment implements IView {
     RecyclerView allCategoriesRV;
     RecyclerView randomMealRV;
+    ShimmerFrameLayout randomMealShimmer;
+    ShimmerFrameLayout categoryMealShimmer;
     HomePresenter homePresenter;
     CategoryAdapter categoryAdapter;
     RandomMealAdapter randomMealAdapter;
@@ -50,6 +53,11 @@ public class HomeFragment extends Fragment implements IView {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        randomMealShimmer = view.findViewById(R.id.random_meal_shimmer_layout);
+        categoryMealShimmer = view.findViewById(R.id.category_shimmer);
+        randomMealShimmer.startShimmerAnimation();
+        categoryMealShimmer.startShimmerAnimation();
+
 
         allCategoriesRV = view.findViewById(R.id.categories_rv);
         randomMealRV = view.findViewById(R.id.random_meal_rv);
@@ -81,6 +89,8 @@ public class HomeFragment extends Fragment implements IView {
         categoryAdapter.setCategoryList(categories);
         categoryAdapter.notifyDataSetChanged();
         allCategoriesRV.setAdapter(categoryAdapter);
+        categoryMealShimmer.setVisibility(View.GONE);
+        allCategoriesRV.setVisibility(View.VISIBLE);
 
 
     }
@@ -91,7 +101,9 @@ public class HomeFragment extends Fragment implements IView {
         randomMealAdapter.setMealList(meals);
         randomMealAdapter.notifyDataSetChanged();
         randomMealRV.setAdapter(randomMealAdapter);
-}
+        randomMealShimmer.setVisibility(View.GONE);
+        randomMealRV.setVisibility(View.VISIBLE);
+    }
 
     @Override
     public void onCategoryFailed(String errorMessage) {

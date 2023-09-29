@@ -1,15 +1,22 @@
 package inc.moe.foody.home_feature.view;
 
+import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.DataSource;
+import com.bumptech.glide.load.engine.GlideException;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.Target;
 
 import java.util.List;
 
@@ -45,7 +52,7 @@ public void onBindViewHolder(@NonNull RandomMealAdapter.ViewHolder holder, int p
         Meal meal =mealList.get(position);
         holder.mealName.setText(meal.getStrMeal());
         Glide.with(holder.itemView).load(meal.getStrMealThumb())
-        .into(holder.mealThumb);
+                .into(holder.mealThumb);
         }
 
 @Override
@@ -60,6 +67,8 @@ public class ViewHolder extends RecyclerView.ViewHolder {
         super(itemView);
         mealName = itemView.findViewById(R.id.meal_name);
         mealThumb = itemView.findViewById(R.id.meal_image);
+
+
     }
 }
 }
