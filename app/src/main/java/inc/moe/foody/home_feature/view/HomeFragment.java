@@ -14,10 +14,12 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.facebook.shimmer.ShimmerFrameLayout;
+import com.google.android.material.snackbar.Snackbar;
 
 import java.util.List;
 
 import inc.moe.foody.R;
+import inc.moe.foody.db.ConcreteLocalSource;
 import inc.moe.foody.home_feature.presenter.HomePresenter;
 import inc.moe.foody.model.Category;
 import inc.moe.foody.model.Meal;
@@ -25,7 +27,7 @@ import inc.moe.foody.model.Repo;
 import inc.moe.foody.network.MealClient;
 
 
-public class HomeFragment extends Fragment implements IView {
+public class HomeFragment extends Fragment implements IView , OnMealClickListener {
     RecyclerView allCategoriesRV;
     RecyclerView randomMealRV;
     ShimmerFrameLayout randomMealShimmer;
@@ -68,10 +70,10 @@ public class HomeFragment extends Fragment implements IView {
         layoutManager1.setOrientation(RecyclerView.HORIZONTAL);
 
         categoryAdapter = new CategoryAdapter();
-        randomMealAdapter = new RandomMealAdapter();
+        randomMealAdapter = new RandomMealAdapter(this);
 
         homePresenter = new HomePresenter(this ,
-                Repo.getInstance( MealClient.getInstance() ));
+                Repo.getInstance( MealClient.getInstance() , ConcreteLocalSource.getInstance(getContext())));
 
 
         allCategoriesRV.setHasFixedSize(true);
@@ -79,9 +81,9 @@ public class HomeFragment extends Fragment implements IView {
 
         randomMealRV.setHasFixedSize(true);
         randomMealRV.setLayoutManager(layoutManager1);
-
-        homePresenter.getAllCategories();
         homePresenter.getRandomMeal();
+        homePresenter.getAllCategories();
+
     }
 
     @Override
@@ -91,7 +93,6 @@ public class HomeFragment extends Fragment implements IView {
         allCategoriesRV.setAdapter(categoryAdapter);
         categoryMealShimmer.setVisibility(View.GONE);
         allCategoriesRV.setVisibility(View.VISIBLE);
-
 
     }
 
@@ -115,5 +116,12 @@ public class HomeFragment extends Fragment implements IView {
     public void onRandomMealFailed(String errorMessage) {
         Toast.makeText(getContext(), errorMessage, Toast.LENGTH_SHORT).show();
 
+    }
+
+    @Override
+    public void insertToDatabase(Meal meal) {
+        homePresenter.addRandomMealToFav(meal);
+        Snackbar snackbar = Snackbar.make(getView() ,meal.getStrMeal()+" saved." ,Snackbar.LENGTH_SHORT);
+        snackbar.show();
     }
 }

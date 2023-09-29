@@ -25,13 +25,15 @@ import inc.moe.foody.model.Meal;
 
 public class RandomMealAdapter extends RecyclerView.Adapter<RandomMealAdapter.ViewHolder> {
         List<Meal> mealList;
+        OnMealClickListener onMealClickListener;
 
 public void setMealList(List<Meal> mealList) {
         this.mealList = mealList;
         }
 
-public RandomMealAdapter() {
-        }
+public RandomMealAdapter(OnMealClickListener onMealClickListener) {
+    this.onMealClickListener = onMealClickListener;
+}
 
 public RandomMealAdapter(List<Meal> mealList) {
         this.mealList = mealList;
@@ -53,7 +55,15 @@ public void onBindViewHolder(@NonNull RandomMealAdapter.ViewHolder holder, int p
         holder.mealName.setText(meal.getStrMeal());
         Glide.with(holder.itemView).load(meal.getStrMealThumb())
                 .into(holder.mealThumb);
-        }
+        holder.favImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onMealClickListener.insertToDatabase(meal);
+                holder.favImage.setImageResource(R.drawable.fav_icon_red);
+            }
+        });
+}
+
 
 @Override
 public int getItemCount() {
@@ -63,11 +73,12 @@ public int getItemCount() {
 public class ViewHolder extends RecyclerView.ViewHolder {
     TextView mealName ;
     ImageView mealThumb;
+    ImageView favImage;
     public ViewHolder(@NonNull View itemView) {
         super(itemView);
         mealName = itemView.findViewById(R.id.meal_name);
         mealThumb = itemView.findViewById(R.id.meal_image);
-
+        favImage = itemView.findViewById(R.id.favImage);
 
     }
 }

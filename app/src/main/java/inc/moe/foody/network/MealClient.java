@@ -1,9 +1,16 @@
 package inc.moe.foody.network;
 
 import android.util.Log;
+import android.util.LruCache;
 
+import java.io.File;
+
+import inc.moe.foody.model.Category;
 import inc.moe.foody.model.ListOfCategories;
 import inc.moe.foody.model.ListOfMeals;
+
+import okhttp3.Cache;
+import okhttp3.OkHttpClient;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -16,7 +23,12 @@ public class MealClient implements RemoteSource  {
     private static MealClient instance = null;
     Retrofit retrofit;
     MealService mealService;
+
+
+
     private MealClient() {
+
+
        retrofit = new Retrofit.Builder()
                 .baseUrl(BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create())

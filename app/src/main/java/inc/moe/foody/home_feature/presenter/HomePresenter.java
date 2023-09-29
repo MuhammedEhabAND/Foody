@@ -29,6 +29,11 @@ public class HomePresenter implements IHomePresenter, MyNetworkCallBack {
     }
 
     @Override
+    public void addRandomMealToFav(Meal meal) {
+        iRepo.insertMealToFav(meal);
+    }
+
+    @Override
     public void onSuccessCategories(List categories) {
         iView.onCategoryFetch(categories);
 

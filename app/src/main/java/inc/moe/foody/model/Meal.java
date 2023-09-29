@@ -1,16 +1,20 @@
 package inc.moe.foody.model;
 
-import java.util.ArrayList;
+import androidx.annotation.NonNull;
+import androidx.room.Entity;
+import androidx.room.PrimaryKey;
 
+import java.util.ArrayList;
+@Entity(tableName ="favourite_meal" )
 public class Meal {
+    @PrimaryKey
+    @NonNull
     private String strMeal ;
     private String strCategory ;
     private String strArea;
     private String strInstructions;
     private String strMealThumb;
     private String strYoutube;
-    private ArrayList<String> strIngredient;
-    private ArrayList<String> strMeasure;
     private String strSource;
 
     public String getStrMeal() {
@@ -61,22 +65,6 @@ public class Meal {
         this.strYoutube = strYoutube;
     }
 
-    public ArrayList<String> getStrIngredient() {
-        return strIngredient;
-    }
-
-    public void setStrIngredient(ArrayList<String> strIngredient) {
-        this.strIngredient = strIngredient;
-    }
-
-    public ArrayList<String> getStrMeasure() {
-        return strMeasure;
-    }
-
-    public void setStrMeasure(ArrayList<String> strMeasure) {
-        this.strMeasure = strMeasure;
-    }
-
     public String getStrSource() {
         return strSource;
     }
@@ -88,15 +76,13 @@ public class Meal {
     public Meal() {
     }
 
-    public Meal(String strMeal, String strCategory, String strArea, String strInstructions, String strMealThumb, String strYoutube, ArrayList<String> strIngredient, ArrayList<String> strMeasure, String strSource) {
+    public Meal(String strMeal, String strCategory, String strArea, String strInstructions, String strMealThumb, String strYoutube,  String strSource) {
         this.strMeal = strMeal;
         this.strCategory = strCategory;
         this.strArea = strArea;
         this.strInstructions = strInstructions;
         this.strMealThumb = strMealThumb;
         this.strYoutube = strYoutube;
-        this.strIngredient = strIngredient;
-        this.strMeasure = strMeasure;
         this.strSource = strSource;
     }
 }
