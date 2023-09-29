@@ -21,7 +21,12 @@ public class Repo implements IRepo{
 
 
     @Override
-    public void makeNetworkCall(MyNetworkCallBack myNetworkCallBack) {
+    public void makeNetworkCallForCategories(MyNetworkCallBack myNetworkCallBack) {
         remoteSource.makeNetworkCallForCategories(myNetworkCallBack);
+    }
+
+    @Override
+    public void makeNetworkCallForRandomMeal(MyNetworkCallBack myNetworkCallBack) {
+        remoteSource.makeNetworkCallForRandomMeal(myNetworkCallBack);
     }
 }

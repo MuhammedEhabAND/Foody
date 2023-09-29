@@ -14,19 +14,24 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import java.util.List;
+import java.util.Random;
 
 import inc.moe.foody.R;
 import inc.moe.foody.home_feature.presenter.HomePresenter;
 import inc.moe.foody.model.Category;
+import inc.moe.foody.model.Meal;
 import inc.moe.foody.model.Repo;
 import inc.moe.foody.network.MealClient;
 
 
 public class HomeFragment extends Fragment implements IView {
     RecyclerView allCategoriesRV;
+    RecyclerView randomMealRV;
     HomePresenter homePresenter;
     CategoryAdapter categoryAdapter;
+    RandomMealAdapter randomMealAdapter;
     LinearLayoutManager layoutManager;
+    LinearLayoutManager layoutManager1;
 
     public HomeFragment() {
         // Required empty public constructor
@@ -47,10 +52,15 @@ public class HomeFragment extends Fragment implements IView {
         super.onViewCreated(view, savedInstanceState);
 
         allCategoriesRV = view.findViewById(R.id.categories_rv);
+        randomMealRV = view.findViewById(R.id.random_meal_rv);
         layoutManager = new LinearLayoutManager(getContext()  );
         layoutManager.setOrientation(RecyclerView.HORIZONTAL);
 
+        layoutManager1 = new LinearLayoutManager(getContext()  );
+        layoutManager1.setOrientation(RecyclerView.HORIZONTAL);
+
         categoryAdapter = new CategoryAdapter();
+        randomMealAdapter = new RandomMealAdapter();
 
         homePresenter = new HomePresenter(this ,
                 Repo.getInstance( MealClient.getInstance() ));
@@ -59,16 +69,29 @@ public class HomeFragment extends Fragment implements IView {
         allCategoriesRV.setHasFixedSize(true);
         allCategoriesRV.setLayoutManager(layoutManager);
 
+        randomMealRV.setHasFixedSize(true);
+        randomMealRV.setLayoutManager(layoutManager1);
+
         homePresenter.getAllCategories();
+        //homePresenter.getRandomMeal();
+    }
+
+    @Override
+    public void onCategoryFetch(List<Category> categories) {
+        categoryAdapter.setCategoryList(categories);
+        categoryAdapter.notifyDataSetChanged();
+        allCategoriesRV.setAdapter(categoryAdapter);
+
 
     }
 
     @Override
-    public void onDataFetch(List<Category> categories) {
-        categoryAdapter.setCategoryList(categories);
-        categoryAdapter.notifyDataSetChanged();
-        allCategoriesRV.setAdapter(categoryAdapter);
-    }
+    public void onRandomMealFetch(List<Meal> meals) {
+
+//        randomMealAdapter.setMealList(meals);
+//        randomMealAdapter.notifyDataSetChanged();
+//        randomMealRV.setAdapter(randomMealAdapter);
+}
 
     @Override
     public void onDataFetchFailed(String errorMessage) {

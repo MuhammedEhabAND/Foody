@@ -2,10 +2,8 @@ package inc.moe.foody.network;
 
 import java.util.List;
 
-import inc.moe.foody.model.Category;
+public interface MyNetworkCallBack<T> {
 
-public interface MyNetworkCallBack {
-
-    void onSuccess(List<Category> categories);
+    void onSuccess(List<T> categories);
     void onFailed(String errorMessage);
 }

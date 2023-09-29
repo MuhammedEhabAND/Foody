@@ -34,7 +34,7 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHo
     @Override
     public CategoryAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-        View view = inflater.inflate(R.layout.daily_inspiration_item_layout , parent,false);
+        View view = inflater.inflate(R.layout.category_item_layout , parent,false);
         ViewHolder viewHolder = new ViewHolder(view);
 
         return viewHolder;
@@ -58,8 +58,8 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHo
         ImageView categoryThumb;
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            categoryName = itemView.findViewById(R.id.meal_name);
-            categoryThumb = itemView.findViewById(R.id.meal_image);
+            categoryName = itemView.findViewById(R.id.category_name);
+            categoryThumb = itemView.findViewById(R.id.category_image);
         }
     }
 }

@@ -4,6 +4,7 @@ import inc.moe.foody.network.MyNetworkCallBack;
 
 public interface IRepo {
 
-    void makeNetworkCall(MyNetworkCallBack myNetworkCallBack);
+    void makeNetworkCallForCategories(MyNetworkCallBack myNetworkCallBack);
+    void makeNetworkCallForRandomMeal(MyNetworkCallBack myNetworkCallBack);
 
 }
