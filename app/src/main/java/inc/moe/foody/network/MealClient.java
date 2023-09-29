@@ -41,13 +41,13 @@ public class MealClient implements RemoteSource  {
             public void onResponse(Call<ListOfCategories> call, Response<ListOfCategories> response) {
                 if (response.isSuccessful()) {
                     Log.i(TAG, "onSuccess: " + response.raw() + "meals: " + response.body().getCategories());
-                    myNetworkCallBack.onSuccess(response.body().getCategories());
+                    myNetworkCallBack.onSuccessCategories(response.body().getCategories());
                 }
             }
                 @Override
                 public void onFailure (Call < ListOfCategories > call, Throwable t){
                     Log.i(TAG, "onFailure: " + t.getMessage());
-                    myNetworkCallBack.onFailed(t.getMessage());
+                    myNetworkCallBack.onFailedCategories(t.getMessage());
 
                 }
 
@@ -65,14 +65,14 @@ public class MealClient implements RemoteSource  {
             public void onResponse(Call<ListOfMeals> call, Response<ListOfMeals> response) {
                 if (response.isSuccessful()) {
                     Log.i(TAG, "onSuccess: " + response.raw() + "meals: " + response.body().getMeals());
-                    myNetworkCallBack.onSuccess(response.body().getMeals());
+                    myNetworkCallBack.onSuccessRandomMeal(response.body().getMeals());
                 }
             }
 
             @Override
             public void onFailure(Call<ListOfMeals> call, Throwable t) {
                 Log.i(TAG, "onFailure: " + t.getMessage());
-                myNetworkCallBack.onFailed(t.getMessage());
+                myNetworkCallBack.onFailedRandomMeal(t.getMessage());
 
             }
         });

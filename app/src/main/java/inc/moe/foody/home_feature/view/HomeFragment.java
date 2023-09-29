@@ -73,7 +73,7 @@ public class HomeFragment extends Fragment implements IView {
         randomMealRV.setLayoutManager(layoutManager1);
 
         homePresenter.getAllCategories();
-        //homePresenter.getRandomMeal();
+        homePresenter.getRandomMeal();
     }
 
     @Override
@@ -88,13 +88,19 @@ public class HomeFragment extends Fragment implements IView {
     @Override
     public void onRandomMealFetch(List<Meal> meals) {
 
-//        randomMealAdapter.setMealList(meals);
-//        randomMealAdapter.notifyDataSetChanged();
-//        randomMealRV.setAdapter(randomMealAdapter);
+        randomMealAdapter.setMealList(meals);
+        randomMealAdapter.notifyDataSetChanged();
+        randomMealRV.setAdapter(randomMealAdapter);
 }
 
     @Override
-    public void onDataFetchFailed(String errorMessage) {
+    public void onCategoryFailed(String errorMessage) {
+        Toast.makeText(getContext(), errorMessage, Toast.LENGTH_SHORT).show();
+
+    }
+
+    @Override
+    public void onRandomMealFailed(String errorMessage) {
         Toast.makeText(getContext(), errorMessage, Toast.LENGTH_SHORT).show();
 
     }

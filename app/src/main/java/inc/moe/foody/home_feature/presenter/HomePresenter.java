@@ -4,6 +4,7 @@ import java.util.List;
 
 import inc.moe.foody.home_feature.view.IView;
 import inc.moe.foody.model.IRepo;
+import inc.moe.foody.model.Meal;
 import inc.moe.foody.network.MyNetworkCallBack;
 
 public class HomePresenter implements IHomePresenter, MyNetworkCallBack {
@@ -28,14 +29,25 @@ public class HomePresenter implements IHomePresenter, MyNetworkCallBack {
     }
 
     @Override
-    public void onSuccess(List categories) {
+    public void onSuccessCategories(List categories) {
         iView.onCategoryFetch(categories);
-        iView.onRandomMealFetch(categories);
+
 
     }
 
     @Override
-    public void onFailed(String errorMessage) {
-        iView.onDataFetchFailed(errorMessage);
+    public void onFailedCategories(String errorMessage) {
+        iView.onCategoryFailed(errorMessage);
+    }
+
+    @Override
+    public void onSuccessRandomMeal(List<Meal> meals) {
+        iView.onRandomMealFetch(meals);
+
+    }
+
+    @Override
+    public void onFailedRandomMeal(String errorMessage) {
+        iView.onRandomMealFailed(errorMessage);
     }
 }

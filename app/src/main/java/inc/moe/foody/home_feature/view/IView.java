@@ -9,5 +9,6 @@ public interface IView {
 
     void onCategoryFetch(List<Category> categories);
     void onRandomMealFetch(List<Meal> meals);
-    void onDataFetchFailed(String errorMessage);
+    void onCategoryFailed(String errorMessage);
+    void onRandomMealFailed(String errorMessage);
 }

@@ -2,8 +2,14 @@ package inc.moe.foody.network;
 
 import java.util.List;
 
-public interface MyNetworkCallBack<T> {
+import inc.moe.foody.model.Category;
+import inc.moe.foody.model.Meal;
 
-    void onSuccess(List<T> categories);
-    void onFailed(String errorMessage);
+public interface MyNetworkCallBack {
+
+    void onSuccessCategories(List<Category> categories);
+    void onFailedCategories(String errorMessage);
+
+    void onSuccessRandomMeal(List<Meal> meals);
+    void onFailedRandomMeal(String errorMessage);
 }
