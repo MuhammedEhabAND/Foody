@@ -27,7 +27,7 @@ import inc.moe.foody.model.Repo;
 import inc.moe.foody.network.MealClient;
 
 
-public class HomeFragment extends Fragment implements IView , OnMealClickListener {
+public class HomeFragment extends Fragment implements IView , OnRandomMealClickListener {
     RecyclerView allCategoriesRV;
     RecyclerView randomMealRV;
     ShimmerFrameLayout randomMealShimmer;

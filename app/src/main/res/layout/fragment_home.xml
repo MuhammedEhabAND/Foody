@@ -20,6 +20,8 @@
             android:layout_width="match_parent"
             android:layout_height="0dp">
             <TextView
+
+                android:layout_marginStart="25dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="15dp"
@@ -63,6 +65,8 @@
                 tools:listitem="@layout/daily_inspiration_item_layout" />
 
             <TextView
+
+                android:layout_marginStart="25dp"
                 android:id="@+id/all_categories_txt_view"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

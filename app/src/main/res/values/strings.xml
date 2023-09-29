@@ -12,6 +12,7 @@
     <string name="fav_bottom_icon">Favourite</string>
     <string name="search_bottom_icon">Search</string>
     <string name="daily_inspiration">Daily Inspiration</string>
+    <string name="my_favourites">My Favourites</string>
     <string name="categories">Categories</string>
     <string name="all">All Meals</string>
     <!-- TODO: Remove or change this placeholder text -->
