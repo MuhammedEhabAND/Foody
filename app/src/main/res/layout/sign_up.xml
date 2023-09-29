@@ -72,22 +72,36 @@
             android:inputType="textPassword"
             tools:ignore="SpeakableTextPresentCheck,SpeakableTextPresentCheck,TouchTargetSizeCheck,TouchTargetSizeCheck" />
     </com.google.android.material.textfield.TextInputLayout>
-    <Button
-        android:id="@+id/login_btn"
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/sign_up_btn"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
 
         android:onClick="onSignUpClicked"
+        android:textAllCaps="false"
         android:text="@string/sign_up_btn"
-        android:backgroundTint="@color/Red"
+        android:background="@drawable/primary_button"
         android:textColor="@color/white"
         app:layout_constraintStart_toStartOf="@id/passwordTextInputLayout"
         app:layout_constraintEnd_toEndOf="@id/passwordTextInputLayout"
         app:layout_constraintTop_toBottomOf="@id/confirmPasswordTextInputLayout"
-        android:layout_marginTop="25dp"
+        android:layout_marginTop="15dp"
 
         />
 
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/guest_btn"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:textColor="@color/Red"
+        android:textAllCaps="false"
+        android:text="Join as a Guest"
+        android:background="@drawable/secondary_button"
+        app:layout_constraintStart_toStartOf="@+id/passwordTextInputLayout"
+        app:layout_constraintTop_toBottomOf="@+id/sign_up_btn"
+        app:layout_constraintEnd_toEndOf="@+id/passwordTextInputLayout"
+        />
     <TextView
         android:id="@+id/or_txt_view"
         android:layout_width="wrap_content"
@@ -96,7 +110,7 @@
         android:text="@string/or_text"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/login_btn" />
+        app:layout_constraintTop_toBottomOf="@id/guest_btn" />
 
 
     <ImageButton
@@ -107,7 +121,7 @@
         android:layout_marginTop="25dp"
         android:background="@drawable/rounded_button"
         android:src="@drawable/google_icon"
-        app:layout_constraintStart_toStartOf="@id/login_btn"
+        app:layout_constraintStart_toStartOf="@id/guest_btn"
         app:layout_constraintTop_toBottomOf="@id/or_txt_view"
         tools:ignore="SpeakableTextPresentCheck" />
 
@@ -131,7 +145,7 @@
         android:layout_marginEnd="10dp"
         android:background="@drawable/rounded_button"
         android:src="@drawable/instagram_icon"
-        app:layout_constraintEnd_toEndOf="@id/login_btn"
+        app:layout_constraintEnd_toEndOf="@id/guest_btn"
         app:layout_constraintTop_toBottomOf="@id/or_txt_view"
         tools:ignore="SpeakableTextPresentCheck" />
 
