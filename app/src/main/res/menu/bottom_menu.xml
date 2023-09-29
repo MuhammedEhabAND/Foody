@@ -1,9 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <item android:title="@string/home_bottom_icon" android:icon="@drawable/home_icon" />
-    <item android:title="@string/search_bottom_icon" android:icon="@drawable/search" />
-    <item android:title="@string/fav_bottom_icon" android:icon="@drawable/favourite" />
-    <item android:title="@string/country_bottom_icon" android:icon="@drawable/country_icon" />
-    <item android:title="@string/profile_bottom_icon" android:icon="@drawable/profile"/>
+    <item
+        android:id="@+id/homeFragment"
+        android:icon="@drawable/home_icon"
+        android:title="@string/home_bottom_icon" />
+    <item
+        android:id="@+id/searchFragment"
+        android:icon="@drawable/search"
+        android:title="@string/search_bottom_icon" />
+    <item
+        android:id="@+id/favFragment"
+        android:icon="@drawable/favourite"
+        android:title="@string/fav_bottom_icon" />
+    <item
+        android:id="@+id/countryFragment"
+        android:icon="@drawable/country_icon"
+        android:title="@string/country_bottom_icon" />
+    <item
+        android:id="@+id/profileFragment"
+        android:icon="@drawable/profile"
+        android:title="@string/profile_bottom_icon" />
 </menu>

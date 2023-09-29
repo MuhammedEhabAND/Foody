@@ -10,4 +10,24 @@
         android:name="inc.moe.foody.home_feature.view.HomeFragment"
         android:label="@string/home_bottom_icon"
         tools:layout="@layout/fragment_home" />
+    <fragment
+        android:id="@+id/favFragment"
+        android:name="inc.moe.foody.favourite_feature.view.FavFragment"
+        android:label="Favourites"
+        tools:layout="@layout/fragment_fav" />
+    <fragment
+        android:id="@+id/searchFragment"
+        android:name="inc.moe.foody.search_feature.view.SearchFragment"
+        android:label="Search"
+        tools:layout="@layout/fragment_search" />
+    <fragment
+        android:id="@+id/countryFragment"
+        android:name="inc.moe.foody.country_feature.view.CountryFragment"
+        android:label="Country Search"
+        tools:layout="@layout/fragment_country" />
+    <fragment
+        android:id="@+id/profileFragment"
+        android:name="inc.moe.foody.profile_feature.view.ProfileFragment"
+        android:label="Profile"
+        tools:layout="@layout/fragment_profile" />
 </navigation>
