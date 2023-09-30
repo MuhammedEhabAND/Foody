@@ -2,6 +2,6 @@ package inc.moe.foody.network;
 
 public interface RemoteSource {
     void makeNetworkCallForCategories(MyNetworkCallBack myNetworkCallBack);
-    void makeNetworkCallForRandomMeal(MyNetworkCallBack myNetworkCallBack);
+    void makeMultipleRandomMealRequests(int numberOfRequests,MyNetworkCallBack myNetworkCallBack);
 
 }
