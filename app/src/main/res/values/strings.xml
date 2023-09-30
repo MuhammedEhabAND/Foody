@@ -16,6 +16,10 @@
     <string name="my_favourites">My Favourites</string>
     <string name="categories">Categories</string>
     <string name="all">All Meals</string>
+
+    <string name="search_county">Country</string>
+    <string name="search_ingredients">Ingredient</string>
+    <string name="search_categories">Category</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="search_hint">Search on Foody</string>

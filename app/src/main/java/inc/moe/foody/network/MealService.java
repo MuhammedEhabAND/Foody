@@ -13,4 +13,5 @@ public interface MealService {
     @GET("random.php")
     Call<ListOfMeals> getRandomMeal();
 
+
 }
