@@ -6,4 +6,5 @@ public interface IHomePresenter {
     void getAllCategories();
     void getRandomMeal();
     void addRandomMealToFav(Meal meal);
+    void searchByCategoryName(String categoryName);
 }

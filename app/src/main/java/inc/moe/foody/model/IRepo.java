@@ -10,6 +10,7 @@ public interface IRepo {
 
     void makeNetworkCallForCategories(MyNetworkCallBack myNetworkCallBack);
     void makeNetworkCallForRandomMeal(MyNetworkCallBack myNetworkCallBack);
+    void makeNetworkCallForSearchByCategoryName(MyNetworkCallBack myNetworkCallBack , String categoryName);
 
     void removeMealFromFav(Meal meal);
     void insertMealToFav(Meal meal);

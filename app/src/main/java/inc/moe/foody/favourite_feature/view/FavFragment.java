@@ -33,7 +33,6 @@ public class FavFragment extends Fragment implements OnFavMealClickListener {
     FavAdapter adapter;
     IFavouritePresenter favPresenter;
     GridLayoutManager layoutManager;
-    ShimmerFrameLayout shimmerFrameLayout;
 
     public FavFragment() {
         // Required empty public constructor
@@ -54,8 +53,6 @@ public class FavFragment extends Fragment implements OnFavMealClickListener {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         favMealsRV = view.findViewById(R.id.fav_rv);
-        shimmerFrameLayout =view.findViewById(R.id.fav_shimmer);
-        shimmerFrameLayout.startShimmerAnimation();
         layoutManager = new GridLayoutManager(getContext() ,2 );
         layoutManager.setOrientation(RecyclerView.VERTICAL);
 
@@ -72,8 +69,6 @@ public class FavFragment extends Fragment implements OnFavMealClickListener {
                 adapter.setMeals(meals);
                 adapter.notifyDataSetChanged();
                 favMealsRV.setAdapter(adapter);
-                shimmerFrameLayout.setVisibility(View.GONE);
-                favMealsRV.setVisibility(View.VISIBLE);
             }
         });
 

@@ -27,7 +27,7 @@ import inc.moe.foody.model.Repo;
 import inc.moe.foody.network.MealClient;
 
 
-public class HomeFragment extends Fragment implements IView , OnRandomMealClickListener {
+public class HomeFragment extends Fragment implements IView , OnRandomMealClickListener , OnCategoryClickListener {
     RecyclerView allCategoriesRV;
     RecyclerView randomMealRV;
     ShimmerFrameLayout randomMealShimmer;
@@ -69,7 +69,7 @@ public class HomeFragment extends Fragment implements IView , OnRandomMealClickL
         layoutManager1 = new LinearLayoutManager(getContext()  );
         layoutManager1.setOrientation(RecyclerView.HORIZONTAL);
 
-        categoryAdapter = new CategoryAdapter();
+        categoryAdapter = new CategoryAdapter(this::searchByCategoryName);
         randomMealAdapter = new RandomMealAdapter(this);
 
         homePresenter = new HomePresenter(this ,
@@ -122,6 +122,13 @@ public class HomeFragment extends Fragment implements IView , OnRandomMealClickL
     public void insertToDatabase(Meal meal) {
         homePresenter.addRandomMealToFav(meal);
         Snackbar snackbar = Snackbar.make(getView() ,meal.getStrMeal()+" saved." ,Snackbar.LENGTH_SHORT);
+        snackbar.show();
+    }
+
+    @Override
+    public void searchByCategoryName(String categoryName) {
+        homePresenter.searchByCategoryName(categoryName);
+        Snackbar snackbar = Snackbar.make(getView() ,"Searching for "+categoryName+" meals." ,Snackbar.LENGTH_SHORT);
         snackbar.show();
     }
 }

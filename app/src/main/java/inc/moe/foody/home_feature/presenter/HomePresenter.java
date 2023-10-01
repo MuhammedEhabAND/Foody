@@ -6,6 +6,7 @@ import inc.moe.foody.home_feature.view.IView;
 import inc.moe.foody.model.IRepo;
 import inc.moe.foody.model.Meal;
 import inc.moe.foody.network.MyNetworkCallBack;
+import inc.moe.foody.utils.Cache;
 
 public class HomePresenter implements IHomePresenter, MyNetworkCallBack {
 
@@ -19,13 +20,18 @@ public class HomePresenter implements IHomePresenter, MyNetworkCallBack {
 
     @Override
     public void getAllCategories() {
-        iRepo.makeNetworkCallForCategories(this);
+        if(Cache.getInstance().getCategories() == null )
+            iRepo.makeNetworkCallForCategories(this);
+        else
+            iView.onCategoryFetch(Cache.getInstance().getCategories());
     }
 
     @Override
     public void getRandomMeal() {
-        iRepo.makeNetworkCallForRandomMeal(this);
-
+        if(Cache.getInstance().getRandomMeals() == null )
+            iRepo.makeNetworkCallForRandomMeal(this);
+        else
+            iView.onRandomMealFetch(Cache.getInstance().getRandomMeals());
     }
 
     @Override
@@ -34,8 +40,15 @@ public class HomePresenter implements IHomePresenter, MyNetworkCallBack {
     }
 
     @Override
+    public void searchByCategoryName(String categoryName) {
+        iRepo.makeNetworkCallForSearchByCategoryName(this , categoryName);
+
+    }
+
+    @Override
     public void onSuccessCategories(List categories) {
         iView.onCategoryFetch(categories);
+        Cache.getInstance().setCategories(categories);
 
 
     }
@@ -48,6 +61,7 @@ public class HomePresenter implements IHomePresenter, MyNetworkCallBack {
     @Override
     public void onSuccessRandomMeal(List<Meal> meals) {
         iView.onRandomMealFetch(meals);
+        Cache.getInstance().setRandomMeals(meals);
 
     }
 

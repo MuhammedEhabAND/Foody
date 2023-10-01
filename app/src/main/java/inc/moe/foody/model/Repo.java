@@ -38,6 +38,11 @@ public class Repo implements IRepo{
     }
 
     @Override
+    public void makeNetworkCallForSearchByCategoryName(MyNetworkCallBack myNetworkCallBack, String categoryName) {
+        remoteSource.makeNetworkCallForSearchByCategoryName(myNetworkCallBack  ,categoryName);
+    }
+
+    @Override
     public void removeMealFromFav(Meal meal) {
         localSource.removeMeal(meal);
     }

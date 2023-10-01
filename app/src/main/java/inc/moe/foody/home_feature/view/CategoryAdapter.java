@@ -29,12 +29,13 @@ import inc.moe.foody.model.Category;
 
 public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHolder> {
     List<Category> categoryList;
-
+    OnCategoryClickListener onCategoryClickListener;
     public void setCategoryList(List<Category> categoryList) {
         this.categoryList = categoryList;
     }
 
-    public CategoryAdapter() {
+    public CategoryAdapter(OnCategoryClickListener onCategoryClickListener) {
+        this.onCategoryClickListener = onCategoryClickListener;
     }
 
     public CategoryAdapter(List<Category> categoryList) {
@@ -59,6 +60,12 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHo
         holder.categoryName.setText(category.getStrCategory());
         Glide.with(holder.itemView).load(category.getStrCategoryThumb())
                 .into(holder.categoryThumb);
+        holder.constraintLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onCategoryClickListener.searchByCategoryName(category.getStrCategory());
+            }
+        });
     }
 
     @Override

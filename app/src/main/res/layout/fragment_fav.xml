@@ -32,34 +32,15 @@
         android:orientation="horizontal"
         app:layout_constraintGuide_begin="99dp" />
 
-    <com.facebook.shimmer.ShimmerFrameLayout
-        android:id="@+id/fav_shimmer"
-        android:layout_marginTop="100dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-
-        app:layout_constraintTop_toTopOf="@+id/guideline4">
-
-        <include
-            layout="@layout/recycler_shimmer"
-            tools:layout_editor_absoluteX="55dp"
-            tools:layout_editor_absoluteY="93dp" />
-
-    </com.facebook.shimmer.ShimmerFrameLayout>
-
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/fav_rv"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="invisible"
-        android:layout_marginTop="70dp"
+        android:layout_marginTop="100dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/guideline4"
+        app:layout_constraintTop_toBottomOf="@+id/guideline4"
         tools:listitem="@layout/fav_item_layout" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
