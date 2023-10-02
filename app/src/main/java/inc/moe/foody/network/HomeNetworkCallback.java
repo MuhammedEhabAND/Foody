@@ -5,7 +5,7 @@ import java.util.List;
 import inc.moe.foody.model.Category;
 import inc.moe.foody.model.Meal;
 
-public interface MyNetworkCallBack {
+public interface HomeNetworkCallback {
 
     void onSuccessCategories(List<Category> categories);
     void onFailedCategories(String errorMessage);

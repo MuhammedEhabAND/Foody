@@ -1,12 +1,15 @@
 package inc.moe.foody.model;
 
+import android.util.Log;
+
 import androidx.lifecycle.LiveData;
 
 import java.util.List;
 
 import inc.moe.foody.db.LocalSource;
-import inc.moe.foody.network.MyNetworkCallBack;
+import inc.moe.foody.network.HomeNetworkCallback;
 import inc.moe.foody.network.RemoteSource;
+import inc.moe.foody.network.SearchNetworkCallback;
 
 public class Repo implements IRepo{
     RemoteSource remoteSource;
@@ -28,18 +31,19 @@ public class Repo implements IRepo{
 
 
     @Override
-    public void makeNetworkCallForCategories(MyNetworkCallBack myNetworkCallBack) {
-        remoteSource.makeNetworkCallForCategories(myNetworkCallBack);
+    public void makeNetworkCallForCategories(HomeNetworkCallback homeNetworkCallback) {
+        remoteSource.makeNetworkCallForCategories(homeNetworkCallback);
     }
 
     @Override
-    public void makeNetworkCallForRandomMeal(MyNetworkCallBack myNetworkCallBack) {
-        remoteSource.makeMultipleRandomMealRequests( 5 ,myNetworkCallBack);
+    public void makeNetworkCallForRandomMeal(HomeNetworkCallback homeNetworkCallback) {
+        remoteSource.makeMultipleRandomMealRequests( 5 , homeNetworkCallback);
     }
 
     @Override
-    public void makeNetworkCallForSearchByCategoryName(MyNetworkCallBack myNetworkCallBack, String categoryName) {
-        remoteSource.makeNetworkCallForSearchByCategoryName(myNetworkCallBack  ,categoryName);
+    public void makeNetworkCallForSearchByCategoryName(SearchNetworkCallback searchNetworkCallback, String categoryName) {
+        Log.i("TAG", "makeNetworkCallForSearchByCategoryName: ");
+        remoteSource.makeNetworkCallForSearchByCategoryName(searchNetworkCallback,categoryName);
     }
 
     @Override

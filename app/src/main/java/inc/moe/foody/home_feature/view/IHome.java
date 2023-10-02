@@ -5,7 +5,7 @@ import java.util.List;
 import inc.moe.foody.model.Category;
 import inc.moe.foody.model.Meal;
 
-public interface IView {
+public interface IHome {
 
     void onCategoryFetch(List<Category> categories);
     void onRandomMealFetch(List<Meal> meals);

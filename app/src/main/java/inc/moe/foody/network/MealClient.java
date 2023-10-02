@@ -1,14 +1,11 @@
 package inc.moe.foody.network;
 
 import android.util.Log;
-import android.util.LruCache;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import inc.moe.foody.model.Category;
 import inc.moe.foody.model.ListOfCategories;
 import inc.moe.foody.model.ListOfMeals;
 
@@ -16,8 +13,6 @@ import inc.moe.foody.model.Meal;
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.schedulers.Schedulers;
-import okhttp3.Cache;
-import okhttp3.OkHttpClient;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -49,7 +44,7 @@ public class MealClient implements RemoteSource {
     }
 
     @Override
-    public void makeNetworkCallForCategories(MyNetworkCallBack myNetworkCallBack) {
+    public void makeNetworkCallForCategories(HomeNetworkCallback homeNetworkCallback) {
 
         Call<ListOfCategories> call = mealService.getCategories();
         call.enqueue(new Callback<ListOfCategories>() {
@@ -57,14 +52,14 @@ public class MealClient implements RemoteSource {
             public void onResponse(Call<ListOfCategories> call, Response<ListOfCategories> response) {
                 if (response.isSuccessful()) {
                     Log.i(TAG, "onSuccess: " + response.raw() + "meals: " + response.body().getCategories());
-                    myNetworkCallBack.onSuccessCategories(response.body().getCategories());
+                    homeNetworkCallback.onSuccessCategories(response.body().getCategories());
                 }
             }
 
             @Override
             public void onFailure(Call<ListOfCategories> call, Throwable t) {
                 Log.i(TAG, "onFailure: " + t.getMessage());
-                myNetworkCallBack.onFailedCategories(t.getMessage());
+                homeNetworkCallback.onFailedCategories(t.getMessage());
 
             }
 
@@ -74,7 +69,7 @@ public class MealClient implements RemoteSource {
 
     }
 
-    public void makeMultipleRandomMealRequests(int numberOfRequests, MyNetworkCallBack myNetworkCallBack) {
+    public void makeMultipleRandomMealRequests(int numberOfRequests, HomeNetworkCallback homeNetworkCallback) {
         List<Observable<ListOfMeals>> observables = new ArrayList<>();
 
         for (int i = 0; i < numberOfRequests; i++) {
@@ -102,35 +97,37 @@ public class MealClient implements RemoteSource {
                             }
 
                             // Handle the combined list of meals
-                            myNetworkCallBack.onSuccessRandomMeal(allMeals);
+                            homeNetworkCallback.onSuccessRandomMeal(allMeals);
                         },
                         throwable -> {
                             // Handle the error
-                            myNetworkCallBack.onFailedRandomMeal(throwable.getMessage());
+                            homeNetworkCallback.onFailedRandomMeal(throwable.getMessage());
                         }
                 );
     }
 
     @Override
-    public void makeNetworkCallForSearchByCategoryName(MyNetworkCallBack myNetworkCallBack, String categoryName) {
+    public void makeNetworkCallForSearchByCategoryName(SearchNetworkCallback searchNetworkCallback, String categoryName) {
+        Log.i("searchCallback", "makeNetworkCallForSearchByCategoryName: searchWorking");
+
         Call<ListOfMeals> call = mealService.getMealByCategorySearch(categoryName);
         call.enqueue(new Callback<ListOfMeals>() {
             @Override
             public void onResponse(Call<ListOfMeals> call, Response<ListOfMeals> response) {
                 if (response.isSuccessful()) {
-                    Log.i("TAG", "onSuccess: " + response.raw() + "meals: " + response.body().getMeals());
-                    myNetworkCallBack.onSuccessRandomMeal(response.body().getMeals());
+                    Log.i("searchCallback", "onSuccess: " + response.raw() + "meals: " + response.body().getMeals());
+                    searchNetworkCallback.onSearchByCategoryNameFromHomeSuccess(response.body().getMeals());
+                }else{
+                    Log.i("searchCallback", "onResponse: "+ "errorr");
                 }
-
             }
 
             @Override
             public void onFailure(Call<ListOfMeals> call, Throwable t) {
-                Log.i("TAG", "onFailure: " + t.getMessage());
-                myNetworkCallBack.onFailedRandomMeal(t.getMessage());
+                Log.i("searchCallback", "onFailure: " + t.getMessage());
+                searchNetworkCallback.onSearchByCategoryNameFromHomeFailure(t.getMessage());
 
             }
         });
-
     }
 }

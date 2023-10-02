@@ -5,6 +5,7 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -27,7 +28,7 @@ import inc.moe.foody.model.Repo;
 import inc.moe.foody.network.MealClient;
 
 
-public class HomeFragment extends Fragment implements IView , OnRandomMealClickListener , OnCategoryClickListener {
+public class HomeFragment extends Fragment implements IHome, OnRandomMealClickListener , OnCategoryClickListener {
     RecyclerView allCategoriesRV;
     RecyclerView randomMealRV;
     ShimmerFrameLayout randomMealShimmer;
@@ -37,7 +38,7 @@ public class HomeFragment extends Fragment implements IView , OnRandomMealClickL
     RandomMealAdapter randomMealAdapter;
     LinearLayoutManager layoutManager;
     LinearLayoutManager layoutManager1;
-
+    View myView ;
     public HomeFragment() {
         // Required empty public constructor
     }
@@ -55,6 +56,7 @@ public class HomeFragment extends Fragment implements IView , OnRandomMealClickL
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        myView =view;
         randomMealShimmer = view.findViewById(R.id.random_meal_shimmer_layout);
         categoryMealShimmer = view.findViewById(R.id.category_shimmer);
         randomMealShimmer.startShimmerAnimation();
@@ -127,8 +129,16 @@ public class HomeFragment extends Fragment implements IView , OnRandomMealClickL
 
     @Override
     public void searchByCategoryName(String categoryName) {
-        homePresenter.searchByCategoryName(categoryName);
-        Snackbar snackbar = Snackbar.make(getView() ,"Searching for "+categoryName+" meals." ,Snackbar.LENGTH_SHORT);
-        snackbar.show();
+        HomeFragmentDirections.ActionHomeFragmentToSearchFragment action = HomeFragmentDirections
+                .actionHomeFragmentToSearchFragment();
+
+        action.setCategoryName(categoryName);
+
+        Navigation.findNavController(myView).navigate(action);
+
+
+
+
+
     }
 }

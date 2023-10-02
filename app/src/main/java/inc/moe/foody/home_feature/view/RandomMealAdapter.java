@@ -36,7 +36,7 @@ public RandomMealAdapter(List<Meal> mealList) {
 @Override
 public RandomMealAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-        View view = inflater.inflate(R.layout.daily_inspiration_item_layout , parent,false);
+        View view = inflater.inflate(R.layout.search_item_layout , parent,false);
         ViewHolder viewHolder = new ViewHolder(view);
 
         return viewHolder;
