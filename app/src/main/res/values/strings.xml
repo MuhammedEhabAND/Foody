@@ -6,6 +6,7 @@
     <string name="confirm_password_hint">Confirm password</string>
     <string name="sign_up_btn">Sign Up</string>
     <string name="login_btn">Login</string>
+    <string name="instructions">Instructions</string>
     <string name="search">Search</string>
     <string name="home_bottom_icon">Home</string>
     <string name="profile_bottom_icon">Profile</string>
@@ -17,6 +18,9 @@
     <string name="my_favourites">My Favourites</string>
     <string name="categories">Categories</string>
     <string name="all">All Meals</string>
+    <string name="youtube">Youtube</string>
+    <string name="addToFavBtn">Add to Favourite</string>
+    <string name="addToPlan">Add to your Plan</string>
 
     <string name="search_county">Country</string>
     <string name="search_ingredients">Ingredient</string>

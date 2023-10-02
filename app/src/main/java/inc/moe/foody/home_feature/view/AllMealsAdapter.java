@@ -20,6 +20,7 @@ import inc.moe.foody.model.Meal;
 
 public class AllMealsAdapter extends RecyclerView.Adapter<AllMealsAdapter.ViewHolder> {
     List<Meal> meals;
+    OnImageClickListener onImageClickListener ;
 
     public void setMeals(List<Meal> meals) {
         this.meals = meals;
@@ -27,7 +28,8 @@ public class AllMealsAdapter extends RecyclerView.Adapter<AllMealsAdapter.ViewHo
 
     }
 
-    public AllMealsAdapter(){
+    public AllMealsAdapter(OnImageClickListener onImageClickListener){
+        this.onImageClickListener = onImageClickListener;
 
     }
 
@@ -45,10 +47,17 @@ public class AllMealsAdapter extends RecyclerView.Adapter<AllMealsAdapter.ViewHo
 
     @Override
     public void onBindViewHolder(@NonNull AllMealsAdapter.ViewHolder holder, int position) {
-         holder.categoryName.setText(meals.get(position).getStrMeal());
-        Glide.with(holder.itemView).load(meals.get(position).getStrMealThumb()).apply(new RequestOptions().override(300,250))
+        Meal meal = meals.get(position);
+        holder.categoryName.setText(meal.getStrMeal());
+        Glide.with(holder.itemView).load(meal.getStrMealThumb()).apply(new RequestOptions().override(300,250))
 
                 .into(holder.categoryImage);
+        holder.categoryImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onImageClickListener.navigateToFullDetailedMeal(meal.getIdMeal());
+            }
+        });
 
     }
 

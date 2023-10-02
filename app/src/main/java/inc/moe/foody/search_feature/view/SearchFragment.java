@@ -19,6 +19,7 @@ import java.util.List;
 
 import inc.moe.foody.R;
 import inc.moe.foody.db.ConcreteLocalSource;
+import inc.moe.foody.home_feature.view.OnImageClickListener;
 import inc.moe.foody.home_feature.view.OnRandomMealClickListener;
 import inc.moe.foody.home_feature.view.RandomMealAdapter;
 import inc.moe.foody.model.Meal;
@@ -27,7 +28,7 @@ import inc.moe.foody.network.MealClient;
 import inc.moe.foody.search_feature.presenter.SearchPresenter;
 
 
-public class SearchFragment extends Fragment implements ISearch  , OnRandomMealClickListener {
+public class SearchFragment extends Fragment implements ISearch  , OnRandomMealClickListener , OnImageClickListener {
     SearchPresenter searchPresenter ;
     ShimmerFrameLayout firstShimmer, secondShimmer;
     RecyclerView searchRV;
@@ -61,7 +62,7 @@ public class SearchFragment extends Fragment implements ISearch  , OnRandomMealC
         searchRV = view.findViewById(R.id.search_rv);
         linearLayoutManager = new LinearLayoutManager(getContext() );
         linearLayoutManager.setOrientation(RecyclerView.VERTICAL);
-        searchAdapter = new RandomMealAdapter(this::insertToDatabase );
+        searchAdapter = new RandomMealAdapter( this::insertToDatabase ,this);
         searchRV.setHasFixedSize(true);
         searchRV.setLayoutManager(linearLayoutManager);
 
@@ -92,6 +93,11 @@ public class SearchFragment extends Fragment implements ISearch  , OnRandomMealC
 
     @Override
     public void insertToDatabase(Meal meal) {
+
+    }
+
+    @Override
+    public void navigateToFullDetailedMeal(String idMeal) {
 
     }
 }

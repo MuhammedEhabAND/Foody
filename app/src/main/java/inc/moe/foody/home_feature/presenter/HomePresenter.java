@@ -57,6 +57,8 @@ public class HomePresenter implements IHomePresenter, HomeNetworkCallback {
        }
 
 
+
+
     @Override
     public void onSuccessCategories(List categories) {
         iHome.onCategoryFetch(categories);
@@ -105,4 +107,5 @@ public class HomePresenter implements IHomePresenter, HomeNetworkCallback {
     public void onFailedAllCountries(String errorMessage) {
         iHome.onAllCountriesFailed(errorMessage);
     }
+
 }

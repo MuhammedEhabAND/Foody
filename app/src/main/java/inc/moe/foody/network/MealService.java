@@ -23,4 +23,7 @@ public interface MealService {
     @GET("list.php?a=list")
     Call<ListOfMeals> getListOfCountries();
 
+    @GET("lookup.php")
+    Call<ListOfMeals> getFullDetailedMeal(@Query("i") String idMeal);
+
 }

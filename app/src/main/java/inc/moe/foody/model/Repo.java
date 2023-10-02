@@ -7,6 +7,7 @@ import androidx.lifecycle.LiveData;
 import java.util.List;
 
 import inc.moe.foody.db.LocalSource;
+import inc.moe.foody.network.FullDetailedNetworkCallback;
 import inc.moe.foody.network.HomeNetworkCallback;
 import inc.moe.foody.network.RemoteSource;
 import inc.moe.foody.network.SearchNetworkCallback;
@@ -54,6 +55,11 @@ public class Repo implements IRepo{
     @Override
     public void makeNetworkCallForGettingAllMealsWithLetter(HomeNetworkCallback homeNetworkCallback, String letter) {
         remoteSource.makeNetworkCallForAllMeals(homeNetworkCallback, letter);
+    }
+
+    @Override
+    public void makeNetworkCallForGetFullDetailedMeal(FullDetailedNetworkCallback fullDetailedNetworkCallback, String idMeal) {
+        remoteSource.makeNetworkCallForGetFullDetailedMeal(fullDetailedNetworkCallback ,idMeal);
     }
 
     @Override

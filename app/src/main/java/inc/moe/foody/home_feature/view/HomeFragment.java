@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.facebook.shimmer.ShimmerFrameLayout;
@@ -29,7 +30,7 @@ import inc.moe.foody.model.Repo;
 import inc.moe.foody.network.MealClient;
 
 
-public class HomeFragment extends Fragment implements IHome, OnRandomMealClickListener , OnCategoryClickListener {
+public class HomeFragment extends Fragment implements IHome, OnRandomMealClickListener , OnCategoryClickListener ,OnImageClickListener {
     RecyclerView allCategoriesRV ,randomMealRV ,allMealsRV ,allCountriesRV;
     ShimmerFrameLayout randomMealShimmer ,categoryMealShimmer , allMealsShimmer , allCountriesShimmer;
     HomePresenter homePresenter;
@@ -57,6 +58,7 @@ public class HomeFragment extends Fragment implements IHome, OnRandomMealClickLi
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         myView =view;
+
         randomMealShimmer = view.findViewById(R.id.random_meal_shimmer_layout);
         categoryMealShimmer = view.findViewById(R.id.category_shimmer);
         allMealsShimmer =view.findViewById(R.id.all_meals_shimmer);
@@ -83,8 +85,8 @@ public class HomeFragment extends Fragment implements IHome, OnRandomMealClickLi
 
 
         categoryAdapter = new CategoryAdapter(this::searchByCategoryName);
-        randomMealAdapter = new RandomMealAdapter(this);
-        allMealsAdapter = new AllMealsAdapter();
+        randomMealAdapter = new RandomMealAdapter(this , this);
+        allMealsAdapter = new AllMealsAdapter(this);
         allCountriesAdapter = new AllCountriesAdapter();
 
         homePresenter = new HomePresenter(this ,
@@ -164,8 +166,10 @@ public class HomeFragment extends Fragment implements IHome, OnRandomMealClickLi
 
     @Override
     public void onAllCountriesFailed(String errorMessage) {
-
+        Snackbar snackbar = Snackbar.make(getView() , errorMessage ,Snackbar.LENGTH_SHORT);
+        snackbar.show();
     }
+
 
     @Override
     public void insertToDatabase(Meal meal) {
@@ -188,5 +192,13 @@ public class HomeFragment extends Fragment implements IHome, OnRandomMealClickLi
 
 
 
+    }
+
+    @Override
+    public void navigateToFullDetailedMeal(String idMeal) {
+        HomeFragmentDirections.ActionHomeFragmentToDetailedMeal action = HomeFragmentDirections
+                .actionHomeFragmentToDetailedMeal(idMeal);
+        action.setIdMeal(idMeal);
+        Navigation.findNavController(myView).navigate(action);
     }
 }

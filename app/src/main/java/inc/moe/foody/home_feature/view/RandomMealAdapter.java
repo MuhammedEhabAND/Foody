@@ -19,13 +19,15 @@ import inc.moe.foody.model.Meal;
 public class RandomMealAdapter extends RecyclerView.Adapter<RandomMealAdapter.ViewHolder> {
         List<Meal> mealList;
         OnRandomMealClickListener onMealClickListener;
+        OnImageClickListener onImageClickListener;
 
 public void setMealList(List<Meal> mealList) {
         this.mealList = mealList;
         }
 
-public RandomMealAdapter(OnRandomMealClickListener onMealClickListener) {
+public RandomMealAdapter(OnRandomMealClickListener onMealClickListener , OnImageClickListener onImageClickListener) {
     this.onMealClickListener = onMealClickListener;
+    this.onImageClickListener =onImageClickListener;
 }
 
 public RandomMealAdapter(List<Meal> mealList) {
@@ -48,6 +50,12 @@ public void onBindViewHolder(@NonNull RandomMealAdapter.ViewHolder holder, int p
         holder.mealName.setText(meal.getStrMeal());
         Glide.with(holder.itemView).load(meal.getStrMealThumb())
                 .into(holder.mealThumb);
+        holder.mealThumb.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onImageClickListener.navigateToFullDetailedMeal(meal.getIdMeal());
+            }
+        });
         holder.favImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
