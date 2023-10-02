@@ -1,3 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <style name="TitleTextView" parent="ThemeOverlay.Material3.AutoCompleteTextView">
+        <item name="android:layout_marginStart">25dp</item>
+        <item name="fontFamily">sans-serif-medium</item>
+        <item name="android:textSize">40sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/light_mode_text_color</item>
+
+    </style>
 </resources>

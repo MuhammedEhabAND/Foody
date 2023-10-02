@@ -3,6 +3,7 @@ package inc.moe.foody.utils;
 import java.util.List;
 
 import inc.moe.foody.model.Category;
+import inc.moe.foody.model.Country;
 import inc.moe.foody.model.Meal;
 
 public class Cache {
@@ -10,6 +11,15 @@ public class Cache {
     List<Meal> randomMeals ;
     List<Meal> meals ;
     List<Category> categories ;
+    List<Country> countries;
+
+    public List<Country> getCountries() {
+        return countries;
+    }
+
+    public void setCountries(List<Country> countries) {
+        this.countries = countries;
+    }
 
     public List<Category> getCategories() {
         return categories;

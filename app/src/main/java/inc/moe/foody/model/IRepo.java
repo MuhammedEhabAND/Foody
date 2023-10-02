@@ -12,6 +12,8 @@ public interface IRepo {
     void makeNetworkCallForCategories(HomeNetworkCallback homeNetworkCallback);
     void makeNetworkCallForRandomMeal(HomeNetworkCallback homeNetworkCallback);
     void makeNetworkCallForSearchByCategoryName(SearchNetworkCallback searchNetworkCallback, String categoryName);
+    void makeNetworkCallForGettingAllCountries(HomeNetworkCallback homeNetworkCallback);
+    void makeNetworkCallForGettingAllMealsWithLetter(HomeNetworkCallback homeNetworkCallback , String letter);
 
     void removeMealFromFav(Meal meal);
     void insertMealToFav(Meal meal);

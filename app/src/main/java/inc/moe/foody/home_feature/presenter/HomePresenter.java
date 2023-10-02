@@ -1,8 +1,11 @@
 package inc.moe.foody.home_feature.presenter;
 
+import android.util.Log;
+
 import java.util.List;
 
 import inc.moe.foody.home_feature.view.IHome;
+import inc.moe.foody.model.Country;
 import inc.moe.foody.model.IRepo;
 import inc.moe.foody.model.Meal;
 import inc.moe.foody.network.HomeNetworkCallback;
@@ -39,6 +42,20 @@ public class HomePresenter implements IHomePresenter, HomeNetworkCallback {
         iRepo.insertMealToFav(meal);
     }
 
+    @Override
+    public void getAllMeals() {
+        if(Cache.getInstance().getMeals() == null)
+            iRepo.makeNetworkCallForGettingAllMealsWithLetter(this ,"b");
+        else
+            iHome.onAllMealsFetch(Cache.getInstance().getMeals());
+
+    }
+
+    @Override
+    public void getAllCountries() {
+            iRepo.makeNetworkCallForGettingAllCountries(this);
+       }
+
 
     @Override
     public void onSuccessCategories(List categories) {
@@ -56,12 +73,36 @@ public class HomePresenter implements IHomePresenter, HomeNetworkCallback {
     @Override
     public void onSuccessRandomMeal(List<Meal> meals) {
         iHome.onRandomMealFetch(meals);
-        Cache.getInstance().setRandomMeals(meals);
+        Cache.
+                getInstance().setRandomMeals(meals);
 
     }
 
     @Override
     public void onFailedRandomMeal(String errorMessage) {
         iHome.onRandomMealFailed(errorMessage);
+    }
+
+    @Override
+    public void onSuccessAllMealsWithBLetter(List<Meal> meals) {
+        iHome.onAllMealsFetch(meals);
+        Cache.getInstance().setMeals(meals);
+    }
+
+    @Override
+    public void onFailedAllMealsWithBLetter(String errorMessage) {
+        iHome.onAllMealsFailed(errorMessage);
+    }
+
+    @Override
+    public void onSuccessAllCountries(List<Meal> countries) {
+        Log.i("TAG", "onSuccessAllCountries: " + countries.get(0).getStrArea());
+        iHome.onAllCountriesFetch(countries);
+       // Cache.getInstance().setCountries(countries);
+    }
+
+    @Override
+    public void onFailedAllCountries(String errorMessage) {
+        iHome.onAllCountriesFailed(errorMessage);
     }
 }

@@ -23,21 +23,21 @@ import inc.moe.foody.R;
 import inc.moe.foody.db.ConcreteLocalSource;
 import inc.moe.foody.home_feature.presenter.HomePresenter;
 import inc.moe.foody.model.Category;
+import inc.moe.foody.model.Country;
 import inc.moe.foody.model.Meal;
 import inc.moe.foody.model.Repo;
 import inc.moe.foody.network.MealClient;
 
 
 public class HomeFragment extends Fragment implements IHome, OnRandomMealClickListener , OnCategoryClickListener {
-    RecyclerView allCategoriesRV;
-    RecyclerView randomMealRV;
-    ShimmerFrameLayout randomMealShimmer;
-    ShimmerFrameLayout categoryMealShimmer;
+    RecyclerView allCategoriesRV ,randomMealRV ,allMealsRV ,allCountriesRV;
+    ShimmerFrameLayout randomMealShimmer ,categoryMealShimmer , allMealsShimmer , allCountriesShimmer;
     HomePresenter homePresenter;
     CategoryAdapter categoryAdapter;
     RandomMealAdapter randomMealAdapter;
-    LinearLayoutManager layoutManager;
-    LinearLayoutManager layoutManager1;
+    AllMealsAdapter allMealsAdapter;
+    AllCountriesAdapter allCountriesAdapter ;
+    LinearLayoutManager categoryLayoutManager , randomMealsLayoutManager , allMealsLayoutManager ,allCountriesLayoutManger;
     View myView ;
     public HomeFragment() {
         // Required empty public constructor
@@ -59,33 +59,50 @@ public class HomeFragment extends Fragment implements IHome, OnRandomMealClickLi
         myView =view;
         randomMealShimmer = view.findViewById(R.id.random_meal_shimmer_layout);
         categoryMealShimmer = view.findViewById(R.id.category_shimmer);
+        allMealsShimmer =view.findViewById(R.id.all_meals_shimmer);
+        allCountriesShimmer =view.findViewById(R.id.countries_shimmer);
+        allMealsShimmer.startShimmerAnimation();
+        allCountriesShimmer.startShimmerAnimation();
         randomMealShimmer.startShimmerAnimation();
         categoryMealShimmer.startShimmerAnimation();
 
 
         allCategoriesRV = view.findViewById(R.id.categories_rv);
         randomMealRV = view.findViewById(R.id.random_meal_rv);
-        layoutManager = new LinearLayoutManager(getContext()  );
-        layoutManager.setOrientation(RecyclerView.HORIZONTAL);
+        allMealsRV = view.findViewById(R.id.all_meals_rv);
+        allCountriesRV = view.findViewById(R.id.countries_rv);
 
-        layoutManager1 = new LinearLayoutManager(getContext()  );
-        layoutManager1.setOrientation(RecyclerView.HORIZONTAL);
+        allCountriesLayoutManger = new LinearLayoutManager(getContext());
+        allCountriesLayoutManger.setOrientation(RecyclerView.HORIZONTAL);
+        allMealsLayoutManager = new LinearLayoutManager(getContext());
+        allMealsLayoutManager.setOrientation(RecyclerView.HORIZONTAL);
+        categoryLayoutManager = new LinearLayoutManager(getContext()  );
+        categoryLayoutManager.setOrientation(RecyclerView.HORIZONTAL);
+        randomMealsLayoutManager = new LinearLayoutManager(getContext()  );
+        randomMealsLayoutManager.setOrientation(RecyclerView.HORIZONTAL);
+
 
         categoryAdapter = new CategoryAdapter(this::searchByCategoryName);
         randomMealAdapter = new RandomMealAdapter(this);
+        allMealsAdapter = new AllMealsAdapter();
+        allCountriesAdapter = new AllCountriesAdapter();
 
         homePresenter = new HomePresenter(this ,
                 Repo.getInstance( MealClient.getInstance() , ConcreteLocalSource.getInstance(getContext())));
 
 
         allCategoriesRV.setHasFixedSize(true);
-        allCategoriesRV.setLayoutManager(layoutManager);
-
+        allCategoriesRV.setLayoutManager(categoryLayoutManager);
+        allMealsRV.setHasFixedSize(true);
+        allMealsRV.setLayoutManager(allMealsLayoutManager);
         randomMealRV.setHasFixedSize(true);
-        randomMealRV.setLayoutManager(layoutManager1);
+        randomMealRV.setLayoutManager(randomMealsLayoutManager);
+        allCountriesRV.setHasFixedSize(true);
+        allCountriesRV.setLayoutManager(allCountriesLayoutManger);
         homePresenter.getRandomMeal();
         homePresenter.getAllCategories();
-
+        homePresenter.getAllMeals();
+        homePresenter.getAllCountries();
     }
 
     @Override
@@ -121,6 +138,36 @@ public class HomeFragment extends Fragment implements IHome, OnRandomMealClickLi
     }
 
     @Override
+    public void onAllMealsFetch(List<Meal> meals) {
+        allMealsAdapter.setMeals(meals);
+        allMealsAdapter.notifyDataSetChanged();
+        allMealsRV.setAdapter(allMealsAdapter);
+        allMealsShimmer.setVisibility(View.GONE);
+        allMealsRV.setVisibility(View.VISIBLE);
+
+    }
+
+    @Override
+    public void onAllMealsFailed(String errorMessage) {
+
+    }
+
+    @Override
+    public void onAllCountriesFetch(List<Meal> countries) {
+        allCountriesAdapter.setCountries(countries);
+        allCountriesAdapter.notifyDataSetChanged();
+        allCountriesRV.setAdapter(allCountriesAdapter);
+        allCountriesShimmer.setVisibility(View.GONE);
+        allCountriesRV.setVisibility(View.VISIBLE);
+
+    }
+
+    @Override
+    public void onAllCountriesFailed(String errorMessage) {
+
+    }
+
+    @Override
     public void insertToDatabase(Meal meal) {
         homePresenter.addRandomMealToFav(meal);
         Snackbar snackbar = Snackbar.make(getView() ,meal.getStrMeal()+" saved." ,Snackbar.LENGTH_SHORT);
@@ -134,6 +181,7 @@ public class HomeFragment extends Fragment implements IHome, OnRandomMealClickLi
 
         action.setCategoryName(categoryName);
 
+//        HomeActivity.navController.navigate(action);
         Navigation.findNavController(myView).navigate(action);
 
 

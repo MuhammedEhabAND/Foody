@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import inc.moe.foody.model.ListOfCategories;
+import inc.moe.foody.model.ListOfCountries;
 import inc.moe.foody.model.ListOfMeals;
 
 import inc.moe.foody.model.Meal;
@@ -127,6 +128,45 @@ public class MealClient implements RemoteSource {
                 Log.i("searchCallback", "onFailure: " + t.getMessage());
                 searchNetworkCallback.onSearchByCategoryNameFromHomeFailure(t.getMessage());
 
+            }
+        });
+    }
+
+    @Override
+    public void makeNetworkCallForAllMeals(HomeNetworkCallback homeNetworkCallback, String letter) {
+        Call<ListOfMeals> call = mealService.getAllMealsByLetter(letter);
+        call.enqueue(new Callback<ListOfMeals>() {
+            @Override
+            public void onResponse(Call<ListOfMeals> call, Response<ListOfMeals> response) {
+                if(response.isSuccessful()){
+                    homeNetworkCallback.onSuccessAllMealsWithBLetter(response.body().getMeals());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ListOfMeals> call, Throwable t) {
+                Log.i(TAG, "onFailure: " +t.getMessage());
+                homeNetworkCallback.onFailedAllMealsWithBLetter(t.getMessage());
+            }
+        });
+    }
+
+    @Override
+    public void makeNetworkCallForAllCountries(HomeNetworkCallback homeNetworkCallback) {
+        Call<ListOfMeals> call = mealService.getListOfCountries();
+        call.enqueue(new Callback<ListOfMeals>() {
+            @Override
+            public void onResponse(Call<ListOfMeals> call, Response<ListOfMeals> response) {
+                if(response.isSuccessful() && response.body() !=null){
+                    Log.i(TAG, "onResponse countries: " + response.body().getMeals());
+                    homeNetworkCallback.onSuccessAllCountries(response.body().getMeals());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ListOfMeals> call, Throwable t) {
+                Log.i(TAG, "onFailure: "+t.getMessage());
+                homeNetworkCallback.onFailedAllCountries(t.getMessage());
             }
         });
     }

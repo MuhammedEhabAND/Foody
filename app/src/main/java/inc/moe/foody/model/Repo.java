@@ -47,6 +47,16 @@ public class Repo implements IRepo{
     }
 
     @Override
+    public void makeNetworkCallForGettingAllCountries(HomeNetworkCallback homeNetworkCallback) {
+        remoteSource.makeNetworkCallForAllCountries(homeNetworkCallback);
+    }
+
+    @Override
+    public void makeNetworkCallForGettingAllMealsWithLetter(HomeNetworkCallback homeNetworkCallback, String letter) {
+        remoteSource.makeNetworkCallForAllMeals(homeNetworkCallback, letter);
+    }
+
+    @Override
     public void removeMealFromFav(Meal meal) {
         localSource.removeMeal(meal);
     }
