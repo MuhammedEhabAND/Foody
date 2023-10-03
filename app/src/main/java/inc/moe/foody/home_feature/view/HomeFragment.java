@@ -30,7 +30,7 @@ import inc.moe.foody.model.Repo;
 import inc.moe.foody.network.MealClient;
 
 
-public class HomeFragment extends Fragment implements IHome, OnRandomMealClickListener , OnCategoryClickListener ,OnImageClickListener {
+public class HomeFragment extends Fragment implements IHome, OnRandomMealClickListener , OnCategoryClickListener ,OnImageClickListener ,OnCountryClickListener{
     RecyclerView allCategoriesRV ,randomMealRV ,allMealsRV ,allCountriesRV;
     ShimmerFrameLayout randomMealShimmer ,categoryMealShimmer , allMealsShimmer , allCountriesShimmer;
     HomePresenter homePresenter;
@@ -87,7 +87,7 @@ public class HomeFragment extends Fragment implements IHome, OnRandomMealClickLi
         categoryAdapter = new CategoryAdapter(this::searchByCategoryName);
         randomMealAdapter = new RandomMealAdapter(this , this);
         allMealsAdapter = new AllMealsAdapter(this);
-        allCountriesAdapter = new AllCountriesAdapter();
+        allCountriesAdapter = new AllCountriesAdapter(this);
 
         homePresenter = new HomePresenter(this ,
                 Repo.getInstance( MealClient.getInstance() , ConcreteLocalSource.getInstance(getContext())));
@@ -184,8 +184,6 @@ public class HomeFragment extends Fragment implements IHome, OnRandomMealClickLi
                 .actionHomeFragmentToSearchFragment();
 
         action.setCategoryName(categoryName);
-
-//        HomeActivity.navController.navigate(action);
         Navigation.findNavController(myView).navigate(action);
 
 
@@ -200,5 +198,13 @@ public class HomeFragment extends Fragment implements IHome, OnRandomMealClickLi
                 .actionHomeFragmentToDetailedMeal(idMeal);
         action.setIdMeal(idMeal);
         Navigation.findNavController(myView).navigate(action);
+    }
+
+    @Override
+    public void searchByCountryName(String countryName) {
+        HomeFragmentDirections.ActionHomeFragmentToSearchFragment action = HomeFragmentDirections
+                .actionHomeFragmentToSearchFragment();
+        action.setCountryName(countryName);
+        Navigation.findNavController(getView()).navigate(action);
     }
 }

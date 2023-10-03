@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="350dp"
-    android:layout_height="300dp"
+    android:layout_height="100dp"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     app:cardCornerRadius="6dp"
@@ -15,21 +15,21 @@
         android:layout_height="match_parent">
 
         <ImageView
-            android:id="@+id/meal_image"
-            android:layout_width="match_parent"
+            android:id="@+id/searched_meal_image"
+            android:layout_width="100dp"
             android:layout_height="0dp"
-            android:layout_marginBottom="15dp"
+
             android:contentDescription="TODO"
             android:scaleType="centerCrop"
-            app:layout_constraintBottom_toTopOf="@+id/favImage"
-            app:layout_constraintEnd_toEndOf="parent"
+
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:srcCompat="@tools:sample/avatars" />
 
 
         <TextView
-            android:id="@+id/meal_name"
+            android:id="@+id/search_meal_name"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_marginEnd="10dp"
@@ -37,28 +37,15 @@
             android:ellipsize="end"
             android:layout_marginStart="5dp"
             app:layout_constraintHorizontal_weight="5"
-            android:textAlignment="textStart"
             android:gravity="center"
-            android:textSize="18sp"
+            android:textSize="12sp"
             android:textStyle="bold"
-            app:layout_constraintBottom_toBottomOf="@+id/favImage"
-            app:layout_constraintEnd_toStartOf="@+id/favImage"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/favImage"
-            tools:text="Beef tenderloin with  sfsdf teriyaki" />
 
-        <ImageView
-            android:id="@+id/favImage"
-            android:layout_width="0dp"
-            app:layout_constraintHorizontal_weight="1"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="5dp"
-
-            android:layout_marginBottom="8dp"
-            app:layout_constraintStart_toEndOf="@+id/meal_name"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toTopOf="@id/searched_meal_image"
             app:layout_constraintEnd_toEndOf="parent"
-            app:srcCompat="@drawable/fav_icon" />
+            app:layout_constraintBottom_toBottomOf="@id/searched_meal_image"
+            app:layout_constraintStart_toEndOf="@id/searched_meal_image"
+            tools:text="Beef" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -48,6 +48,11 @@ public class Repo implements IRepo{
     }
 
     @Override
+    public void makeNetworkCallForSearchByCountryName(SearchNetworkCallback searchNetworkCallback, String countryName) {
+        remoteSource.makeNetworkCallForSearchByCountryName(searchNetworkCallback,countryName);
+    }
+
+    @Override
     public void makeNetworkCallForGettingAllCountries(HomeNetworkCallback homeNetworkCallback) {
         remoteSource.makeNetworkCallForAllCountries(homeNetworkCallback);
     }
@@ -60,6 +65,11 @@ public class Repo implements IRepo{
     @Override
     public void makeNetworkCallForGetFullDetailedMeal(FullDetailedNetworkCallback fullDetailedNetworkCallback, String idMeal) {
         remoteSource.makeNetworkCallForGetFullDetailedMeal(fullDetailedNetworkCallback ,idMeal);
+    }
+
+    @Override
+    public void makeNetworkCallForGetAllIngredients(SearchNetworkCallback searchNetworkCallback) {
+        remoteSource.makeNetworkCallForAllIngredients(searchNetworkCallback);
     }
 
     @Override

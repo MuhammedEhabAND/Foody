@@ -20,7 +20,10 @@ import inc.moe.foody.model.Meal;
 public class AllCountriesAdapter extends RecyclerView.Adapter<AllCountriesAdapter.ViewHolder> {
     DataSource dataSource = new DataSource();
     List<Meal> countries;
-    public AllCountriesAdapter(){}
+    OnCountryClickListener onCountryClickListener;
+    public AllCountriesAdapter(OnCountryClickListener onCountryClickListener){
+        this.onCountryClickListener = onCountryClickListener;
+    }
 
     public void setCountries(List<Meal> countries) {
         this.countries = countries;
@@ -42,6 +45,12 @@ public class AllCountriesAdapter extends RecyclerView.Adapter<AllCountriesAdapte
         Meal country = countries.get(position);
         holder.countryName.setText(country.getStrArea());
         holder.countryImage.setImageResource(dataSource.getImageResourceIdByName(country.getStrArea()));
+        holder.countryImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onCountryClickListener.searchByCountryName(country.getStrArea());
+            }
+        });
     }
 
     @Override

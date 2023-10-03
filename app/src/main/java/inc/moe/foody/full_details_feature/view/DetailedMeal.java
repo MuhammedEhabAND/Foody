@@ -141,7 +141,8 @@ public class DetailedMeal extends Fragment implements IDetailedMeal {
             String measure = meal.getStrMeasure(i);
 
             // Check if both ingredient and measure are not null
-            if (!ingredient.isEmpty() && !measure.isEmpty()) {
+            if (ingredient!= null && measure!=null) {
+                if(!ingredient.isEmpty()&&!measure.isEmpty())
                 stringBuilder.append(measure).append(" : ").append(ingredient).append("\n");
             }
         }

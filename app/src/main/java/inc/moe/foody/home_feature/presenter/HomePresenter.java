@@ -5,7 +5,6 @@ import android.util.Log;
 import java.util.List;
 
 import inc.moe.foody.home_feature.view.IHome;
-import inc.moe.foody.model.Country;
 import inc.moe.foody.model.IRepo;
 import inc.moe.foody.model.Meal;
 import inc.moe.foody.network.HomeNetworkCallback;
@@ -44,17 +43,22 @@ public class HomePresenter implements IHomePresenter, HomeNetworkCallback {
 
     @Override
     public void getAllMeals() {
-        if(Cache.getInstance().getMeals() == null)
+        if(Cache.getInstance().getAllMeals() == null)
             iRepo.makeNetworkCallForGettingAllMealsWithLetter(this ,"b");
         else
-            iHome.onAllMealsFetch(Cache.getInstance().getMeals());
+            iHome.onAllMealsFetch(Cache.getInstance().getAllMeals());
 
     }
 
     @Override
     public void getAllCountries() {
+        if(Cache.getInstance().getCountries() == null)
             iRepo.makeNetworkCallForGettingAllCountries(this);
-       }
+        else
+            iHome.onAllCountriesFetch(Cache.getInstance().getCountries());
+
+    }
+
 
 
 
@@ -88,7 +92,7 @@ public class HomePresenter implements IHomePresenter, HomeNetworkCallback {
     @Override
     public void onSuccessAllMealsWithBLetter(List<Meal> meals) {
         iHome.onAllMealsFetch(meals);
-        Cache.getInstance().setMeals(meals);
+        Cache.getInstance().setAllMeals(meals);
     }
 
     @Override
@@ -100,7 +104,8 @@ public class HomePresenter implements IHomePresenter, HomeNetworkCallback {
     public void onSuccessAllCountries(List<Meal> countries) {
         Log.i("TAG", "onSuccessAllCountries: " + countries.get(0).getStrArea());
         iHome.onAllCountriesFetch(countries);
-       // Cache.getInstance().setCountries(countries);
+        Cache.getInstance().setCountries(countries);
+        Log.i("TAG", "onSuccessAllCountries: " + Cache.getInstance().getCountries().get(0).getStrArea());
     }
 
     @Override

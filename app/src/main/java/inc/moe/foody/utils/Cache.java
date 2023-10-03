@@ -4,20 +4,31 @@ import java.util.List;
 
 import inc.moe.foody.model.Category;
 import inc.moe.foody.model.Country;
+import inc.moe.foody.model.Ingredient;
 import inc.moe.foody.model.Meal;
 
 public class Cache {
     public static Cache instance = null ;
     List<Meal> randomMeals ;
-    List<Meal> meals ;
+    List<Meal> allMeals;
     List<Category> categories ;
-    List<Country> countries;
+    List<Meal> countries;
+    List<Ingredient> allIngredients;
 
-    public List<Country> getCountries() {
+
+    public List<Ingredient> getAllIngredients() {
+        return allIngredients;
+    }
+
+    public void setAllIngredients(List<Ingredient> allIngredients) {
+        this.allIngredients = allIngredients;
+    }
+
+    public List<Meal> getCountries() {
         return countries;
     }
 
-    public void setCountries(List<Country> countries) {
+    public void setCountries(List<Meal> countries) {
         this.countries = countries;
     }
 
@@ -37,12 +48,12 @@ public class Cache {
         this.randomMeals = randomMeals;
     }
 
-    public List<Meal> getMeals() {
-        return meals;
+    public List<Meal> getAllMeals() {
+        return allMeals;
     }
 
-    public void setMeals(List<Meal> meals) {
-        this.meals = meals;
+    public void setAllMeals(List<Meal> allMeals) {
+        this.allMeals = allMeals;
     }
 
     private Cache () {

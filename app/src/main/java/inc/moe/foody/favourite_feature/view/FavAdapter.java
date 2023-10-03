@@ -1,5 +1,6 @@
 package inc.moe.foody.favourite_feature.view;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +15,7 @@ import com.bumptech.glide.Glide;
 import java.util.List;
 
 import inc.moe.foody.R;
+import inc.moe.foody.home_feature.view.OnImageClickListener;
 import inc.moe.foody.home_feature.view.OnRandomMealClickListener;
 import inc.moe.foody.model.Meal;
 
@@ -21,12 +23,15 @@ public class FavAdapter extends RecyclerView.Adapter<FavAdapter.ViewHolder> {
     List<Meal> meals;
 
     public void setMeals(List<Meal> meals) {
-        this.meals = meals;
+        this.meals= meals;
+
     }
 
     OnFavMealClickListener onMealClickListener;
-    public FavAdapter(OnFavMealClickListener onMealClickListener){
+    OnImageClickListener onImageClickListener;
+    public FavAdapter(OnFavMealClickListener onMealClickListener ,OnImageClickListener onImageClickListener){
         this.onMealClickListener = onMealClickListener;
+        this.onImageClickListener =onImageClickListener;
     }
 
     @NonNull
@@ -43,8 +48,16 @@ public class FavAdapter extends RecyclerView.Adapter<FavAdapter.ViewHolder> {
     public void onBindViewHolder(@NonNull FavAdapter.ViewHolder holder, int position) {
         Meal meal =meals.get(position);
         holder.mealName.setText(meal.getStrMeal());
+        Log.i("TAG", "setMeals: " + meal.getIdMeal());
+
         Glide.with(holder.itemView).load(meal.getStrMealThumb())
                 .into(holder.mealThumb);
+        holder.mealThumb.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onImageClickListener.navigateToFullDetailedMeal(meal.getIdMeal());
+            }
+        });
         holder.deleteBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -66,8 +79,8 @@ public class FavAdapter extends RecyclerView.Adapter<FavAdapter.ViewHolder> {
         ImageView deleteBtn;
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            mealThumb = itemView.findViewById(R.id.meal_image);
-            mealName = itemView.findViewById(R.id.meal_name);
+            mealName = itemView.findViewById(R.id.favourite_meal_name);
+            mealThumb = itemView.findViewById(R.id.fav_meal_image);
             deleteBtn = itemView.findViewById(R.id.delete_image);
         }
     }

@@ -8,6 +8,7 @@ import java.util.List;
 
 import inc.moe.foody.model.ListOfCategories;
 import inc.moe.foody.model.ListOfCountries;
+import inc.moe.foody.model.ListOfIngredients;
 import inc.moe.foody.model.ListOfMeals;
 
 import inc.moe.foody.model.Meal;
@@ -133,6 +134,24 @@ public class MealClient implements RemoteSource {
     }
 
     @Override
+    public void makeNetworkCallForSearchByCountryName(SearchNetworkCallback searchNetworkCallback, String countryName) {
+        Call<ListOfMeals> call = mealService.getMealsByCountry(countryName);
+        call.enqueue(new Callback<ListOfMeals>() {
+            @Override
+            public void onResponse(Call<ListOfMeals> call, Response<ListOfMeals> response) {
+                if(response.isSuccessful()){
+                    searchNetworkCallback.onSearchByCountryNameFromHomeSuccess(response.body().getMeals());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ListOfMeals> call, Throwable t) {
+                searchNetworkCallback.onSearchByCountryNameFromHomeFailure(t.getMessage());
+            }
+        });
+    }
+
+    @Override
     public void makeNetworkCallForGetFullDetailedMeal(FullDetailedNetworkCallback fullDetailedNetworkCallback, String idMeal) {
         Call<ListOfMeals> call = mealService.getFullDetailedMeal(idMeal);
         call.enqueue(new Callback<ListOfMeals>() {
@@ -186,6 +205,26 @@ public class MealClient implements RemoteSource {
             public void onFailure(Call<ListOfMeals> call, Throwable t) {
                 Log.i(TAG, "onFailure: "+t.getMessage());
                 homeNetworkCallback.onFailedAllCountries(t.getMessage());
+            }
+        });
+    }
+
+    @Override
+    public void makeNetworkCallForAllIngredients(SearchNetworkCallback searchNetworkCallback) {
+        Call<ListOfIngredients> call = mealService.getListOfIngredients();
+        call.enqueue(new Callback<ListOfIngredients>() {
+            @Override
+            public void onResponse(Call<ListOfIngredients> call, Response<ListOfIngredients> response) {
+                if(response.isSuccessful() && response.body() !=null){
+                    Log.i(TAG, "onResponse ingredients: " + response.body());
+                    searchNetworkCallback.onGettingAllIngredientsSuccess(response.body().getIngredients());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ListOfIngredients> call, Throwable t) {
+                Log.i(TAG, "onFailure: ingredients "+t.getMessage());
+                searchNetworkCallback.onGettingAllIngredientsFailure(t.getMessage());
             }
         });
     }

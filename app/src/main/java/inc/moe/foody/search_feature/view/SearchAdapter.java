@@ -1,5 +1,6 @@
 package inc.moe.foody.search_feature.view;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,16 +15,57 @@ import com.bumptech.glide.Glide;
 import java.util.List;
 
 import inc.moe.foody.R;
+import inc.moe.foody.home_feature.view.OnImageClickListener;
+import inc.moe.foody.model.Category;
+import inc.moe.foody.model.DataSource;
+import inc.moe.foody.model.Ingredient;
 import inc.moe.foody.model.Meal;
 
 public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder> {
+    DataSource dataSource = new DataSource();
+
     List<Meal> meals;
+    List<Category> categories;
+    List<Meal> countries;
+    List<Ingredient> ingredients;
+    OnImageClickListener onImageClickListener;
     public SearchAdapter (){
 
     }
 
+    public SearchAdapter (OnImageClickListener onImageClickListener){
+        this.onImageClickListener = onImageClickListener;
+    }
     public void setMeals(List<Meal> meals) {
+
         this.meals = meals;
+        this.categories = null;
+        this.countries = null ;
+        this.ingredients = null;
+    }
+
+    public void setCategories(List<Category> categories) {
+
+        this.meals = null;
+        this.categories = categories;
+        this.countries = null ;
+        this.ingredients = null;
+    }
+
+    public void setCountries(List<Meal> countries) {
+
+        this.meals = null;
+        this.categories = null;
+        this.countries = countries ;
+        this.ingredients = null;
+    }
+
+    public void setIngredients(List<Ingredient> ingredients) {
+
+        this.meals = null;
+        this.categories = null;
+        this.countries = null ;
+        this.ingredients = ingredients;
     }
 
 
@@ -39,16 +81,55 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
 
     @Override
     public void onBindViewHolder(@NonNull SearchAdapter.ViewHolder holder, int position) {
-        Meal meal =meals.get(position);
-        holder.mealName.setText(meal.getStrMeal());
-        Glide.with(holder.itemView).load(meal.getStrMealThumb())
-                .into(holder.mealImage);
+        Meal meal ;
+        Meal country;
+        Category category;
+        Ingredient ingredient;
+        if(meals!=null){
+            meal =meals.get(position);
+            holder.mealName.setText(meal.getStrMeal());
+            Glide.with(holder.itemView).load(meal.getStrMealThumb())
+                    .into(holder.mealImage);
+            holder.mealImage.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    onImageClickListener.navigateToFullDetailedMeal(meal.getIdMeal());
+                }
+            });
+        }else if(countries !=null){
+            country = countries.get(position);
+            holder.mealName.setText(country.getStrArea());
+            holder.mealImage.setImageResource(dataSource.getImageResourceIdByName(country.getStrArea()));
+        }else if(categories != null ){
+            category = categories.get(position);
+            holder.mealName.setText(category.getStrCategory());
+            Glide.with(holder.itemView).load(category.getStrCategoryThumb())
+                    .into(holder.mealImage);
+        }else{
+            ingredient =ingredients.get(position);
+            holder.mealName.setText(ingredient.getStrIngredient());
+            Glide.with(holder.itemView).load("https://www.themealdb.com/images/ingredients/" + ingredient.getStrIngredient() + ".png")
+                    .into(holder.mealImage);
 
+        }
     }
 
     @Override
     public int getItemCount() {
-        return meals.size();
+        if(meals !=null){
+            return meals.size();
+        }else if(countries !=null ){
+            return countries.size();
+        }else if(categories != null) {
+            return categories.size();
+        }else if(ingredients != null ){
+
+            Log.i("TAG", "getItemCount: " +ingredients.size());
+            return ingredients.size();
+        }
+
+        Log.i("TAG", "getItemCount: " +ingredients.size());
+        return 0;
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
@@ -57,8 +138,8 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
         public ViewHolder(@NonNull View itemView) {
 
             super(itemView);
-            mealName = itemView.findViewById(R.id.meal_name);
-            mealImage = itemView.findViewById(R.id.meal_image);
+            mealName = itemView.findViewById(R.id.search_meal_name);
+            mealImage = itemView.findViewById(R.id.searched_meal_image);
         }
 
     }

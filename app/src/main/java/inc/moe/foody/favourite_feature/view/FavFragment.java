@@ -6,6 +6,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -22,13 +23,15 @@ import inc.moe.foody.R;
 import inc.moe.foody.db.ConcreteLocalSource;
 import inc.moe.foody.favourite_feature.presenter.FavouritePresenter;
 import inc.moe.foody.favourite_feature.presenter.IFavouritePresenter;
+import inc.moe.foody.home_feature.view.HomeFragmentDirections;
+import inc.moe.foody.home_feature.view.OnImageClickListener;
 import inc.moe.foody.home_feature.view.OnRandomMealClickListener;
 import inc.moe.foody.model.Meal;
 import inc.moe.foody.model.Repo;
 import inc.moe.foody.network.MealClient;
 
 
-public class FavFragment extends Fragment implements OnFavMealClickListener {
+public class FavFragment extends Fragment implements OnFavMealClickListener , OnImageClickListener {
     RecyclerView favMealsRV;
     FavAdapter adapter;
     IFavouritePresenter favPresenter;
@@ -56,7 +59,7 @@ public class FavFragment extends Fragment implements OnFavMealClickListener {
         layoutManager = new GridLayoutManager(getContext() ,2 );
         layoutManager.setOrientation(RecyclerView.VERTICAL);
 
-        adapter = new FavAdapter(this);
+        adapter = new FavAdapter(this,this);
         favPresenter= new FavouritePresenter(
                 Repo.getInstance( MealClient.getInstance() , ConcreteLocalSource.getInstance(getContext())));
 
@@ -81,6 +84,15 @@ public class FavFragment extends Fragment implements OnFavMealClickListener {
         Snackbar snackbar = Snackbar.make(getView() ,meal.getStrMeal()+" deleted." ,Snackbar.LENGTH_SHORT);
         snackbar.show();
         favPresenter.removeFromDataBase(meal);
+
+    }
+
+    @Override
+    public void navigateToFullDetailedMeal(String idMeal) {
+        FavFragmentDirections.ActionFavFragmentToDetailedMeal action = FavFragmentDirections
+                .actionFavFragmentToDetailedMeal(idMeal);
+        action.setIdMeal(idMeal);
+        Navigation.findNavController(getView()).navigate(action);
 
     }
 }

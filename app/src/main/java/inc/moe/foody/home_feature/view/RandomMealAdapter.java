@@ -14,6 +14,7 @@ import com.bumptech.glide.Glide;
 import java.util.List;
 
 import inc.moe.foody.R;
+import inc.moe.foody.model.Category;
 import inc.moe.foody.model.Meal;
 
 public class RandomMealAdapter extends RecyclerView.Adapter<RandomMealAdapter.ViewHolder> {
@@ -22,7 +23,8 @@ public class RandomMealAdapter extends RecyclerView.Adapter<RandomMealAdapter.Vi
         OnImageClickListener onImageClickListener;
 
 public void setMealList(List<Meal> mealList) {
-        this.mealList = mealList;
+
+    this.mealList = mealList;
         }
 
 public RandomMealAdapter(OnRandomMealClickListener onMealClickListener , OnImageClickListener onImageClickListener) {
@@ -30,15 +32,11 @@ public RandomMealAdapter(OnRandomMealClickListener onMealClickListener , OnImage
     this.onImageClickListener =onImageClickListener;
 }
 
-public RandomMealAdapter(List<Meal> mealList) {
-        this.mealList = mealList;
-        }
-
 @NonNull
 @Override
 public RandomMealAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-        View view = inflater.inflate(R.layout.search_item_layout , parent,false);
+        View view = inflater.inflate(R.layout.daily_inspiration_item_layout , parent,false);
         ViewHolder viewHolder = new ViewHolder(view);
 
         return viewHolder;
@@ -46,23 +44,24 @@ public RandomMealAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent
 
 @Override
 public void onBindViewHolder(@NonNull RandomMealAdapter.ViewHolder holder, int position) {
-        Meal meal =mealList.get(position);
-        holder.mealName.setText(meal.getStrMeal());
-        Glide.with(holder.itemView).load(meal.getStrMealThumb())
-                .into(holder.mealThumb);
-        holder.mealThumb.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onImageClickListener.navigateToFullDetailedMeal(meal.getIdMeal());
-            }
-        });
-        holder.favImage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onMealClickListener.insertToDatabase(meal);
-                holder.favImage.setImageResource(R.drawable.fav_icon_red);
-            }
-        });
+            Meal meal = mealList.get(position);
+            holder.mealName.setText(meal.getStrMeal());
+            Glide.with(holder.itemView).load(meal.getStrMealThumb())
+                    .into(holder.mealThumb);
+            holder.mealThumb.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    onImageClickListener.navigateToFullDetailedMeal(meal.getIdMeal());
+                }
+            });
+            holder.favImage.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    onMealClickListener.insertToDatabase(meal);
+                    holder.favImage.setImageResource(R.drawable.fav_icon_red);
+                }
+            });
+
 }
 
 

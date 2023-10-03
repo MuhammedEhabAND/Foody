@@ -15,14 +15,14 @@
         android:layout_height="match_parent">
 
         <ImageView
-            android:id="@+id/meal_image"
+            android:id="@+id/meal_image_shimmer"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:background="@color/DarkGray"
             android:layout_marginBottom="15dp"
             android:contentDescription="TODO"
             android:scaleType="centerCrop"
-            app:layout_constraintBottom_toTopOf="@+id/favImage"
+            app:layout_constraintBottom_toTopOf="@+id/random_meal_shimmer_favImage"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -30,7 +30,7 @@
 
 
         <TextView
-            android:id="@+id/meal_name"
+            android:id="@+id/random_shimmer_meal_name"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_marginEnd="10dp"
@@ -43,21 +43,21 @@
             android:textSize="18sp"
             android:textStyle="bold"
             android:background="@color/DarkGray"
-            app:layout_constraintBottom_toBottomOf="@+id/favImage"
-            app:layout_constraintEnd_toStartOf="@+id/favImage"
+            app:layout_constraintBottom_toBottomOf="@+id/random_meal_shimmer_favImage"
+            app:layout_constraintEnd_toStartOf="@+id/random_meal_shimmer_favImage"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/favImage"
+            app:layout_constraintTop_toTopOf="@+id/random_meal_shimmer_favImage"
             />
 
         <ImageView
-            android:id="@+id/favImage"
+            android:id="@+id/random_meal_shimmer_favImage"
             android:layout_width="0dp"
             app:layout_constraintHorizontal_weight="1"
             android:layout_height="50dp"
             android:layout_marginEnd="5dp"
             android:background="@color/DarkGray"
             android:layout_marginBottom="8dp"
-            app:layout_constraintStart_toEndOf="@+id/meal_name"
+            app:layout_constraintStart_toEndOf="@+id/random_shimmer_meal_name"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
  />

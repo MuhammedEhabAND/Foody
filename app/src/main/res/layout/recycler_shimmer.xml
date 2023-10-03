@@ -24,21 +24,21 @@
             android:layout_height="match_parent">
 
             <ImageView
-                android:id="@+id/meal_image"
+                android:id="@+id/recycler_shimmer_meal_image"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_marginBottom="15dp"
                 android:background="@color/DarkGray"
                 android:contentDescription="TODO"
                 android:scaleType="centerCrop"
-                app:layout_constraintBottom_toTopOf="@+id/favImage"
+                app:layout_constraintBottom_toTopOf="@+id/recycler_shimmer_favImage"
                 app:layout_constraintEnd_toEndOf="@id/constraint"
                 app:layout_constraintStart_toStartOf="@id/constraint"
                 app:layout_constraintTop_toTopOf="@id/constraint" />
 
 
             <TextView
-                android:id="@+id/meal_name"
+                android:id="@+id/recycler_shimmer_meal_name"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 android:layout_marginStart="5dp"
@@ -50,14 +50,14 @@
                 android:textAlignment="textStart"
                 android:textSize="18sp"
                 android:textStyle="bold"
-                app:layout_constraintBottom_toBottomOf="@+id/favImage"
-                app:layout_constraintEnd_toStartOf="@+id/favImage"
+                app:layout_constraintBottom_toBottomOf="@+id/recycler_shimmer_favImage"
+                app:layout_constraintEnd_toStartOf="@+id/recycler_shimmer_favImage"
                 app:layout_constraintHorizontal_weight="5"
                 app:layout_constraintStart_toStartOf="@id/constraint"
-                app:layout_constraintTop_toTopOf="@+id/favImage" />
+                app:layout_constraintTop_toTopOf="@+id/recycler_shimmer_favImage" />
 
             <ImageView
-                android:id="@+id/favImage"
+                android:id="@+id/recycler_shimmer_favImage"
                 android:layout_width="0dp"
                 android:layout_height="50dp"
                 android:layout_marginEnd="5dp"
@@ -66,7 +66,7 @@
                 app:layout_constraintBottom_toBottomOf="@id/constraint"
                 app:layout_constraintEnd_toEndOf="@id/constraint"
                 app:layout_constraintHorizontal_weight="1"
-                app:layout_constraintStart_toEndOf="@+id/meal_name"
+                app:layout_constraintStart_toEndOf="@+id/recycler_shimmer_meal_name"
 
                 />
 
