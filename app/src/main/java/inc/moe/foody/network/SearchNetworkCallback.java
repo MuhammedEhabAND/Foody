@@ -15,5 +15,11 @@ public interface SearchNetworkCallback {
     void onSearchByCountryNameFromHomeSuccess(List<Meal> meals );
     void onSearchByCountryNameFromHomeFailure(String errorMessage);
 
+    void onSearchByIngredientNameSuccess(List<Meal> meals );
+    void onSearchByIngredientNameFailure(String errorMessage);
+
+    void onSearchByLetterForMealsSuccess(List<Meal> meals);
+    void onSearchByLetterForMealsFailure(String errorMessage);
+
 
 }

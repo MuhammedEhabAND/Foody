@@ -5,6 +5,7 @@ import inc.moe.foody.home_feature.view.IHome;
 import inc.moe.foody.model.IRepo;
 import inc.moe.foody.model.Meal;
 import inc.moe.foody.network.FullDetailedNetworkCallback;
+import inc.moe.foody.utils.Cache;
 
 public class DetailedMealPresenter implements IDetailedMealPresenter , FullDetailedNetworkCallback {
     IDetailedMeal iDetailedMeal;
@@ -22,8 +23,14 @@ public class DetailedMealPresenter implements IDetailedMealPresenter , FullDetai
     }
 
     @Override
+    public void insertMealToFav() {
+        iRepo.insertMealToFav(Cache.getInstance().getCurrentMeal());
+    }
+
+    @Override
     public void onSuccessFullDetailedMeal(Meal meal) {
         iDetailedMeal.onFullDetailedMealFetch(meal);
+        Cache.getInstance().setCurrentMeal(meal);
     }
 
     @Override

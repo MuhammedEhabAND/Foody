@@ -53,13 +53,23 @@ public class Repo implements IRepo{
     }
 
     @Override
+    public void makeNetworkCallForSearchByIngredientName(SearchNetworkCallback searchNetworkCallback, String ingredientName) {
+        remoteSource.makeNetworkCallForSearchByIngredientName( searchNetworkCallback,ingredientName);
+    }
+
+    @Override
     public void makeNetworkCallForGettingAllCountries(HomeNetworkCallback homeNetworkCallback) {
         remoteSource.makeNetworkCallForAllCountries(homeNetworkCallback);
     }
 
     @Override
     public void makeNetworkCallForGettingAllMealsWithLetter(HomeNetworkCallback homeNetworkCallback, String letter) {
-        remoteSource.makeNetworkCallForAllMeals(homeNetworkCallback, letter);
+        remoteSource.makeNetworkCallForSearchByFirstLetter(homeNetworkCallback, letter);
+    }
+
+    @Override
+    public void makeNetworkCallForGettingAllMealsWithLetter(SearchNetworkCallback searchNetworkCallback, String letter) {
+        remoteSource.makeNetworkCallForSearchByFirstLetter(searchNetworkCallback ,letter);
     }
 
     @Override

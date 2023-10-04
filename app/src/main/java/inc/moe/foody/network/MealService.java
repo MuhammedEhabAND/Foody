@@ -1,7 +1,6 @@
 package inc.moe.foody.network;
 
 import inc.moe.foody.model.ListOfCategories;
-import inc.moe.foody.model.ListOfCountries;
 import inc.moe.foody.model.ListOfIngredients;
 import inc.moe.foody.model.ListOfMeals;
 import retrofit2.Call;
@@ -21,8 +20,11 @@ public interface MealService {
     @GET("filter.php")
     Call<ListOfMeals> getMealsByCountry(@Query("a") String countryName);
 
+    @GET("filter.php")
+    Call<ListOfMeals> getMealsByIngredient(@Query("i") String ingredientName);
+
     @GET("search.php")
-    Call<ListOfMeals> getAllMealsByLetter(@Query("f") String Letter);
+    Call<ListOfMeals> getAllMealsByLetter(@Query("f") String letter);
 
     @GET("list.php?a=list")
     Call<ListOfMeals> getListOfCountries();

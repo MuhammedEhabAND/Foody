@@ -8,6 +8,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
@@ -15,6 +16,8 @@ import com.bumptech.glide.Glide;
 import java.util.List;
 
 import inc.moe.foody.R;
+import inc.moe.foody.home_feature.view.OnCategoryClickListener;
+import inc.moe.foody.home_feature.view.OnCountryClickListener;
 import inc.moe.foody.home_feature.view.OnImageClickListener;
 import inc.moe.foody.model.Category;
 import inc.moe.foody.model.DataSource;
@@ -29,12 +32,20 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
     List<Meal> countries;
     List<Ingredient> ingredients;
     OnImageClickListener onImageClickListener;
+    OnCategoryClickListener onCategoryClickListener;
+    OnCountryClickListener onCountryClickListener;
+    OnIngredientClickListener onIngredientClickListener;
     public SearchAdapter (){
 
     }
 
-    public SearchAdapter (OnImageClickListener onImageClickListener){
+    public SearchAdapter (OnImageClickListener onImageClickListener , OnCategoryClickListener onCategoryClickListener, OnCountryClickListener onCountryClickListener ,OnIngredientClickListener onIngredientClickListener){
         this.onImageClickListener = onImageClickListener;
+        this.onCategoryClickListener = onCategoryClickListener;
+        this.onCountryClickListener = onCountryClickListener;
+        this.onIngredientClickListener = onIngredientClickListener;
+
+
     }
     public void setMeals(List<Meal> meals) {
 
@@ -90,7 +101,7 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
             holder.mealName.setText(meal.getStrMeal());
             Glide.with(holder.itemView).load(meal.getStrMealThumb())
                     .into(holder.mealImage);
-            holder.mealImage.setOnClickListener(new View.OnClickListener() {
+            holder.cardView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     onImageClickListener.navigateToFullDetailedMeal(meal.getIdMeal());
@@ -100,16 +111,34 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
             country = countries.get(position);
             holder.mealName.setText(country.getStrArea());
             holder.mealImage.setImageResource(dataSource.getImageResourceIdByName(country.getStrArea()));
+            holder.cardView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    onCountryClickListener.searchByCountryName(country.getStrArea());
+                }
+            });
         }else if(categories != null ){
             category = categories.get(position);
             holder.mealName.setText(category.getStrCategory());
             Glide.with(holder.itemView).load(category.getStrCategoryThumb())
                     .into(holder.mealImage);
+            holder.cardView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    onCategoryClickListener.searchByCategoryName(category.getStrCategory());
+                }
+            });
         }else{
             ingredient =ingredients.get(position);
             holder.mealName.setText(ingredient.getStrIngredient());
             Glide.with(holder.itemView).load("https://www.themealdb.com/images/ingredients/" + ingredient.getStrIngredient() + ".png")
                     .into(holder.mealImage);
+            holder.cardView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    onIngredientClickListener.searchMealsByIngredient(ingredient.getStrIngredient());
+                }
+            });
 
         }
     }
@@ -135,11 +164,13 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
     public class ViewHolder extends RecyclerView.ViewHolder {
         TextView mealName;
         ImageView mealImage;
+        CardView cardView;
         public ViewHolder(@NonNull View itemView) {
 
             super(itemView);
             mealName = itemView.findViewById(R.id.search_meal_name);
             mealImage = itemView.findViewById(R.id.searched_meal_image);
+            cardView =itemView.findViewById(R.id.meal_card_search);
         }
 
     }

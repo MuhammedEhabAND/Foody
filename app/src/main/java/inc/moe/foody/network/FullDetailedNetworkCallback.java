@@ -6,4 +6,5 @@ public interface FullDetailedNetworkCallback {
 
     void onSuccessFullDetailedMeal(Meal meal);
     void onFailedFullDetialedMeal(String errorMessage);
+
 }

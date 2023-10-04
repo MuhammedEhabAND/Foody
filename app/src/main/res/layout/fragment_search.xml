@@ -6,16 +6,37 @@
     android:layout_height="match_parent"
     tools:context=".search_feature.view.SearchFragment">
 
-    <com.google.android.material.search.SearchBar
-        android:id="@+id/searchBar"
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/search_bar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="25dp"
-        android:hint="@string/search_hint"
+        android:layout_marginHorizontal="25dp"
+        android:layout_marginTop="10dp"
+        app:endIconMode="clear_text"
+        app:hintEnabled="false"
         app:layout_constraintBottom_toTopOf="@+id/guideline3"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent">
+
+        <com.google.android.material.textfield.MaterialAutoCompleteTextView
+            android:id="@+id/search_text_value"
+            android:layout_width="match_parent"
+            style="@style/SearchBarStyle"
+            android:layout_height="match_parent"
+            android:layout_marginTop="16dp"
+            android:drawableStart="@drawable/ic_baseline_search_24"
+            android:drawablePadding="16dp"
+            app:endIconMode="clear_text"
+            android:inputType="text"
+            android:hint="@string/search_hint"
+            android:maxLines="1"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
+
+            />
+
+    </com.google.android.material.textfield.TextInputLayout>
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline3"

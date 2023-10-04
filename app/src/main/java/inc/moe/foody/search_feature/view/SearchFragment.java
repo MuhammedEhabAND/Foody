@@ -11,10 +11,13 @@ import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 
@@ -22,10 +25,13 @@ import com.facebook.shimmer.ShimmerFrameLayout;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import inc.moe.foody.R;
 import inc.moe.foody.db.ConcreteLocalSource;
 import inc.moe.foody.favourite_feature.view.FavFragmentDirections;
+import inc.moe.foody.home_feature.view.OnCategoryClickListener;
+import inc.moe.foody.home_feature.view.OnCountryClickListener;
 import inc.moe.foody.home_feature.view.OnImageClickListener;
 import inc.moe.foody.home_feature.view.OnRandomMealClickListener;
 import inc.moe.foody.home_feature.view.RandomMealAdapter;
@@ -35,11 +41,16 @@ import inc.moe.foody.model.Meal;
 import inc.moe.foody.model.Repo;
 import inc.moe.foody.network.MealClient;
 import inc.moe.foody.search_feature.presenter.SearchPresenter;
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
+import io.reactivex.rxjava3.core.Observable;
+import io.reactivex.rxjava3.core.Scheduler;
+import io.reactivex.rxjava3.schedulers.Schedulers;
 
 
-public class SearchFragment extends Fragment implements ISearch  , OnRandomMealClickListener , OnImageClickListener  {
+public class SearchFragment extends Fragment implements ISearch  , OnIngredientClickListener , OnImageClickListener , OnCategoryClickListener , OnCountryClickListener {
     SearchPresenter searchPresenter ;
     ShimmerFrameLayout firstShimmer, secondShimmer;
+    EditText searchEditText;
     RecyclerView searchRV;
     LinearLayoutManager linearLayoutManager ;
     SearchAdapter searchAdapter;
@@ -69,11 +80,13 @@ public class SearchFragment extends Fragment implements ISearch  , OnRandomMealC
         secondShimmer = view.findViewById(R.id.second_shimmer);
         firstShimmer.startShimmerAnimation();
         secondShimmer.startShimmerAnimation();
+        searchEditText = view.findViewById(R.id.search_text_value);
+
         searchRadioGroup = view.findViewById(R.id.radio_group_search);
         searchRV = view.findViewById(R.id.search_rv);
         linearLayoutManager = new LinearLayoutManager(getContext() );
         linearLayoutManager.setOrientation(RecyclerView.VERTICAL);
-        searchAdapter = new SearchAdapter(this);
+        searchAdapter = new SearchAdapter(this , this , this ,this);
         searchRV.setHasFixedSize(true);
         searchRV.setLayoutManager(linearLayoutManager);
 
@@ -82,15 +95,18 @@ public class SearchFragment extends Fragment implements ISearch  , OnRandomMealC
         searchPresenter = new SearchPresenter(this ,
                 Repo.getInstance( MealClient.getInstance() , ConcreteLocalSource.getInstance(getContext())));
         categoryName = SearchFragmentArgs.fromBundle(getArguments()).getCategoryName();
-        if(!categoryName.equals("default"))
+        if(!categoryName.equals("default")){
             searchPresenter.getMealsByCategoryOf(categoryName);
-        else
-            searchPresenter.getAllCategories();
-
+            searchRadioGroup.check(R.id.meal_radio);
+        }
         countryName = SearchFragmentArgs.fromBundle(getArguments()).getCountryName();
-        if(!countryName.equals("default"))
+        if(!countryName.equals("default")) {
             searchPresenter.getMealsByCountryOf(countryName);
-
+            searchRadioGroup.check(R.id.meal_radio);
+        }
+        if(categoryName.equals("default")&&countryName.equals("default")){
+            searchPresenter.getAllCategories();
+        }
 
         searchRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
@@ -115,7 +131,54 @@ public class SearchFragment extends Fragment implements ISearch  , OnRandomMealC
                 }
             }
         });
+        Observable<String> searchObservable = Observable.create(emitter -> {
+            TextWatcher textWatcher = new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                }
 
+                @Override
+                public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                    String query =charSequence.toString();
+                    if(query!=null && query!=""){emitter.onNext(query);}
+
+                }
+
+                @Override
+                public void afterTextChanged(Editable editable) {
+                }
+            };
+
+            searchEditText.addTextChangedListener(textWatcher);
+
+        });
+        searchObservable
+                .debounce(500 , TimeUnit.MILLISECONDS)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                        query->{
+                            if(!query.isEmpty()){
+                    int checkedId =searchRadioGroup.getCheckedRadioButtonId();
+                    switch(checkedId){
+                        case R.id.country_radio:
+                            searchPresenter.getFilteredCountries(query);
+                            break;
+                        case R.id.category_radio:
+                            searchPresenter.getFilteredCategories(query);
+                            break;
+                        case R.id.meal_radio:
+                            searchPresenter.getFilteredMeals(query);
+                            break;
+                        case R.id.ingredient_radio:
+                            searchPresenter.getFilteredIngredients(query);
+                            break;
+                        }
+                    }},
+                        onError->{
+                            Snackbar snackbar =Snackbar.make(getView() , onError.getMessage() , Snackbar.LENGTH_SHORT);
+                            snackbar.show();
+                        });
     }
 
     @Override
@@ -215,9 +278,72 @@ public class SearchFragment extends Fragment implements ISearch  , OnRandomMealC
     }
 
     @Override
-    public void insertToDatabase(Meal meal) {
+    public void searchByIngredientSuccess(List<Meal> meals) {
+        searchAdapter.setMeals(meals);
+        searchAdapter.notifyDataSetChanged();
+        searchRV.setAdapter(searchAdapter);
+        secondShimmer.setVisibility(View.GONE);
+        firstShimmer.setVisibility(View.GONE);
+        searchRV.setVisibility(View.VISIBLE);
 
     }
+
+    @Override
+    public void searchByIngredientFailure(String errorMessage) {
+        Snackbar snackbar = Snackbar.make(getView() , errorMessage , Snackbar.LENGTH_SHORT);
+        snackbar.show();
+
+    }
+
+    @Override
+    public void showFilteredCategories(List<Category> categories) {
+        searchAdapter.setCategories(categories);
+        searchAdapter.notifyDataSetChanged();
+        searchRV.setAdapter(searchAdapter);
+        secondShimmer.setVisibility(View.GONE);
+        firstShimmer.setVisibility(View.GONE);
+        searchRV.setVisibility(View.VISIBLE);
+
+    }
+
+    @Override
+    public void showFilteredCountries(List<Meal> countries) {
+        searchAdapter.setCountries(countries);
+        searchAdapter.notifyDataSetChanged();
+        searchRV.setAdapter(searchAdapter);
+        secondShimmer.setVisibility(View.GONE);
+        firstShimmer.setVisibility(View.GONE);
+        searchRV.setVisibility(View.VISIBLE);
+
+    }
+
+    @Override
+    public void showFilteredIngredients(List<Ingredient> ingredients) {
+        searchAdapter.setIngredients(ingredients);
+        searchAdapter.notifyDataSetChanged();
+        searchRV.setAdapter(searchAdapter);
+        secondShimmer.setVisibility(View.GONE);
+        firstShimmer.setVisibility(View.GONE);
+        searchRV.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void showFilteredMeals(List<Meal> filteredMeals) {
+        searchAdapter.setMeals(filteredMeals);
+        searchAdapter.notifyDataSetChanged();
+        searchRV.setAdapter(searchAdapter);
+        secondShimmer.setVisibility(View.GONE);
+        firstShimmer.setVisibility(View.GONE);
+        searchRV.setVisibility(View.VISIBLE);
+
+    }
+
+    @Override
+    public void showFilteredMealsFailure(String errorMessage) {
+        Snackbar snackbar = Snackbar.make(getView() ,errorMessage , Snackbar.LENGTH_SHORT);
+        snackbar.show();
+    }
+
 
     @Override
     public void navigateToFullDetailedMeal(String idMeal) {
@@ -225,5 +351,28 @@ public class SearchFragment extends Fragment implements ISearch  , OnRandomMealC
                 .actionSearchFragmentToDetailedMeal(idMeal);
         action.setIdMeal(idMeal);
         Navigation.findNavController(getView()).navigate(action);
+    }
+
+    @Override
+    public void searchByCategoryName(String categoryName) {
+        searchRadioGroup.check(R.id.meal_radio);
+
+        searchPresenter.getMealsByCategoryOf(categoryName);
+    }
+
+    @Override
+    public void searchByCountryName(String countryName) {
+        searchRadioGroup.check(R.id.meal_radio);
+
+        searchPresenter.getMealsByCountryOf(countryName);
+
+    }
+
+    @Override
+    public void searchMealsByIngredient(String ingredientName) {
+        searchRadioGroup.check(R.id.meal_radio);
+
+        searchPresenter.getMealsByIngredientOf(ingredientName);
+
     }
 }

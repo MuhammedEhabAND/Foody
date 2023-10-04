@@ -14,8 +14,10 @@ public interface IRepo {
     void makeNetworkCallForRandomMeal(HomeNetworkCallback homeNetworkCallback);
     void makeNetworkCallForSearchByCategoryName(SearchNetworkCallback searchNetworkCallback, String categoryName);
     void makeNetworkCallForSearchByCountryName(SearchNetworkCallback searchNetworkCallback, String countryName);
+    void makeNetworkCallForSearchByIngredientName(SearchNetworkCallback searchNetworkCallback, String ingredientName);
     void makeNetworkCallForGettingAllCountries(HomeNetworkCallback homeNetworkCallback);
     void makeNetworkCallForGettingAllMealsWithLetter(HomeNetworkCallback homeNetworkCallback , String letter);
+    void makeNetworkCallForGettingAllMealsWithLetter(SearchNetworkCallback searchNetworkCallback , String letter);
     void makeNetworkCallForGetFullDetailedMeal(FullDetailedNetworkCallback homeNetworkCallback , String idMeal);
 
     void makeNetworkCallForGetAllIngredients(SearchNetworkCallback searchNetworkCallback );

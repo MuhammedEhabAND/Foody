@@ -14,7 +14,25 @@ public class Cache {
     List<Category> categories ;
     List<Meal> countries;
     List<Ingredient> allIngredients;
+    List<Meal> searchedMeals;
 
+    public List<Meal> getSearchedMeals() {
+        return searchedMeals;
+    }
+
+    public void setSearchedMeals(List<Meal> searchedMeals) {
+        this.searchedMeals = searchedMeals;
+    }
+
+    Meal currentMeal;
+
+    public Meal getCurrentMeal() {
+        return currentMeal;
+    }
+
+    public void setCurrentMeal(Meal currentMeal) {
+        this.currentMeal = currentMeal;
+    }
 
     public List<Ingredient> getAllIngredients() {
         return allIngredients;

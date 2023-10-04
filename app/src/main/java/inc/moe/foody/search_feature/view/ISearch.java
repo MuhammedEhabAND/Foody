@@ -1,5 +1,6 @@
 package inc.moe.foody.search_feature.view;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import inc.moe.foody.model.Category;
@@ -18,4 +19,18 @@ public interface ISearch {
     void allCountriesFailed(String errorMessage);
     void allIngredientsFetched(List<Ingredient> ingredients);
     void allIngredientsFailed(String errorMessage);
+
+    void searchByIngredientSuccess(List<Meal> meals);
+
+    void searchByIngredientFailure(String errorMessage);
+
+    void showFilteredCategories(List<Category> categories);
+
+    void showFilteredCountries(List<Meal> countries);
+
+    void showFilteredIngredients(List<Ingredient> ingredients);
+
+    void showFilteredMeals(List<Meal> filteredMeals);
+
+    void showFilteredMealsFailure(String errorMessage);
 }

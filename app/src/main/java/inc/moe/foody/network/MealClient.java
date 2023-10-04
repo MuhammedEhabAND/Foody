@@ -152,6 +152,25 @@ public class MealClient implements RemoteSource {
     }
 
     @Override
+    public void makeNetworkCallForSearchByIngredientName(SearchNetworkCallback searchNetworkCallback, String ingredientName) {
+        Call<ListOfMeals> call = mealService.getMealsByIngredient(ingredientName);
+        call.enqueue(new Callback<ListOfMeals>() {
+            @Override
+            public void onResponse(Call<ListOfMeals> call, Response<ListOfMeals> response) {
+                if(response.isSuccessful()){
+                    searchNetworkCallback.onSearchByIngredientNameSuccess(response.body().getMeals());
+
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ListOfMeals> call, Throwable t) {
+                searchNetworkCallback.onSearchByIngredientNameFailure(t.getMessage());
+            }
+        });
+    }
+
+    @Override
     public void makeNetworkCallForGetFullDetailedMeal(FullDetailedNetworkCallback fullDetailedNetworkCallback, String idMeal) {
         Call<ListOfMeals> call = mealService.getFullDetailedMeal(idMeal);
         call.enqueue(new Callback<ListOfMeals>() {
@@ -171,7 +190,7 @@ public class MealClient implements RemoteSource {
     }
 
     @Override
-    public void makeNetworkCallForAllMeals(HomeNetworkCallback homeNetworkCallback, String letter) {
+    public void makeNetworkCallForSearchByFirstLetter(HomeNetworkCallback homeNetworkCallback, String letter) {
         Call<ListOfMeals> call = mealService.getAllMealsByLetter(letter);
         call.enqueue(new Callback<ListOfMeals>() {
             @Override
@@ -185,6 +204,24 @@ public class MealClient implements RemoteSource {
             public void onFailure(Call<ListOfMeals> call, Throwable t) {
                 Log.i(TAG, "onFailure: " +t.getMessage());
                 homeNetworkCallback.onFailedAllMealsWithBLetter(t.getMessage());
+            }
+        });
+    }
+
+    @Override
+    public void makeNetworkCallForSearchByFirstLetter(SearchNetworkCallback searchNetworkCallback, String letter) {
+        Call<ListOfMeals> call = mealService.getAllMealsByLetter(letter);
+        call.enqueue(new Callback<ListOfMeals>() {
+            @Override
+            public void onResponse(Call<ListOfMeals> call, Response<ListOfMeals> response) {
+                if(response.isSuccessful()){
+                    searchNetworkCallback.onSearchByLetterForMealsSuccess(response.body().getMeals());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ListOfMeals> call, Throwable t) {
+                searchNetworkCallback.onSearchByLetterForMealsFailure(t.getMessage());
             }
         });
     }
