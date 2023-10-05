@@ -1,14 +1,167 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".profile_feature.view.ProfileFragment">
 
     <!-- TODO: Update blank fragment layout -->
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
 
-</FrameLayout>
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cardView5"
+        android:layout_width="match_parent"
+
+        android:layout_height="wrap_content"
+        android:layout_marginVertical="50dp"
+        app:cardCornerRadius="25dp"
+        app:cardElevation="10dp"
+        app:cardUseCompatPadding="true"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+
+            <com.mikhaellopez.circularimageview.CircularImageView
+                android:id="@+id/profileImage"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="136dp"
+                android:layout_marginTop="48dp"
+                android:src="@drawable/ic_baseline_person_24"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/userNameTxtViewId"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+
+                android:gravity="center_horizontal"
+                android:textSize="22sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toTopOf="@+id/your_favourites_txt_view"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/profileImage"
+                tools:text="Muhammed Ehab" />
+
+            <TextView
+                android:id="@+id/login_txt_view"
+                android:background="@drawable/text_ripple"
+                android:layout_width="match_parent"
+                android:layout_height="70dp"
+                android:clickable="true"
+                android:focusable="true"
+                android:drawableStart="@drawable/ic_baseline_logout_24"
+                android:drawablePadding="10dp"
+                android:gravity="center"
+                android:paddingStart="25dp"
+                android:text="@string/logout"
+                android:textSize="18sp"
+
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/delete_account_txt_view" />
+
+            <TextView
+                android:id="@+id/delete_account_txt_view"
+                android:layout_width="match_parent"
+                android:layout_height="70dp"
+                android:layout_marginBottom="112dp"
+                android:background="@drawable/text_ripple"
+                android:clickable="true"
+                android:drawableStart="@drawable/ic_baseline_delete_24"
+                android:drawablePadding="10dp"
+                android:focusable="true"
+                android:gravity="center"
+                android:paddingStart="25dp"
+                android:text="@string/delete"
+                android:textColor="@color/Red"
+                android:textSize="18sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="1.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/your_plans_txt_view" />
+
+            <TextView
+                android:id="@+id/your_plans_txt_view"
+                android:background="@drawable/text_ripple"
+                android:layout_width="match_parent"
+                android:layout_height="70dp"
+                android:layout_marginBottom="2dp"
+                android:clickable="true"
+                android:focusable="true"
+                android:drawableStart="@drawable/ic_baseline_edit_calendar_24"
+                android:drawablePadding="10dp"
+                android:gravity="center"
+                android:paddingStart="25dp"
+                android:text="@string/your_plans"
+                android:textSize="18sp"
+                app:layout_constraintBottom_toTopOf="@+id/delete_account_txt_view"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="1.0"
+                app:layout_constraintStart_toStartOf="parent" />
+
+            <TextView
+                android:background="@drawable/text_ripple"
+                android:id="@+id/your_favourites_txt_view"
+                android:layout_width="match_parent"
+                android:layout_height="70dp"
+                android:clickable="true"
+                android:focusable="true"
+                android:layout_marginTop="70dp"
+                android:drawableStart="@drawable/ic_baseline_favorite_24"
+                android:gravity="center"
+                android:paddingStart="25dp"
+                android:text="@string/your_favourites"
+                android:textSize="18sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/profileImage" />
+
+            <View
+                android:id="@+id/divider"
+                android:layout_width="374dp"
+                android:layout_height="1dp"
+                android:background="?android:attr/listDivider"
+                app:layout_constraintBottom_toTopOf="@+id/your_plans_txt_view"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="1.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/your_favourites_txt_view"
+                app:layout_constraintVertical_bias="0.0" />
+
+            <View
+                android:id="@+id/divider2"
+                android:layout_width="374dp"
+                android:layout_height="1dp"
+                android:layout_marginTop="2dp"
+                android:background="?android:attr/listDivider"
+                app:layout_constraintBottom_toTopOf="@+id/delete_account_txt_view"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/your_plans_txt_view" />
+
+            <View
+                android:id="@+id/divider3"
+                android:layout_width="374dp"
+                android:layout_height="1dp"
+                android:background="?android:attr/listDivider"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/delete_account_txt_view" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.cardview.widget.CardView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

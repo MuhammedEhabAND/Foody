@@ -5,6 +5,7 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.NavDirections;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -184,7 +185,7 @@ public class HomeFragment extends Fragment implements IHome, OnRandomMealClickLi
                 .actionHomeFragmentToSearchFragment();
 
         action.setCategoryName(categoryName);
-        Navigation.findNavController(myView).navigate(action);
+        Navigation.findNavController(myView).navigate((NavDirections) action);
 
 
 
@@ -197,7 +198,7 @@ public class HomeFragment extends Fragment implements IHome, OnRandomMealClickLi
         HomeFragmentDirections.ActionHomeFragmentToDetailedMeal action = HomeFragmentDirections
                 .actionHomeFragmentToDetailedMeal(idMeal);
         action.setIdMeal(idMeal);
-        Navigation.findNavController(myView).navigate(action);
+        Navigation.findNavController(myView).navigate((NavDirections) action);
     }
 
     @Override
@@ -205,6 +206,6 @@ public class HomeFragment extends Fragment implements IHome, OnRandomMealClickLi
         HomeFragmentDirections.ActionHomeFragmentToSearchFragment action = HomeFragmentDirections
                 .actionHomeFragmentToSearchFragment();
         action.setCountryName(countryName);
-        Navigation.findNavController(getView()).navigate(action);
+        Navigation.findNavController(getView()).navigate((NavDirections) action);
     }
 }
