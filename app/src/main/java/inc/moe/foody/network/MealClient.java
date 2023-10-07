@@ -2,16 +2,29 @@ package inc.moe.foody.network;
 
 import android.util.Log;
 
+import androidx.annotation.NonNull;
+
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QuerySnapshot;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import inc.moe.foody.model.ListOfCategories;
-import inc.moe.foody.model.ListOfCountries;
 import inc.moe.foody.model.ListOfIngredients;
 import inc.moe.foody.model.ListOfMeals;
 
 import inc.moe.foody.model.Meal;
+import inc.moe.foody.utils.MealToMapConverter;
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.schedulers.Schedulers;
@@ -250,6 +263,107 @@ public class MealClient implements RemoteSource {
             }
         });
     }
+
+    @Override
+    public void onGettingFavFromFB(FavCallBack favCallBack) {
+            FirebaseFirestore db = FirebaseFirestore.getInstance();
+            FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+            String userID = currentUser.getUid();
+            CollectionReference collectionReference = db.collection("My Favourite Meals "+ userID);
+            Query query = collectionReference.whereEqualTo("userID" , userID);
+
+            ArrayList<Meal> mealArrayList =new ArrayList<>();
+            query.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                @Override
+                public void onSuccess(QuerySnapshot querySnapshot) {
+                    Log.i("TAG", "onSuccess: retrieving data");
+                    List<DocumentSnapshot> documents = querySnapshot.getDocuments();
+
+                    for (DocumentSnapshot documentSnapshot : documents) {
+
+                        Meal meal = MealToMapConverter.convertToMeal(documentSnapshot);
+                        mealArrayList.add(meal);
+                        Log.i("TAG", "onSuccess: " + meal.getStrMeal());
+                    }
+                    favCallBack.onSuccessGetFavFb(mealArrayList);
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    // Handle the error.
+                    favCallBack.onFailureGetFavFB(e.getMessage());
+                }
+            });
+
+    }
+
+    @Override
+    public void onAddingFavToFB(HomeNetworkCallback homeNetworkCallback, Meal meal) {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        String userID = currentUser.getUid();
+
+        Map<String , Object> myMealMapped  = MealToMapConverter.convertToMap(meal ,userID);
+        db.collection("My Favourite Meals "+ userID).document(meal.getStrMeal()).set(myMealMapped).addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void unused) {
+                Log.i("TAG", "Firebase Store onSuccess: ");
+                homeNetworkCallback.onSuccessAddFavFb(meal.getStrMeal() + " saved in cloud");
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.i("TAG", "Firebase Store onFailure: ");
+
+                homeNetworkCallback.onFailureAddFavFB(meal.getStrMeal() + " didn't save in cloud");
+            }
+        });
+
+    }
+
+    @Override
+    public void onAddingFavToFB(FullDetailedNetworkCallback fullDetailedNetworkCallback, Meal meal) {
+        if(FirebaseAuth.getInstance().getCurrentUser()==null) {
+
+            fullDetailedNetworkCallback.onFailureAddFavFB("You Have to Login First!");
+        }else{
+
+            FirebaseFirestore db = FirebaseFirestore.getInstance();
+            FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+            String userID = currentUser.getUid();
+
+            Map<String, Object> myMealMapped = MealToMapConverter.convertToMap(meal, userID);
+            db.collection("My Favourite Meals " + userID).document(meal.getStrMeal()).set(myMealMapped).addOnSuccessListener(new OnSuccessListener<Void>() {
+                @Override
+                public void onSuccess(Void unused) {
+                    Log.i("TAG", "Firebase Store onSuccess: ");
+                    fullDetailedNetworkCallback.onSuccessAddFavFb(meal.getStrMeal() + " saved in cloud");
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    Log.i("TAG", "Firebase Store onFailure: ");
+
+                    fullDetailedNetworkCallback.onFailureAddFavFB(meal.getStrMeal() + " didn't save in cloud");
+                }
+            });
+
+        }
+
+    }
+
+    @Override
+    public void onRemoveFavFromFB(FavCallBack favCallBack, Meal meal) {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        String userID = currentUser.getUid();
+
+        Map<String , Object> myMealMapped  = MealToMapConverter.convertToMap(meal ,userID);
+        db.collection("My Favourite Meals "+ userID).document(meal.getStrMeal()).delete();
+        favCallBack.onRemoveMealFBSuccess(meal.getStrMeal() + "Deleted From Cloud");
+
+    }
+
 
     @Override
     public void makeNetworkCallForAllCountries(HomeNetworkCallback homeNetworkCallback) {

@@ -7,6 +7,7 @@ import androidx.lifecycle.LiveData;
 import java.util.List;
 
 import inc.moe.foody.db.LocalSource;
+import inc.moe.foody.network.FavCallBack;
 import inc.moe.foody.network.FullDetailedNetworkCallback;
 import inc.moe.foody.network.HomeNetworkCallback;
 import inc.moe.foody.network.RemoteSource;
@@ -105,5 +106,26 @@ public class Repo implements IRepo{
     @Override
     public LiveData<List<Meal>> getFavMeals() {
         return localSource.getFavMealsLiveData();
+    }
+
+    @Override
+    public void getFavMealsFB(FavCallBack favCallBack) {
+         remoteSource.onGettingFavFromFB(favCallBack);
+    }
+
+    @Override
+    public void addFavMealToFB(HomeNetworkCallback homeNetworkCallback, Meal meal) {
+        remoteSource.onAddingFavToFB(homeNetworkCallback , meal);
+    }
+
+    @Override
+    public void addFavMealToFB(FullDetailedNetworkCallback fullDetailedNetworkCallback, Meal meal) {
+        remoteSource.onAddingFavToFB(fullDetailedNetworkCallback , meal);
+
+    }
+
+    @Override
+    public void removeFavMealFromFB(FavCallBack favCallBack, Meal meal) {
+        remoteSource.onRemoveFavFromFB(favCallBack , meal);
     }
 }

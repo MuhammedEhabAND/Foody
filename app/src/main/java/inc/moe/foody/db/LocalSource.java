@@ -14,4 +14,5 @@ public interface LocalSource {
 
         LiveData<List<Meal>> getFavMealsLiveData();
 
+
 }

@@ -26,7 +26,10 @@ public class DetailedMealPresenter implements IDetailedMealPresenter , FullDetai
 
     @Override
     public void insertMealToFav() {
+
+
         iRepo.insertMealToFav(Cache.getInstance().getCurrentMeal());
+        iRepo.addFavMealToFB(this ,Cache.getInstance().getCurrentMeal());
     }
 
     @Override
@@ -48,5 +51,16 @@ public class DetailedMealPresenter implements IDetailedMealPresenter , FullDetai
     @Override
     public void onFailedFullDetialedMeal(String errorMessage) {
         iDetailedMeal.onFullDetailedMealFailed(errorMessage);
+    }
+
+    @Override
+    public void onSuccessAddFavFb(String addedMessage) {
+        iDetailedMeal.onAddedToFavFBSuccess(addedMessage);
+    }
+
+    @Override
+    public void onFailureAddFavFB(String errorMessage) {
+        iDetailedMeal.onAddedToFavFBFailure(errorMessage);
+
     }
 }

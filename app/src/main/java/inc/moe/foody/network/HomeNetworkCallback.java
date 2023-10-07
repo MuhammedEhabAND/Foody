@@ -21,6 +21,8 @@ public interface HomeNetworkCallback {
     void onFailedAllCountries(String errorMessage);
 
 
+    void onSuccessAddFavFb(String addedMessage);
+    void onFailureAddFavFB(String errorMessage);
 
 
 

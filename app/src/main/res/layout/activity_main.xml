@@ -146,6 +146,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="25dp"
+                android:onClick="onGuestClicked"
                 android:textColor="?attr/colorPrimary"
                 android:textAllCaps="false"
                 android:text="Join as a Guest"

@@ -12,21 +12,16 @@ import androidx.navigation.Navigation;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.FirebaseDatabase;
 
-import java.util.Arrays;
-import java.util.List;
-
-import inc.moe.foody.HomeActivity;
 import inc.moe.foody.R;
 import inc.moe.foody.auth_feature.view.MainActivity;
 import inc.moe.foody.db.ConcreteLocalSource;
@@ -40,9 +35,10 @@ public class ProfileFragment extends Fragment  {
     private ListView settingsList;
     private TextView userName , changeUserName;
     TextView yourFav ,yourPlan , deleteAcc , logout;
-    FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
-    FirebaseUser currentUser = firebaseAuth.getCurrentUser();
+    FirebaseAuth firebaseAuth ;
+    FirebaseUser currentUser ;
     ProfilePresenter profilePresenter;
+    private boolean isUser = false;
     private ImageView profileImage;
     public ProfileFragment() {
         // Required empty public constructor
@@ -56,12 +52,21 @@ public class ProfileFragment extends Fragment  {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
         return inflater.inflate(R.layout.fragment_profile, container, false);
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+         if(FirebaseAuth.getInstance().getCurrentUser()!=null){
+             firebaseAuth = FirebaseAuth.getInstance();
+             currentUser = firebaseAuth.getCurrentUser();
+             isUser = true;
+
+         }else{
+             isUser = false;
+         }
         initUI();
         profilePresenter  = new ProfilePresenter(
                  Repo.getInstance(MealClient.getInstance() , ConcreteLocalSource.getInstance(getContext()))
@@ -102,15 +107,33 @@ public class ProfileFragment extends Fragment  {
 
             }
         });
-        if (currentUser.getDisplayName() != null) {
+        if(isUser){
+            if (currentUser.getDisplayName() != null) {
                 userName.setText(currentUser.getDisplayName());
-        }else{
-            userName.setText(currentUser.getEmail());
+            }else{
+                userName.setText(currentUser.getEmail());
 
+            }
+            profileImage = view.findViewById(R.id.profileImage);
+            Glide.with(view).load(currentUser.getPhotoUrl())
+                    .error(R.drawable.ic_baseline_person_24).into(profileImage);
+
+
+        }else{
+            new MaterialAlertDialogBuilder(getContext())
+                    .setTitle("Oops")
+                    .setMessage("It seems that you haven't logged in yet ,Umm what are waiting for?")
+                    .setNegativeButton("Cancel", (dialog, which) -> {
+                        // Respond to negative button press
+                        Navigation.findNavController(getView()).navigateUp();
+                    })
+                    .setPositiveButton("Log in", (dialog, which) -> {
+                        Intent intent = new Intent(getContext(), MainActivity.class);
+                        startActivity(intent);
+                    })
+                    .setOnDismissListener(dialogInterface -> Navigation.findNavController(getView()).navigateUp())
+                    .show();
         }
-        profileImage = view.findViewById(R.id.profileImage);
-        Glide.with(view).load(currentUser.getPhotoUrl())
-                .error(R.drawable.ic_baseline_person_24).into(profileImage);
 
     }
     public void initUI(){

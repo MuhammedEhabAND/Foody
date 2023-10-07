@@ -15,6 +15,15 @@ public class Cache {
     List<Meal> countries;
     List<Ingredient> allIngredients;
     List<Meal> searchedMeals;
+    List<Meal> favMeals;
+
+    public List<Meal> getFavMeals() {
+        return favMeals;
+    }
+
+    public void setFavMeals(List<Meal> favMeals) {
+        this.favMeals = favMeals;
+    }
 
     public List<Meal> getSearchedMeals() {
         return searchedMeals;

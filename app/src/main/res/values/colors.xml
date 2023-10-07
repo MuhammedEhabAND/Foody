@@ -155,7 +155,8 @@
     <color name="colorSecondaryLight">#713ABE</color>
     <color name="colorTeratiryLight">#E5CFF7</color>
     <color name="colorErrorLight">#ba1a1a</color>
-    C<color name="backgroundLight">#ECE2F6</color>
+    <color name="backgroundLight">#ECE2F6</color>
+    <color name="backgroundLight2">#FFFFFF</color>
     <color name="outlineLight">#857370</color>
     <color name="colorPrimaryDark">#9D76C1</color>
     <color name="colorSecondaryDark">#713ABE</color>

@@ -1,5 +1,6 @@
 package inc.moe.foody.full_details_feature.view;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -20,12 +21,16 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.facebook.shimmer.ShimmerFrameLayout;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.snackbar.Snackbar;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer;
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.AbstractYouTubePlayerListener;
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.views.YouTubePlayerView;
 
 import inc.moe.foody.R;
+import inc.moe.foody.auth_feature.view.MainActivity;
 import inc.moe.foody.db.ConcreteLocalSource;
 import inc.moe.foody.full_details_feature.presenter.DetailedMealPresenter;
 import inc.moe.foody.home_feature.view.OnRandomMealClickListener;
@@ -47,7 +52,9 @@ public class DetailedMeal extends Fragment implements IDetailedMeal  {
     private ShimmerFrameLayout imageShimmer, scrollViewShimmer;
     private Button addToFavBtn , addToYourPlanBtn;
     private DetailedMealDirections.ActionDetailedMealToPlansFragment action;
-
+    private FirebaseAuth firebaseAuth;
+    private FirebaseUser currentUser;
+    boolean isUser = false;
     public DetailedMeal() {
 
 
@@ -69,6 +76,14 @@ public class DetailedMeal extends Fragment implements IDetailedMeal  {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        if(FirebaseAuth.getInstance().getCurrentUser()!= null){
+            firebaseAuth =FirebaseAuth.getInstance();
+            currentUser =firebaseAuth.getCurrentUser();
+            isUser = true;
+        }else{
+            isUser = false;
+        }
         mealCard = view.findViewById(R.id.meal_card);
         mealName = view.findViewById(R.id.meal_name_detailed);
         mealImage = view.findViewById(R.id.meal_image_detailed);
@@ -80,22 +95,55 @@ public class DetailedMeal extends Fragment implements IDetailedMeal  {
         mealYoutubeVideo = view.findViewById(R.id.youtube_video);
         addToFavBtn = view.findViewById(R.id.add_to_fav);
         addToYourPlanBtn = view.findViewById(R.id.add_to_your_plan);
-        addToYourPlanBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                action =DetailedMealDirections.actionDetailedMealToPlansFragment();
 
-                detailedMealPresenter.addToPlans();
+            addToYourPlanBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if(isUser){
 
-            }
-        });
+                    action =DetailedMealDirections.actionDetailedMealToPlansFragment();
+
+                    detailedMealPresenter.addToPlans();
+                    }else{
+                        new MaterialAlertDialogBuilder(getContext())
+                                .setTitle("Oops")
+                                .setMessage("It seems that you haven't logged in yet ,Umm what are waiting for?")
+                                .setNegativeButton("Cancel", (dialog, which) -> {
+                                    // Respond to negative button press
+                                })
+                                .setPositiveButton("Log in", (dialog, which) -> {
+                                    Intent intent = new Intent(getContext(), MainActivity.class);
+                                    startActivity(intent);
+                                })
+                                .show();
+
+                    }
+
+                }
+            });
+
         addToFavBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if(isUser){
 
                 detailedMealPresenter.insertMealToFav();
-                Snackbar snackbar = Snackbar.make(getView() , Cache.getInstance().getCurrentMeal().getStrMeal() + " saved." , Snackbar.LENGTH_SHORT);
+                Snackbar snackbar = Snackbar.make(v , Cache.getInstance().getCurrentMeal().getStrMeal() + " saved." , Snackbar.LENGTH_SHORT);
                 snackbar.show();
+                }else{
+                    new MaterialAlertDialogBuilder(getContext())
+                            .setTitle("Oops")
+                            .setMessage("It seems that you haven't logged in yet ,Umm what are waiting for?")
+                            .setNegativeButton("Cancel", (dialog, which) -> {
+                                // Respond to negative button press
+                             })
+                            .setPositiveButton("Log in", (dialog, which) -> {
+                                Intent intent = new Intent(getContext(), MainActivity.class);
+                                startActivity(intent);
+                            })
+                            .show();
+
+                }
 
             }
         });
@@ -221,6 +269,20 @@ public class DetailedMeal extends Fragment implements IDetailedMeal  {
     @Override
     public void navigateToCalendarFailure(String errorMessage) {
         Snackbar snackbar = Snackbar.make(getView() , errorMessage , Snackbar.LENGTH_SHORT);
+        snackbar.show();
+
+    }
+
+    @Override
+    public void onAddedToFavFBSuccess(String addedMessage) {
+        Snackbar snackbar = Snackbar.make(getView() ,addedMessage ,Snackbar.LENGTH_SHORT);
+        snackbar.show();
+
+    }
+
+    @Override
+    public void onAddedToFavFBFailure(String errorMessage) {
+        Snackbar snackbar = Snackbar.make(getView() ,errorMessage ,Snackbar.LENGTH_SHORT);
         snackbar.show();
 
     }

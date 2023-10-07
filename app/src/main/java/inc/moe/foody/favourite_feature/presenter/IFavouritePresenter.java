@@ -10,4 +10,7 @@ public interface IFavouritePresenter {
     LiveData<List<Meal>> getFavMeals();
 
     void removeFromDataBase(Meal meal);
+
+    void getMealsFromFirebase();
+
 }

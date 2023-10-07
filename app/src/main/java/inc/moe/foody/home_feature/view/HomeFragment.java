@@ -1,5 +1,6 @@
 package inc.moe.foody.home_feature.view;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -17,11 +18,20 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.facebook.shimmer.ShimmerFrameLayout;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.snackbar.Snackbar;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.List;
 
 import inc.moe.foody.R;
+import inc.moe.foody.auth_feature.view.MainActivity;
 import inc.moe.foody.db.ConcreteLocalSource;
 import inc.moe.foody.home_feature.presenter.HomePresenter;
 import inc.moe.foody.model.Category;
@@ -29,6 +39,7 @@ import inc.moe.foody.model.Country;
 import inc.moe.foody.model.Meal;
 import inc.moe.foody.model.Repo;
 import inc.moe.foody.network.MealClient;
+import inc.moe.foody.utils.NetworkConnection;
 
 
 public class HomeFragment extends Fragment implements IHome, OnRandomMealClickListener , OnCategoryClickListener ,OnImageClickListener ,OnCountryClickListener{
@@ -41,6 +52,9 @@ public class HomeFragment extends Fragment implements IHome, OnRandomMealClickLi
     AllCountriesAdapter allCountriesAdapter ;
     LinearLayoutManager categoryLayoutManager , randomMealsLayoutManager , allMealsLayoutManager ,allCountriesLayoutManger;
     View myView ;
+    FirebaseAuth firebaseAuth;
+    FirebaseUser currentUser;
+    boolean isUser = false;
     public HomeFragment() {
         // Required empty public constructor
     }
@@ -59,6 +73,13 @@ public class HomeFragment extends Fragment implements IHome, OnRandomMealClickLi
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         myView =view;
+        if(FirebaseAuth.getInstance().getCurrentUser()!= null){
+            firebaseAuth = FirebaseAuth.getInstance();
+            currentUser = firebaseAuth.getCurrentUser();
+            isUser = true;
+        }else{
+            isUser = false;
+        }
 
         randomMealShimmer = view.findViewById(R.id.random_meal_shimmer_layout);
         categoryMealShimmer = view.findViewById(R.id.category_shimmer);
@@ -89,7 +110,6 @@ public class HomeFragment extends Fragment implements IHome, OnRandomMealClickLi
         randomMealAdapter = new RandomMealAdapter(this , this);
         allMealsAdapter = new AllMealsAdapter(this);
         allCountriesAdapter = new AllCountriesAdapter(this);
-
         homePresenter = new HomePresenter(this ,
                 Repo.getInstance( MealClient.getInstance() , ConcreteLocalSource.getInstance(getContext())));
 
@@ -102,11 +122,17 @@ public class HomeFragment extends Fragment implements IHome, OnRandomMealClickLi
         randomMealRV.setLayoutManager(randomMealsLayoutManager);
         allCountriesRV.setHasFixedSize(true);
         allCountriesRV.setLayoutManager(allCountriesLayoutManger);
-        homePresenter.getRandomMeal();
-        homePresenter.getAllCategories();
-        homePresenter.getAllMeals();
-        homePresenter.getAllCountries();
-    }
+        if(NetworkConnection.isConnected(getContext())){
+            homePresenter.getRandomMeal();
+            homePresenter.getAllCategories();
+            homePresenter.getAllMeals();
+            homePresenter.getAllCountries();
+
+        } else{
+            Toast.makeText(getContext(), "No Network", Toast.LENGTH_SHORT).show();
+            }
+
+        }
 
     @Override
     public void onCategoryFetch(List<Category> categories) {
@@ -152,6 +178,8 @@ public class HomeFragment extends Fragment implements IHome, OnRandomMealClickLi
 
     @Override
     public void onAllMealsFailed(String errorMessage) {
+        Snackbar snackbar = Snackbar.make(myView ,errorMessage ,Snackbar.LENGTH_SHORT);
+        snackbar.show();
 
     }
 
@@ -167,17 +195,47 @@ public class HomeFragment extends Fragment implements IHome, OnRandomMealClickLi
 
     @Override
     public void onAllCountriesFailed(String errorMessage) {
-        Snackbar snackbar = Snackbar.make(getView() , errorMessage ,Snackbar.LENGTH_SHORT);
+        Snackbar snackbar = Snackbar.make(myView , errorMessage ,Snackbar.LENGTH_SHORT);
         snackbar.show();
     }
+
+    @Override
+    public void onAddedToFavFBSuccess(String addedMessage) {
+        Snackbar snackbar = Snackbar.make(myView ,addedMessage ,Snackbar.LENGTH_SHORT);
+        snackbar.show();
+
+    }
+
+    @Override
+    public void onAddedToFavFBFailure(String errorMessage) {
+        Snackbar snackbar = Snackbar.make(myView ,errorMessage ,Snackbar.LENGTH_SHORT);
+        snackbar.show();
+
+    }
+
 
 
     @Override
     public void insertToDatabase(Meal meal) {
+        if(isUser){
         homePresenter.addRandomMealToFav(meal);
-        Snackbar snackbar = Snackbar.make(getView() ,meal.getStrMeal()+" saved." ,Snackbar.LENGTH_SHORT);
-        snackbar.show();
-    }
+        }else{
+            new MaterialAlertDialogBuilder(getContext())
+                    .setTitle("Oops")
+                    .setMessage("It seems that you haven't logged in yet ,Umm what are waiting for?")
+                    .setNegativeButton("Cancel", (dialog, which) -> {
+                        // Respond to negative button press
+                        Navigation.findNavController(getView()).navigateUp();
+                    })
+                    .setPositiveButton("Log in", (dialog, which) -> {
+                        Intent intent = new Intent(getContext(), MainActivity.class);
+                        startActivity(intent);
+                    })
+                    .setOnDismissListener(dialogInterface -> Navigation.findNavController(getView()).navigateUp())
+                    .show();
+
+        }
+        }
 
     @Override
     public void searchByCategoryName(String categoryName) {

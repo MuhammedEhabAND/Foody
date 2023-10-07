@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData;
 
 import java.util.List;
 
+import inc.moe.foody.network.FavCallBack;
 import inc.moe.foody.network.FullDetailedNetworkCallback;
 import inc.moe.foody.network.HomeNetworkCallback;
 import inc.moe.foody.network.SearchNetworkCallback;
@@ -25,8 +26,13 @@ public interface IRepo {
     void makeNetworkCallForGetAllIngredients(SearchNetworkCallback searchNetworkCallback );
 
 
+
     void removeMealFromFav(Meal meal);
     void insertMealToFav(Meal meal);
     LiveData<List<Meal>> getFavMeals();
+    void getFavMealsFB(FavCallBack favCallBack);
+    void addFavMealToFB(HomeNetworkCallback homeNetworkCallback , Meal meal );
+    void addFavMealToFB(FullDetailedNetworkCallback fullDetailedNetworkCallback , Meal meal );
+    void removeFavMealFromFB(FavCallBack favCallBack, Meal meal );
 
 }

@@ -1,5 +1,6 @@
 package inc.moe.foody.plan_feature.view;
 
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 
@@ -18,7 +19,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -29,6 +32,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 
 import inc.moe.foody.R;
+import inc.moe.foody.auth_feature.view.MainActivity;
 import inc.moe.foody.db.ConcreteLocalSource;
 import inc.moe.foody.model.MyPlannedMeals;
 import inc.moe.foody.model.PlannedMeal;
@@ -45,6 +49,9 @@ public class PlansFragment extends Fragment implements OnAddToPlanListener, IPla
     private PlansPresenter plansPresenter ;
     private DatabaseReference userDatabase;
     MyPlannedMeals myPlannedMeals;
+    FirebaseAuth firebaseAuth ;
+    FirebaseUser currentUser;
+    boolean isUser = false;
     public PlansFragment() {
         // Required empty public constructor
     }
@@ -63,8 +70,15 @@ public class PlansFragment extends Fragment implements OnAddToPlanListener, IPla
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        if(FirebaseAuth.getInstance()!= null){
+            firebaseAuth = FirebaseAuth.getInstance();
+            currentUser = firebaseAuth.getCurrentUser();
+            isUser = true;
+        }else{
+            isUser = false;
+        }
         myPlannedMeals =new MyPlannedMeals();
-        initUI();
+            initUI();
 
 
 
@@ -88,11 +102,28 @@ public class PlansFragment extends Fragment implements OnAddToPlanListener, IPla
         previousBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if(isUser){
                 plansPresenter.onPreviousButtonPressed();
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                     selectedDate.minusMonths(1);
                 }
                 setMonthView();
+                }else{
+                    new MaterialAlertDialogBuilder(getContext())
+                            .setTitle("Oops")
+                            .setMessage("It seems that you haven't logged in yet ,Umm what are waiting for?")
+                            .setNegativeButton("Cancel", (dialog, which) -> {
+                                // Respond to negative button press
+                                Navigation.findNavController(getView()).navigateUp();
+                            })
+                            .setPositiveButton("Log in", (dialog, which) -> {
+                                Intent intent = new Intent(getContext(), MainActivity.class);
+                                startActivity(intent);
+                            })
+                            .setOnDismissListener(dialogInterface -> Navigation.findNavController(getView()).navigateUp())
+                            .show();
+
+                }
             }
         });
         forwardBtn.setOnClickListener(new View.OnClickListener() {

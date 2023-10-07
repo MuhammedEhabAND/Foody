@@ -1,5 +1,7 @@
 package inc.moe.foody.network;
 
+import inc.moe.foody.model.Meal;
+
 public interface RemoteSource {
     void makeNetworkCallForCategories(HomeNetworkCallback homeNetworkCallback);
     void makeNetworkCallForCategories(SearchNetworkCallback searchNetworkCallback);
@@ -14,5 +16,9 @@ public interface RemoteSource {
 
     void makeNetworkCallForSearchByFirstLetter(HomeNetworkCallback homeNetworkCallback, String letter);
     void makeNetworkCallForSearchByFirstLetter(SearchNetworkCallback searchNetworkCallback, String letter);
+    void onGettingFavFromFB(FavCallBack favCallBack );
+    void onAddingFavToFB(HomeNetworkCallback homeNetworkCallback , Meal meal);
+    void onAddingFavToFB(FullDetailedNetworkCallback fullDetailedNetworkCallback , Meal meal);
+    void onRemoveFavFromFB(FavCallBack favCallBack , Meal meal);
 
 }

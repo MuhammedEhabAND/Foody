@@ -10,4 +10,7 @@ public interface IDetailedMeal {
     void navigateToCalendarSuccess(String idMeal);
     void navigateToCalendarFailure(String errorMessage);
 
+    void onAddedToFavFBSuccess(String addedMessage);
+    void onAddedToFavFBFailure(String errorMessage);
+
 }

@@ -1,7 +1,7 @@
 plugins {
     id 'com.android.application'
     id 'androidx.navigation.safeargs'
-    id 'com.google.gms.google-services'
+        id 'com.google.gms.google-services'
 
 }
 
@@ -65,6 +65,6 @@ dependencies {
     implementation 'com.facebook.shimmer:shimmer:0.1.0@aar'
     implementation 'io.reactivex.rxjava3:rxandroid:3.0.2'
     implementation 'io.reactivex.rxjava3:rxjava:3.1.6'
-
+    implementation("com.google.firebase:firebase-firestore")
     implementation 'com.pierfrancescosoffritti.androidyoutubeplayer:core:12.1.0'
 }

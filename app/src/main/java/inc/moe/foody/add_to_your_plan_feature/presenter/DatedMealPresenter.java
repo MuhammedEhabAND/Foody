@@ -38,4 +38,14 @@ public class DatedMealPresenter implements IDetailedMealPresenter , FullDetailed
     public void onFailedFullDetialedMeal(String errorMessage) {
         iDatedMealView.onFullDetailedMealFailed(errorMessage);
     }
+
+    @Override
+    public void onSuccessAddFavFb(String addedMessage) {
+
+    }
+
+    @Override
+    public void onFailureAddFavFB(String errorMessage) {
+
+    }
 }

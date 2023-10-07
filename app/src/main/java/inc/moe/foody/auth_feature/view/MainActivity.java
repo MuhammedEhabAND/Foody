@@ -63,9 +63,6 @@ public class MainActivity extends AppCompatActivity implements IAuth {
     private GoogleSignInClient googleSignInClient;
     private ProgressDialog progressDialog ;
     private AuthPresenter authPresenter;
-    private static final String PREFS_NAME = "MyPrefsFile";
-    private static final int SPLASH_DELAY_MS = 500;
-    private static final String FIRST_RUN_KEY = "firstRun";
     private ConstraintLayout loginLayout ,signUpLayout;
     private TextInputLayout emailTextLayout , passwordTextLayout , emailSignUpLayout , passwordSignUpLayout , confirmPasswordSignUpLayout;
     @Override
@@ -81,9 +78,6 @@ public class MainActivity extends AppCompatActivity implements IAuth {
         //firebase
         mAuth = FirebaseAuth.getInstance();
         firebaseDatabase = FirebaseDatabase.getInstance();
-        progressDialog = new ProgressDialog(MainActivity.this );
-        progressDialog.setTitle("Creating Account ");
-        progressDialog.setMessage("We are creating your account ");
 
         googleSignInClient = GoogleSignIn.getClient(this ,GoogleOptions.getInstance().getGso() );
 
@@ -195,9 +189,15 @@ public class MainActivity extends AppCompatActivity implements IAuth {
         passwordSignUpLayout.setError(null);
 
     }
+    public void onGuestClicked(View view){
+        Intent intent = new Intent(MainActivity.this ,HomeActivity.class);
+
+        startActivity(intent);
+    }
     @Override
     public void onLoginSuccess() {
         Intent intent = new Intent(MainActivity.this, HomeActivity.class);
+
         startActivity(intent);
 
     }

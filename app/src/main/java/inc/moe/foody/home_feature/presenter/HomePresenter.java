@@ -38,6 +38,8 @@ public class HomePresenter implements IHomePresenter, HomeNetworkCallback {
 
     @Override
     public void addRandomMealToFav(Meal meal) {
+        iRepo.addFavMealToFB(this , meal);
+        Cache.getInstance().setFavMeals(null);
         iRepo.insertMealToFav(meal);
     }
 
@@ -111,6 +113,17 @@ public class HomePresenter implements IHomePresenter, HomeNetworkCallback {
     @Override
     public void onFailedAllCountries(String errorMessage) {
         iHome.onAllCountriesFailed(errorMessage);
+    }
+
+    @Override
+    public void onSuccessAddFavFb(String addedMessage) {
+     iHome.onAddedToFavFBSuccess(addedMessage);
+    }
+
+    @Override
+    public void onFailureAddFavFB(String errorMessage) {
+        iHome.onAddedToFavFBFailure(errorMessage);
+
     }
 
 }
