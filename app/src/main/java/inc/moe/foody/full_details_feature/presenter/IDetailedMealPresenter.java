@@ -4,4 +4,6 @@ public interface IDetailedMealPresenter {
 
     void getFullDetailedMeal(String idMeal);
     void insertMealToFav();
+
+    void addToPlans();
 }

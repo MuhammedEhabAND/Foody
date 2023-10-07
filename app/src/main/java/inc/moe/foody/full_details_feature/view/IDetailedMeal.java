@@ -6,4 +6,8 @@ public interface IDetailedMeal {
 
     void onFullDetailedMealFetch(Meal meal);
     void onFullDetailedMealFailed(String errorMessage);
+
+    void navigateToCalendarSuccess(String idMeal);
+    void navigateToCalendarFailure(String errorMessage);
+
 }

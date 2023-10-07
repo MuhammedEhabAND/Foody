@@ -14,9 +14,10 @@
         android:icon="@drawable/favourite"
         android:title="@string/fav_bottom_icon" />
     <item
-        android:id="@+id/countryFragment"
-        android:icon="@drawable/country_icon"
-        android:title="@string/country_bottom_icon" />
+        android:id="@+id/plansFragment"
+        android:icon="@drawable/plan_icon"
+        android:title="@string/plan_button_icon" />
+
     <item
         android:id="@+id/profileFragment"
         android:icon="@drawable/profile"

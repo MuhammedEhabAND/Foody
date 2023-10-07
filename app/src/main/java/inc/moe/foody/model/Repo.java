@@ -37,6 +37,11 @@ public class Repo implements IRepo{
     }
 
     @Override
+    public void makeNetworkCallForCategories(SearchNetworkCallback searchNetworkCallback) {
+        remoteSource.makeNetworkCallForCategories(searchNetworkCallback);
+    }
+
+    @Override
     public void makeNetworkCallForRandomMeal(HomeNetworkCallback homeNetworkCallback) {
         remoteSource.makeMultipleRandomMealRequests( 5 , homeNetworkCallback);
     }
@@ -60,6 +65,11 @@ public class Repo implements IRepo{
     @Override
     public void makeNetworkCallForGettingAllCountries(HomeNetworkCallback homeNetworkCallback) {
         remoteSource.makeNetworkCallForAllCountries(homeNetworkCallback);
+    }
+
+    @Override
+    public void makeNetworkCallForGettingAllCountries(SearchNetworkCallback searchNetworkCallback) {
+        remoteSource.makeNetworkCallForAllCountries(searchNetworkCallback);
     }
 
     @Override

@@ -1,5 +1,9 @@
 package inc.moe.foody.search_feature.presenter;
 
+import java.util.List;
+
+import inc.moe.foody.model.Category;
+
 public interface ISearchPresenter {
 
     void getMealsByCategoryOf( String categoryName);

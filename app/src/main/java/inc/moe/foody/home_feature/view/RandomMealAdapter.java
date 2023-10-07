@@ -58,7 +58,7 @@ public void onBindViewHolder(@NonNull RandomMealAdapter.ViewHolder holder, int p
                 @Override
                 public void onClick(View v) {
                     onMealClickListener.insertToDatabase(meal);
-                    holder.favImage.setImageResource(R.drawable.fav_icon_red);
+                    holder.favImage.setImageResource(R.drawable.favourite_red);
                 }
             });
 

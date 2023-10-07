@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="390dp"
+    android:layout_width="370dp"
     android:layout_height="300dp"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     app:cardCornerRadius="6dp"
     android:layout_gravity="center_horizontal"
 
-    app:cardElevation="6dp"
+    app:cardElevation="8dp"
     app:cardUseCompatPadding="true">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -30,12 +30,13 @@
 
         <TextView
             android:id="@+id/meal_name"
+
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_marginEnd="10dp"
             android:maxLines="1"
             android:ellipsize="end"
-            android:layout_marginStart="5dp"
+            android:layout_marginStart="15dp"
             app:layout_constraintHorizontal_weight="5"
             android:textAlignment="textStart"
             android:gravity="center"
@@ -49,16 +50,16 @@
 
         <ImageView
             android:id="@+id/favImage"
-            android:layout_width="0dp"
+            android:layout_width="35dp"
             app:layout_constraintHorizontal_weight="1"
-            android:layout_height="wrap_content"
+            android:layout_height="35dp"
             android:layout_marginEnd="5dp"
 
             android:layout_marginBottom="8dp"
             app:layout_constraintStart_toEndOf="@+id/meal_name"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:srcCompat="@drawable/fav_icon" />
+            app:srcCompat="@drawable/favourite" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

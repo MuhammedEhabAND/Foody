@@ -71,6 +71,31 @@ public class MealClient implements RemoteSource {
 
     }
 
+    @Override
+    public void makeNetworkCallForCategories(SearchNetworkCallback searchNetworkCallback) {
+        Call<ListOfCategories> call = mealService.getCategories();
+        call.enqueue(new Callback<ListOfCategories>() {
+            @Override
+            public void onResponse(Call<ListOfCategories> call, Response<ListOfCategories> response) {
+                if (response.isSuccessful()) {
+                    Log.i(TAG, "onSuccess: " + response.raw() + "meals: " + response.body().getCategories());
+                    searchNetworkCallback.onSuccessCategories(response.body().getCategories());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ListOfCategories> call, Throwable t) {
+                Log.i(TAG, "onFailure: " + t.getMessage());
+                searchNetworkCallback.onFailureCategories(t.getMessage());
+
+            }
+
+
+        });
+
+
+    }
+
     public void makeMultipleRandomMealRequests(int numberOfRequests, HomeNetworkCallback homeNetworkCallback) {
         List<Observable<ListOfMeals>> observables = new ArrayList<>();
 
@@ -242,6 +267,26 @@ public class MealClient implements RemoteSource {
             public void onFailure(Call<ListOfMeals> call, Throwable t) {
                 Log.i(TAG, "onFailure: "+t.getMessage());
                 homeNetworkCallback.onFailedAllCountries(t.getMessage());
+            }
+        });
+    }
+
+    @Override
+    public void makeNetworkCallForAllCountries(SearchNetworkCallback searchNetworkCallback) {
+        Call<ListOfMeals> call = mealService.getListOfCountries();
+        call.enqueue(new Callback<ListOfMeals>() {
+            @Override
+            public void onResponse(Call<ListOfMeals> call, Response<ListOfMeals> response) {
+                if(response.isSuccessful() && response.body() !=null){
+                    Log.i(TAG, "onResponse countries: " + response.body().getMeals());
+                    searchNetworkCallback.onSuccessAllCountries(response.body().getMeals());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ListOfMeals> call, Throwable t) {
+                Log.i(TAG, "onFailure: "+t.getMessage());
+                searchNetworkCallback.onFailureAllCountries(t.getMessage());
             }
         });
     }

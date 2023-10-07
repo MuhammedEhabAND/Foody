@@ -101,6 +101,7 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
             holder.mealName.setText(meal.getStrMeal());
             Glide.with(holder.itemView).load(meal.getStrMealThumb())
                     .into(holder.mealImage);
+            holder.mealInstructions.setText(meal.getStrInstructions());
             holder.cardView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -110,6 +111,8 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
         }else if(countries !=null){
             country = countries.get(position);
             holder.mealName.setText(country.getStrArea());
+
+            holder.mealInstructions.setText(country.getStrInstructions());
             holder.mealImage.setImageResource(dataSource.getImageResourceIdByName(country.getStrArea()));
             holder.cardView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -119,6 +122,8 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
             });
         }else if(categories != null ){
             category = categories.get(position);
+
+            holder.mealInstructions.setText(category.getStrCategoryDescription());
             holder.mealName.setText(category.getStrCategory());
             Glide.with(holder.itemView).load(category.getStrCategoryThumb())
                     .into(holder.mealImage);
@@ -130,7 +135,9 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
             });
         }else{
             ingredient =ingredients.get(position);
+
             holder.mealName.setText(ingredient.getStrIngredient());
+            holder.mealInstructions.setText(ingredient.getStrDescription());
             Glide.with(holder.itemView).load("https://www.themealdb.com/images/ingredients/" + ingredient.getStrIngredient() + ".png")
                     .into(holder.mealImage);
             holder.cardView.setOnClickListener(new View.OnClickListener() {
@@ -163,13 +170,16 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         TextView mealName;
+        TextView mealInstructions;
         ImageView mealImage;
         CardView cardView;
         public ViewHolder(@NonNull View itemView) {
 
             super(itemView);
             mealName = itemView.findViewById(R.id.search_meal_name);
+            mealInstructions = itemView.findViewById(R.id.search_meal_name_instruction);
             mealImage = itemView.findViewById(R.id.searched_meal_image);
+
             cardView =itemView.findViewById(R.id.meal_card_search);
         }
 

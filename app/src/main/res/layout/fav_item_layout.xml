@@ -49,16 +49,17 @@
 
         <ImageView
             android:id="@+id/delete_image"
-            android:layout_width="30sp"
+            android:layout_width="25dp"
             app:layout_constraintHorizontal_weight="1"
-            android:layout_height="50dp"
-            android:layout_marginEnd="5dp"
+            android:layout_height="25dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginStart="-20dp"
 
             android:layout_marginBottom="8dp"
-            app:layout_constraintStart_toEndOf="@+id/meal_name"
+            app:layout_constraintStart_toEndOf="@+id/fav_meal_image"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:srcCompat="@drawable/error" />
+            app:srcCompat="@drawable/ic_baseline_delete_24_primary" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

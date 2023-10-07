@@ -1,6 +1,7 @@
 package inc.moe.foody.profile_feature.view;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -27,17 +28,21 @@ import java.util.List;
 
 import inc.moe.foody.HomeActivity;
 import inc.moe.foody.R;
+import inc.moe.foody.auth_feature.view.MainActivity;
+import inc.moe.foody.db.ConcreteLocalSource;
+import inc.moe.foody.model.Repo;
+import inc.moe.foody.network.MealClient;
+import inc.moe.foody.profile_feature.presenter.ProfilePresenter;
 import inc.moe.foody.utils.GoogleOptions;
 
 
 public class ProfileFragment extends Fragment  {
     private ListView settingsList;
     private TextView userName , changeUserName;
-    private FirebaseAuth mAuth = FirebaseAuth.getInstance();
-    FirebaseUser currentUser = mAuth.getCurrentUser();
     TextView yourFav ,yourPlan , deleteAcc , logout;
-    private FirebaseDatabase firebaseDatabase;
-
+    FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
+    FirebaseUser currentUser = firebaseAuth.getCurrentUser();
+    ProfilePresenter profilePresenter;
     private ImageView profileImage;
     public ProfileFragment() {
         // Required empty public constructor
@@ -57,11 +62,10 @@ public class ProfileFragment extends Fragment  {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        userName = view.findViewById(R.id.userNameTxtViewId);
-        yourFav = view.findViewById(R.id.your_favourites_txt_view);
-        yourPlan = view.findViewById(R.id.your_plans_txt_view);
-        deleteAcc = view.findViewById(R.id.delete_account_txt_view);
-        logout = view.findViewById(R.id.login_txt_view);
+        initUI();
+        profilePresenter  = new ProfilePresenter(
+                 Repo.getInstance(MealClient.getInstance() , ConcreteLocalSource.getInstance(getContext()))
+        );
         yourFav.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -78,8 +82,10 @@ public class ProfileFragment extends Fragment  {
         logout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mAuth.signOut();
+                profilePresenter.logout();
                 GoogleSignIn.getClient(getContext(), GoogleOptions.getInstance().getGso()).signOut();
+                Intent intent = new Intent(getActivity() , MainActivity.class);
+                startActivity(intent);
                 getActivity().finish();
 
             }
@@ -87,23 +93,32 @@ public class ProfileFragment extends Fragment  {
         deleteAcc.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mAuth.signOut();
+                profilePresenter.deleteAccount();
                 GoogleSignIn.getClient(getContext() , GoogleOptions.getInstance().getGso()).signOut();
-                currentUser.delete();
+                Intent intent = new Intent(getActivity() , MainActivity.class);
+                startActivity(intent);
+
                 getActivity().finish();
 
             }
         });
         if (currentUser.getDisplayName() != null) {
-            if (currentUser.getDisplayName().isEmpty())
-                userName.setText(currentUser.getEmail());
-            else
                 userName.setText(currentUser.getDisplayName());
+        }else{
+            userName.setText(currentUser.getEmail());
 
         }
         profileImage = view.findViewById(R.id.profileImage);
         Glide.with(view).load(currentUser.getPhotoUrl())
                 .error(R.drawable.ic_baseline_person_24).into(profileImage);
 
+    }
+    public void initUI(){
+
+        userName = getView().findViewById(R.id.userNameTxtViewId);
+        yourFav = getView().findViewById(R.id.your_favourites_txt_view);
+        yourPlan = getView().findViewById(R.id.your_plans_txt_view);
+        deleteAcc = getView().findViewById(R.id.delete_account_txt_view);
+        logout = getView().findViewById(R.id.login_txt_view);
     }
 }

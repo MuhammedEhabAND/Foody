@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ripple xmlns:android="http://schemas.android.com/apk/res/android"
-    android:color="@color/Red">
+    android:color="@color/purple_200">
     <item>/
         <shape android:shape="rectangle">
 
@@ -8,7 +8,7 @@
 
         <stroke
             android:width="2dp"
-            android:color="@color/Red" />
+            android:color="?attr/colorPrimary" />
 
         <solid android:color="@color/white" />
 

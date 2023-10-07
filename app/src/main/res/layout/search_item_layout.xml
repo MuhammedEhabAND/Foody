@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="350dp"
+    android:layout_width="match_parent"
     android:id="@+id/meal_card_search"
     android:layout_height="100dp"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -8,7 +8,7 @@
     app:cardCornerRadius="6dp"
     android:layout_gravity="center_horizontal"
 
-    app:cardElevation="6dp"
+    app:cardElevation="2dp"
     app:cardUseCompatPadding="true">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -32,21 +32,40 @@
         <TextView
             android:id="@+id/search_meal_name"
             android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_marginEnd="10dp"
-            android:maxLines="1"
-            android:ellipsize="end"
+            android:layout_height="wrap_content"
             android:layout_marginStart="5dp"
-            app:layout_constraintHorizontal_weight="5"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="10dp"
+            android:ellipsize="end"
             android:gravity="center"
-            android:textSize="12sp"
-            android:textStyle="bold"
+            android:maxLines="1"
+            android:textSize="18sp"
 
-            app:layout_constraintTop_toTopOf="@id/searched_meal_image"
+            android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toBottomOf="@id/searched_meal_image"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintHorizontal_weight="5"
             app:layout_constraintStart_toEndOf="@id/searched_meal_image"
+            app:layout_constraintTop_toTopOf="@id/searched_meal_image"
             tools:text="Beef" />
+
+        <TextView
+            android:id="@+id/search_meal_name_instruction"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
+            android:layout_marginEnd="10dp"
+            android:ellipsize="end"
+            android:gravity="center"
+            android:maxLines="3"
+            android:textSize="12sp"
+
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintHorizontal_weight="5"
+            app:layout_constraintStart_toEndOf="@id/searched_meal_image"
+            app:layout_constraintTop_toBottomOf="@+id/search_meal_name"
+            tools:text="Beef is the culinary name for meat from cattle, particularly skeletal muscle. Humans have been eating beef since prehistoric times.[1] Beef is a source of high-quality protein and essential nutrients.[2]" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

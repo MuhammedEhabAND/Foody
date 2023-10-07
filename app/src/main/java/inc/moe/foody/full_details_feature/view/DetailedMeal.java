@@ -6,6 +6,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -45,7 +46,7 @@ public class DetailedMeal extends Fragment implements IDetailedMeal  {
     private DetailedMealPresenter detailedMealPresenter;
     private ShimmerFrameLayout imageShimmer, scrollViewShimmer;
     private Button addToFavBtn , addToYourPlanBtn;
-
+    private DetailedMealDirections.ActionDetailedMealToPlansFragment action;
 
     public DetailedMeal() {
 
@@ -79,6 +80,15 @@ public class DetailedMeal extends Fragment implements IDetailedMeal  {
         mealYoutubeVideo = view.findViewById(R.id.youtube_video);
         addToFavBtn = view.findViewById(R.id.add_to_fav);
         addToYourPlanBtn = view.findViewById(R.id.add_to_your_plan);
+        addToYourPlanBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                action =DetailedMealDirections.actionDetailedMealToPlansFragment();
+
+                detailedMealPresenter.addToPlans();
+
+            }
+        });
         addToFavBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -197,6 +207,19 @@ public class DetailedMeal extends Fragment implements IDetailedMeal  {
 
     @Override
     public void onFullDetailedMealFailed(String errorMessage) {
+        Snackbar snackbar = Snackbar.make(getView() , errorMessage , Snackbar.LENGTH_SHORT);
+        snackbar.show();
+
+    }
+
+    @Override
+    public void navigateToCalendarSuccess(String idMeal) {
+        action.setIdMeal(idMeal);
+        Navigation.findNavController(getView()).navigate(action);
+    }
+
+    @Override
+    public void navigateToCalendarFailure(String errorMessage) {
         Snackbar snackbar = Snackbar.make(getView() , errorMessage , Snackbar.LENGTH_SHORT);
         snackbar.show();
 

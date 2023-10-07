@@ -10,11 +10,15 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import android.app.Application;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -59,12 +63,16 @@ public class MainActivity extends AppCompatActivity implements IAuth {
     private GoogleSignInClient googleSignInClient;
     private ProgressDialog progressDialog ;
     private AuthPresenter authPresenter;
+    private static final String PREFS_NAME = "MyPrefsFile";
+    private static final int SPLASH_DELAY_MS = 500;
+    private static final String FIRST_RUN_KEY = "firstRun";
     private ConstraintLayout loginLayout ,signUpLayout;
     private TextInputLayout emailTextLayout , passwordTextLayout , emailSignUpLayout , passwordSignUpLayout , confirmPasswordSignUpLayout;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         initUI();
         authPresenter = new AuthPresenter(
                 Repo.getInstance( MealClient.getInstance() , ConcreteLocalSource.getInstance(this) ) ,this);
@@ -99,6 +107,8 @@ public class MainActivity extends AppCompatActivity implements IAuth {
             }
         });
     }
+
+
     public void onSignInWithGoogleClicked(View view){
        signInWithGoogle();
     }
@@ -133,11 +143,6 @@ public class MainActivity extends AppCompatActivity implements IAuth {
     public void onStart() {
         super.onStart();
 
-        currentUser = mAuth.getCurrentUser();
-        if(currentUser != null){
-            Intent intent = new Intent(MainActivity.this, HomeActivity.class);
-            startActivity(intent);
-        }
     }
 
     public void onLoginClicked(View view){

@@ -12,6 +12,11 @@
     <string name="profile_bottom_icon">Profile</string>
     <string name="country_bottom_icon">Country</string>
     <string name="fav_bottom_icon">Favourite</string>
+    <string name="plan_button_icon">Your Plans</string>
+    <string name="back">Back</string>
+    <string name="forward">Forward</string>
+
+
     <string name="search_bottom_icon">Search</string>
     <string name="daily_inspiration">Daily Inspiration</string>
     <string name="countries">Countries</string>

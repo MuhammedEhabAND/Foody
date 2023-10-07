@@ -17,7 +17,6 @@
         android:layout_marginTop="15dp"
         android:layout_marginStart="25dp"
         android:text="@string/my_favourites"
-        android:textColor="@color/light_mode_text_color"
         android:textSize="40sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"

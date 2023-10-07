@@ -49,7 +49,7 @@ public class SearchPresenter implements ISearchPresenter , SearchNetworkCallback
         if(Cache.getInstance().getCategories() != null)
             iSearch.allCategoriesFetched(Cache.instance.getCategories());
         else
-            iSearch.allCategoriesFailed("Categories not found");
+            iRepo.makeNetworkCallForCategories(this);
     }
 
     @Override
@@ -57,7 +57,7 @@ public class SearchPresenter implements ISearchPresenter , SearchNetworkCallback
         if(Cache.getInstance().getAllMeals() != null)
             iSearch.allMealsFetched(Cache.instance.getAllMeals());
         else
-            iSearch.allMealsFailed("Meals not found");
+            iRepo.makeNetworkCallForGettingAllMealsWithLetter(this, "b");
 
     }
 
@@ -74,7 +74,7 @@ public class SearchPresenter implements ISearchPresenter , SearchNetworkCallback
         if(Cache.getInstance().getCountries() != null)
             iSearch.allCountriesFetched(Cache.instance.getCountries());
         else
-            iSearch.allCountriesFailed("Countries not found");
+            iRepo.makeNetworkCallForGettingAllCountries(this);
 
 
     }
@@ -177,5 +177,27 @@ public class SearchPresenter implements ISearchPresenter , SearchNetworkCallback
     @Override
     public void onSearchByLetterForMealsFailure(String errorMessage) {
         iSearch.showFilteredMealsFailure(errorMessage);
+    }
+
+    @Override
+    public void onSuccessCategories(List<Category> categoryList) {
+        iSearch.allCategoriesFetched(categoryList);
+        Cache.getInstance().setCategories(categoryList);
+    }
+
+    @Override
+    public void onFailureCategories(String errorMessage) {
+        iSearch.allCategoriesFailed(errorMessage);
+    }
+
+    @Override
+    public void onSuccessAllCountries(List<Meal> countries) {
+        iSearch.allCountriesFetched(countries);
+        Cache.getInstance().setCountries(countries);
+    }
+
+    @Override
+    public void onFailureAllCountries(String errorMessage) {
+        iSearch.allCountriesFailed(errorMessage);
     }
 }

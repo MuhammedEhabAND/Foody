@@ -197,7 +197,6 @@
             android:id="@+id/instructions"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:textColor="@color/white"
             android:visibility="visible"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -225,7 +224,6 @@
                 android:id="@+id/ingredient_text_view"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:textColor="@color/white"
                 android:visibility="invisible"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -253,7 +251,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toBottomOf="@id/guideline12"
         android:text="@string/addToFavBtn"
-        android:textColor="@color/Red"
+        android:textColor="?attr/colorPrimary"
         android:textAllCaps="false"
         android:background="@drawable/secondary_button"
         app:layout_constraintEnd_toStartOf="@id/add_to_your_plan"
@@ -263,7 +261,7 @@
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/add_to_your_plan"
         android:layout_width="0dp"
-        android:textColor="@color/white"
+android:textColor="@color/white"
         android:textAllCaps="false"
 
 

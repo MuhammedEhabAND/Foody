@@ -52,7 +52,7 @@
                 android:id="@+id/random_meal_rv"
                 android:layout_width="wrap_content"
                 android:layout_height="0dp"
-                android:layout_marginTop="25dp"
+                android:layout_marginTop="5dp"
                 android:visibility="invisible"
 
                 app:layout_constraintBottom_toBottomOf="@id/guideline2"
@@ -114,7 +114,6 @@
                 android:layout_height="wrap_content"
 
                 android:text="@string/countries"
-                android:textColor="@color/light_mode_text_color"
                 style="@style/TitleTextView"
 
                 app:layout_constraintStart_toStartOf="parent"
@@ -184,13 +183,12 @@
             </androidx.recyclerview.widget.RecyclerView>
 
 
-
             <androidx.constraintlayout.widget.Guideline
                 android:id="@+id/guideline2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                app:layout_constraintGuide_begin="423dp" />
+                app:layout_constraintGuide_begin="385dp" />
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>
