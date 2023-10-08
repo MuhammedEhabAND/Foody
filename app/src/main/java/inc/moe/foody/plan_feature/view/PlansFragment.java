@@ -79,7 +79,7 @@ public class PlansFragment extends Fragment implements OnAddToPlanListener, IPla
             plansPresenter = new PlansPresenter(selectedDate ,
                     Repo.getInstance(MealClient.getInstance() , ConcreteLocalSource.getInstance(getContext())) , this);
         }
-        if(FirebaseAuth.getInstance()!= null){
+        if(FirebaseAuth.getInstance().getCurrentUser()!= null){
             firebaseAuth = FirebaseAuth.getInstance();
             currentUser = firebaseAuth.getCurrentUser();
             isUser = true;
@@ -103,10 +103,25 @@ public class PlansFragment extends Fragment implements OnAddToPlanListener, IPla
                     }
                 }
             });
+
+        }else{
+            new MaterialAlertDialogBuilder(getContext())
+                    .setTitle("Oops")
+                    .setMessage("It seems that you haven't logged in yet ,Umm what are waiting for?")
+                    .setNegativeButton("Cancel", (dialog, which) -> {
+                        // Respond to negative button press
+                        Navigation.findNavController(getView()).navigateUp();
+                    })
+                    .setPositiveButton("Log in", (dialog, which) -> {
+                        Intent intent = new Intent(getContext(), MainActivity.class);
+                        startActivity(intent);
+                    })
+                    .setOnDismissListener(dialogInterface -> Navigation.findNavController(getView()).navigateUp())
+                    .show();
         }
+
         initUI();
         setMonthView();
-
 
 
 //        setMonthView();
@@ -123,7 +138,7 @@ public class PlansFragment extends Fragment implements OnAddToPlanListener, IPla
     }
     private void setMonthView()
     {
-
+        if(isUser){
         monthYearText.setText(plansPresenter.monthYearFromDate(selectedDate));
         ArrayList<String> daysInMonth = plansPresenter.daysInMonthArray(selectedDate);
         ArrayList<String> daysUsed = new ArrayList<>();
@@ -134,6 +149,7 @@ public class PlansFragment extends Fragment implements OnAddToPlanListener, IPla
         RecyclerView.LayoutManager layoutManager = new GridLayoutManager(getContext(), 7);
         calendarRecyclerView.setLayoutManager(layoutManager);
         calendarRecyclerView.setAdapter(calendarAdapter);
+        }
     }
 
     @Override
