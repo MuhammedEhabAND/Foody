@@ -20,15 +20,14 @@ import inc.moe.foody.model.PlannedMeal;
 public class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.ViewHolder>{
     private final ArrayList<String> daysOfMonth;
     private final OnAddToPlanListener onAddToPlanListener;
-    private List<PlannedMeal> myPlannedMeals;
 
-
-    public CalendarAdapter(ArrayList<String> daysOfMonth, OnAddToPlanListener onAddToPlanListener, List<PlannedMeal> myPlannedMeals)
+    private List<String> usedDays;
+    public CalendarAdapter(ArrayList<String> daysOfMonth, OnAddToPlanListener onAddToPlanListener, List<String> usedDays)
     {
 
         this.daysOfMonth = daysOfMonth;
         this.onAddToPlanListener = onAddToPlanListener;
-        this.myPlannedMeals = myPlannedMeals;
+        this.usedDays = usedDays;
     }
 
     @NonNull
@@ -46,14 +45,17 @@ public class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.ViewHo
     @Override
     public void onBindViewHolder(@NonNull CalendarAdapter.ViewHolder holder, int position) {
 
-        holder.dayOfMonth.setText(daysOfMonth.get(position));
-
-
-        holder.dayOfMonth.setOnClickListener(new View.OnClickListener() {
+        holder.day.setText(daysOfMonth.get(position));
+        for(String usedDay :usedDays){
+            if(holder.day.getText().equals(usedDay)){
+                holder.planedMeal.setVisibility(View.VISIBLE);
+            }
+        }
+        holder.day.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 onAddToPlanListener.onItemClick(position ,daysOfMonth.get(position));
-                holder.planedMeal.setVisibility(View.VISIBLE);
+//                holder.planedMeal.setVisibility(View.VISIBLE);
             }
         });
 
@@ -65,12 +67,12 @@ public class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.ViewHo
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder  {
-        public TextView dayOfMonth;
+        public TextView day;
         private ImageView planedMeal;
         public ViewHolder(@NonNull View itemView)
         {
             super(itemView);
-            dayOfMonth = itemView.findViewById(R.id.cellDayText);
+            day = itemView.findViewById(R.id.cellDayText);
             planedMeal= itemView.findViewById(R.id.planned_meal);
             planedMeal.setImageResource(R.drawable.favourite_red);
         }

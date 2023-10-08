@@ -1,6 +1,8 @@
 package inc.moe.foody.network;
 
 import inc.moe.foody.model.Meal;
+import inc.moe.foody.model.PlannedMeal;
+import inc.moe.foody.model.PlansNetworkCallback;
 
 public interface RemoteSource {
     void makeNetworkCallForCategories(HomeNetworkCallback homeNetworkCallback);
@@ -20,5 +22,10 @@ public interface RemoteSource {
     void onAddingFavToFB(HomeNetworkCallback homeNetworkCallback , Meal meal);
     void onAddingFavToFB(FullDetailedNetworkCallback fullDetailedNetworkCallback , Meal meal);
     void onRemoveFavFromFB(FavCallBack favCallBack , Meal meal);
+
+    void onAddingPlansToFB(DatedMealNetworkCallback datedMealNetworkCallback , PlannedMeal meal);
+    void onRemovePlansToFB(DatedMealNetworkCallback datedMealNetworkCallback , PlannedMeal meal);
+    void onGettingPlansFromFB(PlansNetworkCallback plansNetworkCallback );
+
 
 }

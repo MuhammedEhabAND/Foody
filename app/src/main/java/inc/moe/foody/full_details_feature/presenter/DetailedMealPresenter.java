@@ -2,6 +2,8 @@ package inc.moe.foody.full_details_feature.presenter;
 
 import android.util.Log;
 
+import com.google.firebase.auth.FirebaseAuth;
+
 import inc.moe.foody.full_details_feature.view.IDetailedMeal;
 import inc.moe.foody.home_feature.view.IHome;
 import inc.moe.foody.model.IRepo;
@@ -27,8 +29,9 @@ public class DetailedMealPresenter implements IDetailedMealPresenter , FullDetai
     @Override
     public void insertMealToFav() {
 
-
-        iRepo.insertMealToFav(Cache.getInstance().getCurrentMeal());
+        Meal meal = Cache.getInstance().getCurrentMeal();
+        meal.setUserId(FirebaseAuth.getInstance().getCurrentUser().getUid());
+        iRepo.insertMealToFav(meal);
         iRepo.addFavMealToFB(this ,Cache.getInstance().getCurrentMeal());
     }
 

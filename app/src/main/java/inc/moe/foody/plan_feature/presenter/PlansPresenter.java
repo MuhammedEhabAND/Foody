@@ -2,15 +2,21 @@ package inc.moe.foody.plan_feature.presenter;
 
 import android.os.Build;
 
+import androidx.lifecycle.LiveData;
+
 import java.time.LocalDate;
 import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.List;
 
 import inc.moe.foody.model.IRepo;
+import inc.moe.foody.model.Meal;
+import inc.moe.foody.model.PlannedMeal;
+import inc.moe.foody.model.PlansNetworkCallback;
 import inc.moe.foody.plan_feature.view.IPlansView;
 
-public class PlansPresenter implements IPlansPresenter {
+public class PlansPresenter implements IPlansPresenter , PlansNetworkCallback {
 
 
     private LocalDate selectedDate;
@@ -68,16 +74,23 @@ public class PlansPresenter implements IPlansPresenter {
         }
         return "";
     }
-    public void onForwardButtonPressed(){
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            selectedDate = selectedDate.plusMonths(1);
-        }
-    }
-    public void onPreviousButtonPressed(){
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            selectedDate = selectedDate.minusMonths(1);
-        }
-
+    @Override
+    public LiveData<List<PlannedMeal>> getPlannedMeal() {
+        return iRepo.getAllPlannedMeal();
     }
 
+    @Override
+    public void getPlannedMealsFromFirebase() {
+        iRepo.onGettingPlansFromFB(this);
+    }
+
+    @Override
+    public void onGettingPlansSuccess(List<PlannedMeal> plannedMealList) {
+       iPlansView.onGettingPlansSuccess(plannedMealList);
+    }
+
+    @Override
+    public void onGettingPlansFailure(String errorMessage) {
+        iPlansView.onGettingPlansFailure(errorMessage);
+    }
 }

@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 
 import inc.moe.foody.model.Meal;
+import inc.moe.foody.model.PlannedMeal;
 
 public class MealToMapConverter {
         public static Map<String, Object> convertToMap(Object obj , String userID) {
@@ -76,5 +77,18 @@ public class MealToMapConverter {
 
             return meal;
         } else return null;
+    }
+    public static PlannedMeal fromDocumentSnapshot(DocumentSnapshot documentSnapshot) {
+        String idMeal = documentSnapshot.getString("idMeal");
+        String dayOfMonth = documentSnapshot.getString("dayOfMonth");
+        String month = documentSnapshot.getString("month");
+        String year = documentSnapshot.getString("year");
+        String type = documentSnapshot.getString("type");
+        String userId = documentSnapshot.getString("userId");
+        PlannedMeal plannedMeal = new PlannedMeal(idMeal, dayOfMonth, month, year);
+        plannedMeal.setType(type);
+        plannedMeal.setType(userId);
+
+        return plannedMeal ;
     }
 }

@@ -10,13 +10,22 @@ import androidx.room.Query;
 import java.util.List;
 
 import inc.moe.foody.model.Meal;
+import inc.moe.foody.model.PlannedMeal;
+
 @Dao
 public interface MealDao {
     @Query("SELECT * FROM favourite_meal")
     LiveData<List<Meal>> getAllFavMeals();
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    void insertMealToFav(Meal meal);
+    void insertMealToFav(Meal meal );
     @Delete
     void deleteMealFromFav(Meal meal);
+    @Query("SELECT * FROM planned_meal")
+    LiveData<List<PlannedMeal>> getAllPlannedMeal();
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    void insertPlannedMeal(PlannedMeal plannedMeal );
+    @Delete
+    void deleteMealFromFav(PlannedMeal plannedMeal);
+
 
 }

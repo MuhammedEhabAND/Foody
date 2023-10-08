@@ -24,6 +24,8 @@ import inc.moe.foody.model.ListOfIngredients;
 import inc.moe.foody.model.ListOfMeals;
 
 import inc.moe.foody.model.Meal;
+import inc.moe.foody.model.PlannedMeal;
+import inc.moe.foody.model.PlansNetworkCallback;
 import inc.moe.foody.utils.MealToMapConverter;
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.core.Observable;
@@ -361,6 +363,84 @@ public class MealClient implements RemoteSource {
         Map<String , Object> myMealMapped  = MealToMapConverter.convertToMap(meal ,userID);
         db.collection("My Favourite Meals "+ userID).document(meal.getStrMeal()).delete();
         favCallBack.onRemoveMealFBSuccess(meal.getStrMeal() + "Deleted From Cloud");
+
+    }
+
+    @Override
+    public void onAddingPlansToFB(DatedMealNetworkCallback datedMealNetworkCallback, PlannedMeal meal) {
+
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        String userID = currentUser.getUid();
+
+        Map<String, Object> myMealMapped = meal.toMap();
+        db.collection("My Planned Meals " + userID).document(meal.getIdMeal()).set(myMealMapped).addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void unused) {
+                Log.i("TAG", "Firebase Store onSuccess: ");
+                datedMealNetworkCallback.onSuccessAddPlanFb(" saved in cloud");
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.i("TAG", "Firebase Store onFailure: ");
+
+                datedMealNetworkCallback.onFailureAddPlanFB( " didn't save in cloud");
+            }
+        });
+
+    }
+
+    @Override
+    public void onRemovePlansToFB(DatedMealNetworkCallback datedMealNetworkCallback, PlannedMeal meal) {
+
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        String userID = currentUser.getUid();
+
+        Map<String, Object> myMealMapped = meal.toMap();
+        db.collection("My Planned Meals " + userID).document(meal.getIdMeal()).delete();
+        datedMealNetworkCallback.onSuccessRemovePlanFb("Deleted");
+    }
+
+    @Override
+    public void onGettingPlansFromFB(PlansNetworkCallback plansNetworkCallback) {
+
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        String userID = currentUser.getUid();
+        CollectionReference collectionReference = db.collection("My Planned Meals "+ userID);
+        Query query = collectionReference.whereEqualTo("userID" , userID);
+        ArrayList<PlannedMeal> plannedMeals =new ArrayList<>();
+        query.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+            @Override
+            public void onSuccess(QuerySnapshot querySnapshot) {
+                Log.i("TAG", "onSuccess: retrieving data");
+                List<DocumentSnapshot> documents = querySnapshot.getDocuments();
+
+                for (DocumentSnapshot documentSnapshot : documents) {
+                    String idMeal = documentSnapshot.getString("idMeal");
+                    String dayOfMonth = documentSnapshot.getString("dayOfMonth");
+                    String month = documentSnapshot.getString("month");
+                    String year = documentSnapshot.getString("year");
+                    String type = documentSnapshot.getString("type");
+                    String userId = documentSnapshot.getString("userId");
+                    PlannedMeal plannedMeal = new PlannedMeal(idMeal , dayOfMonth ,month ,year );
+                    plannedMeal.setType(type);
+                    plannedMeal.setUserId(userId);
+                    plannedMeals.add(plannedMeal);
+
+                }
+
+                plansNetworkCallback.onGettingPlansSuccess(plannedMeals);
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                // Handle the error.
+                plansNetworkCallback.onGettingPlansFailure(e.getMessage());
+            }
+        });
 
     }
 

@@ -101,5 +101,15 @@
         <argument
             android:name="plannedMeal"
             app:argType="inc.moe.foody.model.PlannedMeal" />
+        <action
+            android:id="@+id/action_datedMealFragment_to_plansFragment"
+            app:destination="@id/plansFragment"
+            app:launchSingleTop="true"
+            app:popUpTo="@id/datedMealFragment" />
+        <argument
+            android:name="type"
+            app:argType="string"
+            app:nullable="true"
+            android:defaultValue='"default"' />
     </fragment>
 </navigation>

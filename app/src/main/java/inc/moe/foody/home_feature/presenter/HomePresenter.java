@@ -2,6 +2,8 @@ package inc.moe.foody.home_feature.presenter;
 
 import android.util.Log;
 
+import com.google.firebase.auth.FirebaseAuth;
+
 import java.util.List;
 
 import inc.moe.foody.home_feature.view.IHome;
@@ -38,8 +40,10 @@ public class HomePresenter implements IHomePresenter, HomeNetworkCallback {
 
     @Override
     public void addRandomMealToFav(Meal meal) {
+
         iRepo.addFavMealToFB(this , meal);
         Cache.getInstance().setFavMeals(null);
+        meal.setUserId(FirebaseAuth.getInstance().getCurrentUser().getUid());
         iRepo.insertMealToFav(meal);
     }
 

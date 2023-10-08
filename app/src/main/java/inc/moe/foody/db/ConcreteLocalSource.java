@@ -3,27 +3,12 @@ package inc.moe.foody.db;
 import android.content.Context;
 import android.util.Log;
 
-import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.Query;
-import com.google.firebase.firestore.QuerySnapshot;
-
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import inc.moe.foody.model.Meal;
-import inc.moe.foody.utils.MealToMapConverter;
+import inc.moe.foody.model.PlannedMeal;
 
 public class ConcreteLocalSource implements LocalSource{
 
@@ -31,6 +16,7 @@ public class ConcreteLocalSource implements LocalSource{
     private static ConcreteLocalSource instance = null;
     private AppDatabase appDatabase;
     private MealDao mealDao;
+
     private ConcreteLocalSource(Context context) {
         this.context = context;
         Log.i("Database", "ConcreteLocalSource: created ");
@@ -45,7 +31,7 @@ public class ConcreteLocalSource implements LocalSource{
     }
 
     @Override
-    public void addMeal(Meal meal) {
+    public void addMeal(Meal meal ) {
         new Thread(()->mealDao.insertMealToFav(meal)).start();
     }
 
@@ -59,6 +45,22 @@ public class ConcreteLocalSource implements LocalSource{
     public LiveData<List<Meal>> getFavMealsLiveData() {
 
         return mealDao.getAllFavMeals();
+    }
+
+    @Override
+    public void addPlannedMeal(PlannedMeal plannedMeal) {
+        new Thread(()-> mealDao.insertPlannedMeal(plannedMeal)).start();
+        Log.i("TAG", "insertPlannedMeal: added success ");
+    }
+
+    @Override
+    public void removePlannedMeal(PlannedMeal plannedMeal) {
+       new Thread(()-> mealDao.deleteMealFromFav(plannedMeal)).start();
+    }
+
+    @Override
+    public LiveData<List<PlannedMeal>> getAllPlannedMeal() {
+        return mealDao.getAllPlannedMeal();
     }
 
 }

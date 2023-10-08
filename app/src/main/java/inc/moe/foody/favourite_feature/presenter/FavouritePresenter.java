@@ -32,19 +32,18 @@ public class FavouritePresenter implements IFavouritePresenter , FavCallBack {
 
         repo.removeMealFromFav(meal);
 
-        repo.getFavMealsFB(this);
+     //   repo.getFavMealsFB(this);
     }
 
     @Override
     public void getMealsFromFirebase() {
 
-        if(Cache.getInstance().getFavMeals()!=null){
-            iFav.onGettingFavDataFromDBSuccess(Cache.getInstance().getFavMeals());
-        }else{
+//        if(Cache.getInstance().getFavMeals()!=null){/
+//            iFav.onGettingFavDataFromDBSuccess(Cache.getInstance().getFavMeals());
+//        }else{
             repo.getFavMealsFB(this);
 
-
-        }
+//        }
     }
 
 

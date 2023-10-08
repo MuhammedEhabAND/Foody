@@ -7,6 +7,7 @@ import androidx.lifecycle.LiveData;
 import java.util.List;
 
 import inc.moe.foody.db.LocalSource;
+import inc.moe.foody.network.DatedMealNetworkCallback;
 import inc.moe.foody.network.FavCallBack;
 import inc.moe.foody.network.FullDetailedNetworkCallback;
 import inc.moe.foody.network.HomeNetworkCallback;
@@ -105,7 +106,38 @@ public class Repo implements IRepo{
 
     @Override
     public LiveData<List<Meal>> getFavMeals() {
+
         return localSource.getFavMealsLiveData();
+    }
+
+    @Override
+    public void onAddingPlansToFB(DatedMealNetworkCallback datedMealNetworkCallback, PlannedMeal meal) {
+        remoteSource.onAddingPlansToFB(datedMealNetworkCallback , meal);
+    }
+
+    @Override
+    public void onGettingPlansFromFB(PlansNetworkCallback plansNetworkCallback) {
+        remoteSource.onGettingPlansFromFB(plansNetworkCallback);
+    }
+
+    @Override
+    public void onRemovePlansToFB(DatedMealNetworkCallback datedMealNetworkCallback, PlannedMeal meal) {
+        remoteSource.onRemovePlansToFB(datedMealNetworkCallback , meal);
+    }
+
+    @Override
+    public void addPlannedMeal(PlannedMeal plannedMeal) {
+        localSource.addPlannedMeal(plannedMeal);
+    }
+
+    @Override
+    public void removePlannedMeal(PlannedMeal plannedMeal) {
+        localSource.removePlannedMeal(plannedMeal);
+    }
+
+    @Override
+    public LiveData<List<PlannedMeal>> getAllPlannedMeal() {
+        return localSource.getAllPlannedMeal();
     }
 
     @Override

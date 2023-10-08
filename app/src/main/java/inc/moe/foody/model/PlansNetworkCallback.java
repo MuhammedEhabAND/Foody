@@ -1,11 +1,8 @@
-package inc.moe.foody.plan_feature.view;
+package inc.moe.foody.model;
 
 import java.util.List;
 
-import inc.moe.foody.model.PlannedMeal;
-
-public interface IPlansView {
-
+public interface PlansNetworkCallback {
     void onGettingPlansSuccess(List<PlannedMeal> plannedMealList);
     void onGettingPlansFailure(String errorMessage);
 }

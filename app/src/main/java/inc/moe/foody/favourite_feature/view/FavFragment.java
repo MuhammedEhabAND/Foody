@@ -6,11 +6,13 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.Observer;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,6 +23,7 @@ import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import inc.moe.foody.R;
@@ -80,8 +83,31 @@ public class FavFragment extends Fragment implements OnFavMealClickListener , On
 
         favMealsRV.setHasFixedSize(true);
         favMealsRV.setLayoutManager(layoutManager);
+
         if(isUser) {
-            favPresenter.getMealsFromFirebase();
+//
+            Log.i("TAG", "onViewCreated: ");
+            ArrayList<Meal> mealArrayList = new ArrayList<>();
+            favPresenter.getFavMeals().observe(getViewLifecycleOwner(), new Observer<List<Meal>>() {
+
+                @Override
+                public void onChanged(List<Meal> meals) {
+
+                    for(Meal meal : meals){
+
+                        if(meal.getUserId().equals(currentUser.getUid())){
+                            mealArrayList.add(meal);
+                        }
+                    }
+                    adapter.setMeals(mealArrayList);
+                    adapter.notifyDataSetChanged();
+                    favMealsRV.setAdapter(adapter);
+
+                }
+            });
+            if(mealArrayList.size()==0){
+                favPresenter.getMealsFromFirebase();
+            }
         }else{ new MaterialAlertDialogBuilder(getContext())
                 .setTitle("Oops")
                 .setMessage("It seems that you haven't logged in yet ,Umm what are waiting for?")

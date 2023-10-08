@@ -7,10 +7,12 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,6 +22,7 @@ import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -30,6 +33,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.List;
 
 import inc.moe.foody.R;
 import inc.moe.foody.auth_feature.view.MainActivity;
@@ -48,8 +52,8 @@ public class PlansFragment extends Fragment implements OnAddToPlanListener, IPla
     private CalendarAdapter calendarAdapter;
     private PlansPresenter plansPresenter ;
     private DatabaseReference userDatabase;
-    MyPlannedMeals myPlannedMeals;
     FirebaseAuth firebaseAuth ;
+    private List<PlannedMeal> myPlannedMeals ;
     FirebaseUser currentUser;
     boolean isUser = false;
     public PlansFragment() {
@@ -70,24 +74,42 @@ public class PlansFragment extends Fragment implements OnAddToPlanListener, IPla
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        if(FirebaseAuth.getInstance()!= null){
-            firebaseAuth = FirebaseAuth.getInstance();
-            currentUser = firebaseAuth.getCurrentUser();
-            isUser = true;
-        }else{
-            isUser = false;
-        }
-        myPlannedMeals =new MyPlannedMeals();
-            initUI();
-
-
-
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             selectedDate = LocalDate.now();
             plansPresenter = new PlansPresenter(selectedDate ,
                     Repo.getInstance(MealClient.getInstance() , ConcreteLocalSource.getInstance(getContext())) , this);
         }
+        if(FirebaseAuth.getInstance()!= null){
+            firebaseAuth = FirebaseAuth.getInstance();
+            currentUser = firebaseAuth.getCurrentUser();
+            isUser = true;
+
+        }else{
+            isUser = false;
+        }
+        if(isUser){
+            myPlannedMeals =new ArrayList<>();
+            plansPresenter.getPlannedMeal().observe(getViewLifecycleOwner(), new Observer<List<PlannedMeal>>() {
+                @Override
+                public void onChanged(List<PlannedMeal> plannedMeals) {
+                    if (plannedMeals.size()==0){
+                        plansPresenter.getPlannedMealsFromFirebase();
+                    }
+                    for(PlannedMeal plannedMeal :plannedMeals){
+                        if(plannedMeal.getUserId().equals(currentUser.getUid())){
+                            myPlannedMeals.add(plannedMeal);
+                            setMonthView();
+                        }
+                    }
+                }
+            });
+        }
+        initUI();
         setMonthView();
+
+
+
+//        setMonthView();
 
 
     }
@@ -97,54 +119,18 @@ public class PlansFragment extends Fragment implements OnAddToPlanListener, IPla
 
         calendarRecyclerView = getView().findViewById(R.id.calendarRecyclerView);
         monthYearText = getView().findViewById(R.id.monthYearTV);
-        previousBtn = getView().findViewById(R.id.back_btn);
-        forwardBtn = getView().findViewById(R.id.forward_btn);
-        previousBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(isUser){
-                plansPresenter.onPreviousButtonPressed();
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                    selectedDate.minusMonths(1);
-                }
-                setMonthView();
-                }else{
-                    new MaterialAlertDialogBuilder(getContext())
-                            .setTitle("Oops")
-                            .setMessage("It seems that you haven't logged in yet ,Umm what are waiting for?")
-                            .setNegativeButton("Cancel", (dialog, which) -> {
-                                // Respond to negative button press
-                                Navigation.findNavController(getView()).navigateUp();
-                            })
-                            .setPositiveButton("Log in", (dialog, which) -> {
-                                Intent intent = new Intent(getContext(), MainActivity.class);
-                                startActivity(intent);
-                            })
-                            .setOnDismissListener(dialogInterface -> Navigation.findNavController(getView()).navigateUp())
-                            .show();
 
-                }
-            }
-        });
-        forwardBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                plansPresenter.onForwardButtonPressed();
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                    selectedDate.plusMonths(1);
-                }
-                setMonthView();
-
-            }
-        });
     }
     private void setMonthView()
     {
 
         monthYearText.setText(plansPresenter.monthYearFromDate(selectedDate));
         ArrayList<String> daysInMonth = plansPresenter.daysInMonthArray(selectedDate);
-
-        calendarAdapter = new CalendarAdapter(daysInMonth, this , myPlannedMeals.getPlannedMeals());
+        ArrayList<String> daysUsed = new ArrayList<>();
+        for(PlannedMeal plannedMeal : myPlannedMeals){
+                daysUsed.add(plannedMeal.getDayOfMonth());
+        }
+        calendarAdapter = new CalendarAdapter(daysInMonth, this  , daysUsed);
         RecyclerView.LayoutManager layoutManager = new GridLayoutManager(getContext(), 7);
         calendarRecyclerView.setLayoutManager(layoutManager);
         calendarRecyclerView.setAdapter(calendarAdapter);
@@ -166,9 +152,46 @@ public class PlansFragment extends Fragment implements OnAddToPlanListener, IPla
                 PlansFragmentDirections.ActionPlansFragmentToDatedMealFragment actionPlansFragmentToDatedMealFragment =
                         PlansFragmentDirections.actionPlansFragmentToDatedMealFragment(plannedMeal);
                 actionPlansFragmentToDatedMealFragment.setPlannedMeal(plannedMeal);
+                actionPlansFragmentToDatedMealFragment.setType("default");
                 Navigation.findNavController(getView()).navigate(actionPlansFragmentToDatedMealFragment);
-                Toast.makeText(getContext(), message, Toast.LENGTH_LONG).show();
+            }else{
+                for(PlannedMeal plannedMeal :myPlannedMeals){
+                    if(dayText.equals(plannedMeal.getDayOfMonth())){
+                        PlansFragmentDirections.ActionPlansFragmentToDatedMealFragment actionPlansFragmentToDatedMealFragment =
+                                PlansFragmentDirections.actionPlansFragmentToDatedMealFragment(plannedMeal);
+
+                        actionPlansFragmentToDatedMealFragment.setPlannedMeal(plannedMeal);
+                        actionPlansFragmentToDatedMealFragment.setType(plannedMeal.getType());
+                        Navigation.findNavController(getView()).navigate(actionPlansFragmentToDatedMealFragment);
+
+                    }
+                }
             }
         }
+    }
+
+    @Override
+    public void onGettingPlansSuccess(List<PlannedMeal> plannedMealList) {
+            myPlannedMeals = plannedMealList;
+        ArrayList<String> daysInMonth = plansPresenter.daysInMonthArray(selectedDate);
+        ArrayList<String> daysUsed = new ArrayList<>();
+        for(PlannedMeal plannedMeal : plannedMealList){
+            Log.i("TAG", "onGettingPlansSuccess: " + plannedMeal.getDayOfMonth());
+            daysUsed.add(plannedMeal.getDayOfMonth());
+        }
+        calendarAdapter = new CalendarAdapter(daysInMonth, this  , daysUsed);
+        RecyclerView.LayoutManager layoutManager = new GridLayoutManager(getContext(), 7);
+        calendarRecyclerView.setLayoutManager(layoutManager);
+        calendarRecyclerView.setAdapter(calendarAdapter);
+
+//        setMonthView();
+    }
+
+
+    @Override
+    public void onGettingPlansFailure(String errorMessage) {
+        Snackbar snackbar = Snackbar.make(getView() , errorMessage , Snackbar.LENGTH_SHORT);
+        snackbar.show();
+
     }
 }

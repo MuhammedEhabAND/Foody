@@ -4,10 +4,12 @@ import androidx.lifecycle.LiveData;
 
 import java.util.List;
 
+import inc.moe.foody.network.DatedMealNetworkCallback;
 import inc.moe.foody.network.FavCallBack;
 import inc.moe.foody.network.FullDetailedNetworkCallback;
 import inc.moe.foody.network.HomeNetworkCallback;
 import inc.moe.foody.network.SearchNetworkCallback;
+import inc.moe.foody.plan_feature.view.PlansFragment;
 
 public interface IRepo {
 
@@ -30,6 +32,16 @@ public interface IRepo {
     void removeMealFromFav(Meal meal);
     void insertMealToFav(Meal meal);
     LiveData<List<Meal>> getFavMeals();
+    void onAddingPlansToFB(DatedMealNetworkCallback datedMealNetworkCallback , PlannedMeal meal);
+    void onGettingPlansFromFB(PlansNetworkCallback plansNetworkCallback );
+
+    void onRemovePlansToFB(DatedMealNetworkCallback datedMealNetworkCallback , PlannedMeal meal);
+    void addPlannedMeal(PlannedMeal plannedMeal);
+
+    void removePlannedMeal(PlannedMeal plannedMeal);
+
+    LiveData<List<PlannedMeal>> getAllPlannedMeal();
+
     void getFavMealsFB(FavCallBack favCallBack);
     void addFavMealToFB(HomeNetworkCallback homeNetworkCallback , Meal meal );
     void addFavMealToFB(FullDetailedNetworkCallback fullDetailedNetworkCallback , Meal meal );
