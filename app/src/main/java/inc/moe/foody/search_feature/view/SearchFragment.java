@@ -140,7 +140,7 @@ public class SearchFragment extends Fragment implements ISearch  , OnIngredientC
                 @Override
                 public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
                     String query =charSequence.toString();
-                    if(query!=null && query!=""){emitter.onNext(query);}
+                   emitter.onNext(query);
 
                 }
 
@@ -158,25 +158,37 @@ public class SearchFragment extends Fragment implements ISearch  , OnIngredientC
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
                         query->{
-                            if(!query.isEmpty()){
+
                     int checkedId =searchRadioGroup.getCheckedRadioButtonId();
                     switch(checkedId){
                         case R.id.country_radio:
-                            searchPresenter.getFilteredCountries(query);
+                            if(!query.isEmpty())
+                                searchPresenter.getFilteredCountries(query);
+                            else
+                                searchPresenter.getAllCountries();
                             break;
                         case R.id.category_radio:
-                            searchPresenter.getFilteredCategories(query);
+                            if(!query.isEmpty())
+                                searchPresenter.getFilteredCategories(query);
+                            else
+                                searchPresenter.getAllCategories();
                             break;
                         case R.id.meal_radio:
-                            searchPresenter.getFilteredMeals(query);
+                            if(!query.isEmpty())
+                                searchPresenter.getFilteredMeals(query);
+                            else
+                                searchPresenter.getAllMeals();
                             break;
                         case R.id.ingredient_radio:
-                            searchPresenter.getFilteredIngredients(query);
+                            if(!query.isEmpty())
+                                searchPresenter.getFilteredIngredients(query);
+                            else
+                                searchPresenter.getAllIngredients();
                             break;
-                        }
+
                     }},
                         onError->{
-                            Snackbar snackbar =Snackbar.make(getView() , onError.getMessage() , Snackbar.LENGTH_SHORT);
+                            Snackbar snackbar =Snackbar.make(getView() , "View + " +onError.getMessage() , Snackbar.LENGTH_SHORT);
                             snackbar.show();
                         });
     }
@@ -195,6 +207,12 @@ public class SearchFragment extends Fragment implements ISearch  , OnIngredientC
     }
 
     @Override
+    public void searchByCategoryGotFromHomeFailed(String errorMessage) {
+        Snackbar snackbar = Snackbar.make(requireView() , errorMessage , Snackbar.LENGTH_SHORT);
+        snackbar.show();
+    }
+
+    @Override
     public void searchByCountryGotFromHome(List<Meal> meals) {
         searchAdapter.setMeals(meals);
         searchAdapter.notifyDataSetChanged();
@@ -207,6 +225,8 @@ public class SearchFragment extends Fragment implements ISearch  , OnIngredientC
 
     @Override
     public void searchByCountryFromHomeFailed(String errorMessage) {
+        Snackbar snackbar = Snackbar.make(requireView() , errorMessage , Snackbar.LENGTH_SHORT);
+        snackbar.show();
 
     }
 

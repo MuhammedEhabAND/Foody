@@ -1,7 +1,5 @@
 package inc.moe.foody.favourite_feature.presenter;
 
-import androidx.lifecycle.LiveData;
-
 import java.util.List;
 
 import inc.moe.foody.favourite_feature.view.IFav;
@@ -9,6 +7,9 @@ import inc.moe.foody.model.IRepo;
 import inc.moe.foody.model.Meal;
 import inc.moe.foody.network.FavCallBack;
 import inc.moe.foody.utils.Cache;
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
+import io.reactivex.rxjava3.core.Flowable;
+import io.reactivex.rxjava3.schedulers.Schedulers;
 
 public class FavouritePresenter implements IFavouritePresenter , FavCallBack {
 
@@ -20,9 +21,12 @@ public class FavouritePresenter implements IFavouritePresenter , FavCallBack {
         this.iFav = iFav;
     }
 
+
     @Override
-    public LiveData<List<Meal>> getFavMeals() {
-        return repo.getFavMeals();
+    public Flowable<List<Meal>> getFavMeals() {
+        return repo.getFavMeals()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
     }
 
     @Override

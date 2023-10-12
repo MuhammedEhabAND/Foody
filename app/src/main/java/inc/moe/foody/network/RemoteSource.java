@@ -1,25 +1,26 @@
 package inc.moe.foody.network;
 
+import inc.moe.foody.model.ListOfCategories;
+import inc.moe.foody.model.ListOfIngredients;
+import inc.moe.foody.model.ListOfMeals;
 import inc.moe.foody.model.Meal;
 import inc.moe.foody.model.PlannedMeal;
 import inc.moe.foody.model.PlansNetworkCallback;
+import io.reactivex.rxjava3.core.Single;
 
 public interface RemoteSource {
-    void makeNetworkCallForCategories(HomeNetworkCallback homeNetworkCallback);
-    void makeNetworkCallForCategories(SearchNetworkCallback searchNetworkCallback);
-    void makeMultipleRandomMealRequests(int numberOfRequests, HomeNetworkCallback homeNetworkCallback);
-    void makeNetworkCallForSearchByCategoryName(SearchNetworkCallback searchNetworkCallback, String categoryName);
-    void makeNetworkCallForSearchByCountryName(SearchNetworkCallback searchNetworkCallback, String countryName);
-    void makeNetworkCallForSearchByIngredientName(SearchNetworkCallback searchNetworkCallback, String ingredientName);
-    void makeNetworkCallForGetFullDetailedMeal(FullDetailedNetworkCallback fullDetailedNetworkCallback , String idMeal);
-    void makeNetworkCallForAllCountries(HomeNetworkCallback homeNetworkCallback);
-    void makeNetworkCallForAllCountries(SearchNetworkCallback searchNetworkCallback);
-    void makeNetworkCallForAllIngredients(SearchNetworkCallback searchNetworkCallback);
 
-    void makeNetworkCallForSearchByFirstLetter(HomeNetworkCallback homeNetworkCallback, String letter);
-    void makeNetworkCallForSearchByFirstLetter(SearchNetworkCallback searchNetworkCallback, String letter);
+    Single<ListOfCategories> makeNetworkCallForCategories();
+    Single<ListOfMeals> getRandomMeal();
+    Single<ListOfMeals> makeNetworkCallForSearchByCategoryName(String query);
+    Single<ListOfMeals> makeNetworkCallForSearchByCountryName( String query);
+    Single<ListOfMeals> makeNetworkCallForSearchByIngredientName(String ingredientName);
+    Single<ListOfMeals> makeNetworkCallForGetFullDetailedMeal(String idMeal);
+    Single<ListOfMeals> makeNetworkCallForAllCountries();
+    Single<ListOfIngredients> makeNetworkCallForAllIngredients();
+
+    Single<ListOfMeals> makeNetworkCallForSearchByFirstLetter( String letter);
     void onGettingFavFromFB(FavCallBack favCallBack );
-    void onAddingFavToFB(HomeNetworkCallback homeNetworkCallback , Meal meal);
     void onAddingFavToFB(FullDetailedNetworkCallback fullDetailedNetworkCallback , Meal meal);
     void onRemoveFavFromFB(FavCallBack favCallBack , Meal meal);
 

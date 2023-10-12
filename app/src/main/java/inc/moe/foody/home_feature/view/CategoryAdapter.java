@@ -32,6 +32,7 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHo
     OnCategoryClickListener onCategoryClickListener;
     public void setCategoryList(List<Category> categoryList) {
         this.categoryList = categoryList;
+        notifyDataSetChanged();
     }
 
     public CategoryAdapter(OnCategoryClickListener onCategoryClickListener) {

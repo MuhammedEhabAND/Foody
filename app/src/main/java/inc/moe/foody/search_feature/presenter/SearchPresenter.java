@@ -2,7 +2,6 @@ package inc.moe.foody.search_feature.presenter;
 
 import android.util.Log;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -10,14 +9,18 @@ import java.util.stream.Collectors;
 import inc.moe.foody.model.Category;
 import inc.moe.foody.model.IRepo;
 import inc.moe.foody.model.Ingredient;
+import inc.moe.foody.model.ListOfCategories;
+import inc.moe.foody.model.ListOfIngredients;
+import inc.moe.foody.model.ListOfMeals;
 import inc.moe.foody.model.Meal;
-import inc.moe.foody.network.HomeNetworkCallback;
 import inc.moe.foody.network.SearchNetworkCallback;
 import inc.moe.foody.search_feature.view.ISearch;
 import inc.moe.foody.utils.Cache;
-import io.reactivex.rxjava3.internal.util.ArrayListSupplier;
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
+import io.reactivex.rxjava3.core.Single;
+import io.reactivex.rxjava3.schedulers.Schedulers;
 
-public class SearchPresenter implements ISearchPresenter , SearchNetworkCallback  {
+public class SearchPresenter implements ISearchPresenter  {
 
     ISearch iSearch;
     private IRepo iRepo;
@@ -30,53 +33,113 @@ public class SearchPresenter implements ISearchPresenter , SearchNetworkCallback
     @Override
     public void getMealsByCategoryOf(String categoryName) {
         Log.i("TAG", "getMealsByCategoryOf: search presenter");
-        iRepo.makeNetworkCallForSearchByCategoryName(this , categoryName);
+        iRepo.makeNetworkCallForSearchByCategoryName( categoryName)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                        item->{iSearch.searchByCategoryGotFromHome(item.getMeals());},
+                        onError->{iSearch.searchByCategoryGotFromHomeFailed(onError.getMessage());}
+                );
 
     }
 
     @Override
-    public void getMealsByCountryOf(String countryName) {
-        iRepo.makeNetworkCallForSearchByCountryName(this , countryName);
+    public void getMealsByCountryOf(String query) {
+         iRepo.makeNetworkCallForSearchByCountryName(query)
+                 .subscribeOn(Schedulers.io())
+                 .observeOn(AndroidSchedulers.mainThread())
+                 .subscribe(
+                         item->{iSearch.searchByCountryGotFromHome(item.getMeals());},
+                         onError->{iSearch.searchByCategoryGotFromHomeFailed(onError.getMessage());}
+                 );
     }
 
     @Override
     public void getMealsByIngredientOf(String ingredientName) {
-        iRepo.makeNetworkCallForSearchByIngredientName(this ,ingredientName);
+         iRepo.makeNetworkCallForSearchByIngredientName( ingredientName)
+                 .subscribeOn(Schedulers.io())
+                 .observeOn(AndroidSchedulers.mainThread())
+                 .subscribe(
+                         item->{iSearch.searchByIngredientSuccess(item.getMeals());},
+                         onError->{iSearch.searchByIngredientFailure(onError.getMessage());}
+                 );
     }
 
     @Override
     public void getAllCategories() {
-        if(Cache.getInstance().getCategories() != null)
+        if(Cache.getInstance().getCategories() != null){
             iSearch.allCategoriesFetched(Cache.instance.getCategories());
-        else
-            iRepo.makeNetworkCallForCategories(this);
+        }else{
+        iRepo.makeNetworkCallForCategories()
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(
+                            item->{
+                                iSearch.allCategoriesFetched(item.getCategories());
+                                Cache.getInstance().setCategories(item.getCategories());},
+                            onError->{iSearch.allCategoriesFailed(onError.getMessage());}
+                    );
+        }
     }
 
     @Override
     public void getAllMeals() {
-        if(Cache.getInstance().getAllMeals() != null)
+        if(Cache.getInstance().getAllMeals() != null) {
             iSearch.allMealsFetched(Cache.instance.getAllMeals());
-        else
-            iRepo.makeNetworkCallForGettingAllMealsWithLetter(this, "b");
+        }else{
+        iRepo.makeNetworkCallForGettingAllMealsWithLetter( "b")
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(
+                            item->{
+                                iSearch.allMealsFetched(item.getMeals());
+                                Cache.getInstance().setAllMeals(item.getMeals());
+                            },
+                            onError->{iSearch.allMealsFailed(onError.getMessage());}
+                    );
 
+        }
     }
 
     @Override
     public void getAllIngredients() {
-        if(Cache.getInstance().getAllIngredients() == null)
-            iRepo.makeNetworkCallForGetAllIngredients(this);
-        else
+      if(Cache.getInstance().getAllIngredients() == null){
+        iRepo.makeNetworkCallForGetAllIngredients()
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(
+                            item->{
+                                iSearch.allIngredientsFetched(item.getIngredients());
+                                Cache.getInstance().setAllIngredients(item.getIngredients());
+                            },
+                            onError->{
+                                iSearch.allIngredientsFailed(onError.getMessage());
+                            }
+                    );
+      }else{
             iSearch.allIngredientsFetched(Cache.getInstance().getAllIngredients());
+        }
     }
 
     @Override
     public void getAllCountries() {
-        if(Cache.getInstance().getCountries() != null)
+        if(Cache.getInstance().getCountries() != null) {
             iSearch.allCountriesFetched(Cache.instance.getCountries());
-        else
-            iRepo.makeNetworkCallForGettingAllCountries(this);
+        }else {
+            iRepo.makeNetworkCallForGettingAllCountries()
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(
+                            item -> {
+                                iSearch.allCountriesFetched(item.getMeals());
+                                Cache.getInstance().setCountries(item.getMeals());
+                            },
+                            onError -> {
+                                iSearch.allCountriesFailed(onError.getMessage());
+                            }
+                    );
 
-
+        }
     }
 
     @Override
@@ -107,97 +170,32 @@ public class SearchPresenter implements ISearchPresenter , SearchNetworkCallback
 
     @Override
     public void getFilteredMeals(String searchMeal) {
-        if (currentChar != ' ' && searchMeal.charAt(0) == currentChar) {
-            ArrayList<Meal> filteredMeals = Cache.getInstance().getSearchedMeals().stream()
-                    .filter(meal -> meal.getStrMeal().toLowerCase().contains(searchMeal.toLowerCase()))
-                    .collect(Collectors.toCollection(ArrayList::new));
-
-            iSearch.showFilteredMeals(filteredMeals);
-        } else {
+//        if (currentChar != ' ' && searchMeal.charAt(0) == currentChar) {
+//            ArrayList<Meal> filteredMeals = Cache.getInstance().getSearchedMeals().stream()
+//                    .filter(meal -> meal.getStrMeal().toLowerCase().contains(searchMeal.toLowerCase()))
+//                    .collect(Collectors.toCollection(ArrayList::new));
+//
+//            iSearch.showFilteredMeals(filteredMeals);
+//        } else {
             currentChar = searchMeal.charAt(0);
-            iRepo.makeNetworkCallForGettingAllMealsWithLetter( this,String.valueOf(currentChar));
-        }
+            iRepo.makeNetworkCallForGettingAllMealsWithLetter( String.valueOf(currentChar))
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(
+                            item->{
+                                if(!String.valueOf(currentChar).isEmpty())
+                                iSearch.showFilteredMeals(item.getMeals()
+                                    .stream().filter(meal->
+                                            meal.getStrMeal()
+                                                    .toLowerCase()
+                                                    .contains(searchMeal.toLowerCase()))
+                                    .collect(Collectors.toCollection(ArrayList::new)));
+                                else
+                                 iSearch.showFilteredMeals(item.getMeals());
+                            },
+                            onError->{iSearch.showFilteredMealsFailure(onError.getMessage());}
+                    );
+//        }
     }
 
-    @Override
-    public void onSearchByCategoryNameFromHomeSuccess(List<Meal> meals) {
-        Log.i("TAG", "onSearchByCategoryNameFromHomeSuccess: ");
-        iSearch.searchByCategoryGotFromHome(meals);
-
-    }
-
-    @Override
-    public void onSearchByCategoryNameFromHomeFailure(String errorMessage) {
-        Log.i("TAG", "onSearchByCategoryNameFromHomeFailure: ");
-    }
-
-    @Override
-    public void onGettingAllIngredientsSuccess(List<Ingredient> ingredients) {
-        iSearch.allIngredientsFetched(ingredients);
-        Cache.getInstance().setAllIngredients(ingredients);
-    }
-
-    @Override
-    public void onGettingAllIngredientsFailure(String errorMessage) {
-        iSearch.allCountriesFailed(errorMessage);
-    }
-
-    @Override
-    public void onSearchByCountryNameFromHomeSuccess(List<Meal> meals) {
-        iSearch.searchByCountryGotFromHome(meals);
-    }
-
-    @Override
-    public void onSearchByCountryNameFromHomeFailure(String errorMessage) {
-        iSearch.searchByCountryFromHomeFailed(errorMessage);
-    }
-
-    @Override
-    public void onSearchByIngredientNameSuccess(List<Meal> meals) {
-        iSearch.searchByIngredientSuccess(meals);
-    }
-
-    @Override
-    public void onSearchByIngredientNameFailure(String errorMessage) {
-        iSearch.searchByIngredientFailure(errorMessage);
-    }
-
-    @Override
-    public void onSearchByLetterForMealsSuccess(List<Meal> meals) {
-        if(meals!=null){
-            iSearch.showFilteredMeals(meals);
-            Cache.getInstance().setSearchedMeals(meals);
-
-        }else{
-            List<Meal> emptyMeals = new ArrayList<Meal>();
-            iSearch.showFilteredMeals(emptyMeals);
-        }
-    }
-
-    @Override
-    public void onSearchByLetterForMealsFailure(String errorMessage) {
-        iSearch.showFilteredMealsFailure(errorMessage);
-    }
-
-    @Override
-    public void onSuccessCategories(List<Category> categoryList) {
-        iSearch.allCategoriesFetched(categoryList);
-        Cache.getInstance().setCategories(categoryList);
-    }
-
-    @Override
-    public void onFailureCategories(String errorMessage) {
-        iSearch.allCategoriesFailed(errorMessage);
-    }
-
-    @Override
-    public void onSuccessAllCountries(List<Meal> countries) {
-        iSearch.allCountriesFetched(countries);
-        Cache.getInstance().setCountries(countries);
-    }
-
-    @Override
-    public void onFailureAllCountries(String errorMessage) {
-        iSearch.allCountriesFailed(errorMessage);
-    }
 }

@@ -18,6 +18,7 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.ScrollView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.facebook.shimmer.ShimmerFrameLayout;
@@ -54,6 +55,7 @@ public class DetailedMeal extends Fragment implements IDetailedMeal  {
     private DetailedMealDirections.ActionDetailedMealToPlansFragment action;
     private FirebaseAuth firebaseAuth;
     private FirebaseUser currentUser;
+    View myView;
     boolean isUser = false;
     public DetailedMeal() {
 
@@ -76,7 +78,7 @@ public class DetailedMeal extends Fragment implements IDetailedMeal  {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
+        myView = view;
         if(FirebaseAuth.getInstance().getCurrentUser()!= null){
             firebaseAuth =FirebaseAuth.getInstance();
             currentUser =firebaseAuth.getCurrentUser();
@@ -128,8 +130,8 @@ public class DetailedMeal extends Fragment implements IDetailedMeal  {
                 if(isUser){
 
                 detailedMealPresenter.insertMealToFav();
-                Snackbar snackbar = Snackbar.make(v , Cache.getInstance().getCurrentMeal().getStrMeal() + " saved." , Snackbar.LENGTH_SHORT);
-                snackbar.show();
+//                Snackbar snackbar = Snackbar.make(v , Cache.getInstance().getCurrentMeal().getStrMeal() + " saved." , Snackbar.LENGTH_SHORT);
+//                snackbar.show();
                 }else{
                     new MaterialAlertDialogBuilder(getContext())
                             .setTitle("Oops")
@@ -210,7 +212,8 @@ public class DetailedMeal extends Fragment implements IDetailedMeal  {
     @Override
     public void onFullDetailedMealFetch(Meal meal) {
         mealName.setText(meal.getStrMeal());
-        Glide.with(getView()).load(meal.getStrMealThumb()).into(mealImage);
+
+        Glide.with(myView).load(meal.getStrMealThumb()).into(mealImage);
         scrollView.setVisibility(View.VISIBLE);
         mealCard.setVisibility(View.VISIBLE);
         scrollViewShimmer.setVisibility(View.GONE);
@@ -255,9 +258,7 @@ public class DetailedMeal extends Fragment implements IDetailedMeal  {
 
     @Override
     public void onFullDetailedMealFailed(String errorMessage) {
-        Snackbar snackbar = Snackbar.make(getView() , errorMessage , Snackbar.LENGTH_SHORT);
-        snackbar.show();
-
+        Toast.makeText(getContext(), errorMessage, Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -268,23 +269,17 @@ public class DetailedMeal extends Fragment implements IDetailedMeal  {
 
     @Override
     public void navigateToCalendarFailure(String errorMessage) {
-        Snackbar snackbar = Snackbar.make(getView() , errorMessage , Snackbar.LENGTH_SHORT);
-        snackbar.show();
-
+//        Toast.makeText(getContext(), errorMessage, Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public void onAddedToFavFBSuccess(String addedMessage) {
-        Snackbar snackbar = Snackbar.make(getView() ,addedMessage ,Snackbar.LENGTH_SHORT);
-        snackbar.show();
-
+//        Toast.makeText(getContext(), addedMessage, Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public void onAddedToFavFBFailure(String errorMessage) {
-        Snackbar snackbar = Snackbar.make(getView() ,errorMessage ,Snackbar.LENGTH_SHORT);
-        snackbar.show();
-
+//        Toast.makeText(getContext(), errorMessage, Toast.LENGTH_SHORT).show();
     }
 
 }

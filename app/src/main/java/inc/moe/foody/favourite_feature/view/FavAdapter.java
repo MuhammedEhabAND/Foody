@@ -25,6 +25,7 @@ public class FavAdapter extends RecyclerView.Adapter<FavAdapter.ViewHolder> {
     public void setMeals(List<Meal> meals) {
         this.meals= meals;
 
+
     }
 
     OnFavMealClickListener onMealClickListener;

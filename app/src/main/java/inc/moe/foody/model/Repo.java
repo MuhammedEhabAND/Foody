@@ -4,15 +4,21 @@ import android.util.Log;
 
 import androidx.lifecycle.LiveData;
 
+import com.google.firebase.auth.FirebaseAuth;
+
+import java.util.ArrayList;
 import java.util.List;
 
 import inc.moe.foody.db.LocalSource;
 import inc.moe.foody.network.DatedMealNetworkCallback;
 import inc.moe.foody.network.FavCallBack;
 import inc.moe.foody.network.FullDetailedNetworkCallback;
-import inc.moe.foody.network.HomeNetworkCallback;
 import inc.moe.foody.network.RemoteSource;
-import inc.moe.foody.network.SearchNetworkCallback;
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
+import io.reactivex.rxjava3.core.Completable;
+import io.reactivex.rxjava3.core.Flowable;
+import io.reactivex.rxjava3.core.Single;
+import io.reactivex.rxjava3.schedulers.Schedulers;
 
 public class Repo implements IRepo{
     RemoteSource remoteSource;
@@ -32,66 +38,51 @@ public class Repo implements IRepo{
         return instance;
     }
 
-
     @Override
-    public void makeNetworkCallForCategories(HomeNetworkCallback homeNetworkCallback) {
-        remoteSource.makeNetworkCallForCategories(homeNetworkCallback);
+    public Single<ListOfCategories> makeNetworkCallForCategories() {
+       return remoteSource.makeNetworkCallForCategories();
     }
 
     @Override
-    public void makeNetworkCallForCategories(SearchNetworkCallback searchNetworkCallback) {
-        remoteSource.makeNetworkCallForCategories(searchNetworkCallback);
+    public Single<ListOfMeals> makeNetworkCallForRandomMeal() {
+       return remoteSource.getRandomMeal();
     }
 
     @Override
-    public void makeNetworkCallForRandomMeal(HomeNetworkCallback homeNetworkCallback) {
-        remoteSource.makeMultipleRandomMealRequests( 5 , homeNetworkCallback);
-    }
-
-    @Override
-    public void makeNetworkCallForSearchByCategoryName(SearchNetworkCallback searchNetworkCallback, String categoryName) {
+    public Single<ListOfMeals> makeNetworkCallForSearchByCategoryName(String query) {
         Log.i("TAG", "makeNetworkCallForSearchByCategoryName: ");
-        remoteSource.makeNetworkCallForSearchByCategoryName(searchNetworkCallback,categoryName);
+        return remoteSource.makeNetworkCallForSearchByCategoryName(query).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread());
     }
 
     @Override
-    public void makeNetworkCallForSearchByCountryName(SearchNetworkCallback searchNetworkCallback, String countryName) {
-        remoteSource.makeNetworkCallForSearchByCountryName(searchNetworkCallback,countryName);
+    public Single<ListOfMeals> makeNetworkCallForSearchByCountryName(String countryName) {
+        return remoteSource.makeNetworkCallForSearchByCountryName(countryName);
     }
 
     @Override
-    public void makeNetworkCallForSearchByIngredientName(SearchNetworkCallback searchNetworkCallback, String ingredientName) {
-        remoteSource.makeNetworkCallForSearchByIngredientName( searchNetworkCallback,ingredientName);
+    public Single<ListOfMeals> makeNetworkCallForSearchByIngredientName(String ingredientName) {
+       return remoteSource.makeNetworkCallForSearchByIngredientName(ingredientName);
     }
 
     @Override
-    public void makeNetworkCallForGettingAllCountries(HomeNetworkCallback homeNetworkCallback) {
-        remoteSource.makeNetworkCallForAllCountries(homeNetworkCallback);
+    public Single<ListOfMeals> makeNetworkCallForGettingAllCountries() {
+       return remoteSource.makeNetworkCallForAllCountries();
+    }
+
+
+    @Override
+    public Single<ListOfMeals> makeNetworkCallForGettingAllMealsWithLetter(String letter) {
+        return  remoteSource.makeNetworkCallForSearchByFirstLetter(letter);
     }
 
     @Override
-    public void makeNetworkCallForGettingAllCountries(SearchNetworkCallback searchNetworkCallback) {
-        remoteSource.makeNetworkCallForAllCountries(searchNetworkCallback);
+    public Single<ListOfMeals> makeNetworkCallForGetFullDetailedMeal( String idMeal) {
+        return remoteSource.makeNetworkCallForGetFullDetailedMeal( idMeal);
     }
 
     @Override
-    public void makeNetworkCallForGettingAllMealsWithLetter(HomeNetworkCallback homeNetworkCallback, String letter) {
-        remoteSource.makeNetworkCallForSearchByFirstLetter(homeNetworkCallback, letter);
-    }
-
-    @Override
-    public void makeNetworkCallForGettingAllMealsWithLetter(SearchNetworkCallback searchNetworkCallback, String letter) {
-        remoteSource.makeNetworkCallForSearchByFirstLetter(searchNetworkCallback ,letter);
-    }
-
-    @Override
-    public void makeNetworkCallForGetFullDetailedMeal(FullDetailedNetworkCallback fullDetailedNetworkCallback, String idMeal) {
-        remoteSource.makeNetworkCallForGetFullDetailedMeal(fullDetailedNetworkCallback ,idMeal);
-    }
-
-    @Override
-    public void makeNetworkCallForGetAllIngredients(SearchNetworkCallback searchNetworkCallback) {
-        remoteSource.makeNetworkCallForAllIngredients(searchNetworkCallback);
+    public Single<ListOfIngredients> makeNetworkCallForGetAllIngredients() {
+        return remoteSource.makeNetworkCallForAllIngredients();
     }
 
     @Override
@@ -100,14 +91,23 @@ public class Repo implements IRepo{
     }
 
     @Override
-    public void insertMealToFav(Meal meal) {
-        localSource.addMeal(meal);
+    public Completable insertMealToFav(Meal meal) {
+
+        return  localSource.addMeal(meal).subscribeOn(Schedulers.io());
     }
 
     @Override
-    public LiveData<List<Meal>> getFavMeals() {
+    public Flowable<List<Meal>> getFavMeals() {
 
-        return localSource.getFavMealsLiveData();
+        return localSource.getFavMealsLiveData().map(meals -> {
+            List<Meal> filteredMeals = new ArrayList<>();
+            for (Meal meal : meals) {
+                if (meal.getUserId().equals(FirebaseAuth.getInstance().getCurrentUser().getUid())) {
+                    filteredMeals.add(meal);
+                }
+            }
+            return filteredMeals;
+        }).subscribeOn(Schedulers.io());
     }
 
     @Override
@@ -146,15 +146,10 @@ public class Repo implements IRepo{
     }
 
     @Override
-    public void addFavMealToFB(HomeNetworkCallback homeNetworkCallback, Meal meal) {
-        remoteSource.onAddingFavToFB(homeNetworkCallback , meal);
-    }
-
-    @Override
     public void addFavMealToFB(FullDetailedNetworkCallback fullDetailedNetworkCallback, Meal meal) {
-        remoteSource.onAddingFavToFB(fullDetailedNetworkCallback , meal);
-
+        remoteSource.onAddingFavToFB(fullDetailedNetworkCallback, meal);
     }
+
 
     @Override
     public void removeFavMealFromFB(FavCallBack favCallBack, Meal meal) {

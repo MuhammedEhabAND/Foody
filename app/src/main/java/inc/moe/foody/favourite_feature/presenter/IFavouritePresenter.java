@@ -1,13 +1,12 @@
 package inc.moe.foody.favourite_feature.presenter;
 
-import androidx.lifecycle.LiveData;
-
 import java.util.List;
 
 import inc.moe.foody.model.Meal;
+import io.reactivex.rxjava3.core.Flowable;
 
 public interface IFavouritePresenter {
-    LiveData<List<Meal>> getFavMeals();
+    Flowable<List<Meal>> getFavMeals();
 
     void removeFromDataBase(Meal meal);
 

@@ -25,6 +25,7 @@ public class RandomMealAdapter extends RecyclerView.Adapter<RandomMealAdapter.Vi
 public void setMealList(List<Meal> mealList) {
 
     this.mealList = mealList;
+    notifyDataSetChanged();
         }
 
 public RandomMealAdapter(OnRandomMealClickListener onMealClickListener , OnImageClickListener onImageClickListener) {

@@ -3,36 +3,37 @@ package inc.moe.foody.network;
 import inc.moe.foody.model.ListOfCategories;
 import inc.moe.foody.model.ListOfIngredients;
 import inc.moe.foody.model.ListOfMeals;
+import io.reactivex.rxjava3.core.Single;
 import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Query;
 
 public interface MealService {
     @GET("categories.php")
-    Call<ListOfCategories> getCategories();
+    Single<ListOfCategories> getCategories();
 
     @GET("random.php")
-    Call<ListOfMeals> getRandomMeal();
+    Single<ListOfMeals> getRandomMeal();
 
     @GET("filter.php")
-    Call<ListOfMeals> getMealByCategorySearch(@Query("c") String categoryName);
+    Single<ListOfMeals> getMealByCategorySearch(@Query("c") String categoryName);
 
     @GET("filter.php")
-    Call<ListOfMeals> getMealsByCountry(@Query("a") String countryName);
+    Single<ListOfMeals> getMealsByCountry(@Query("a") String countryName);
 
     @GET("filter.php")
-    Call<ListOfMeals> getMealsByIngredient(@Query("i") String ingredientName);
+    Single<ListOfMeals> getMealsByIngredient(@Query("i") String ingredientName);
 
     @GET("search.php")
-    Call<ListOfMeals> getAllMealsByLetter(@Query("f") String letter);
+    Single<ListOfMeals> getAllMealsByLetter(@Query("f") String letter);
 
     @GET("list.php?a=list")
-    Call<ListOfMeals> getListOfCountries();
+    Single<ListOfMeals> getListOfCountries();
 
     @GET("list.php?i=list")
-    Call<ListOfIngredients> getListOfIngredients();
+    Single<ListOfIngredients> getListOfIngredients();
 
     @GET("lookup.php")
-    Call<ListOfMeals> getFullDetailedMeal(@Query("i") String idMeal);
+    Single<ListOfMeals> getFullDetailedMeal(@Query("i") String idMeal);
 
 }

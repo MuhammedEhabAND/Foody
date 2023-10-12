@@ -21,6 +21,8 @@ import android.widget.Toast;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
+import java.util.Objects;
+
 import inc.moe.foody.auth_feature.view.MainActivity;
 import inc.moe.foody.favourite_feature.view.FavFragment;
 import inc.moe.foody.full_details_feature.view.DetailedMeal;
@@ -30,6 +32,9 @@ import inc.moe.foody.search_feature.view.SearchFragment;
 
 public class HomeActivity extends AppCompatActivity  {
     public static NavController navController;
+    int currentDestinationId =0;
+    int startDestinationId = R.id.homeFragment;
+
     boolean isUser;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,18 +54,20 @@ public class HomeActivity extends AppCompatActivity  {
 
     @Override
     public void onBackPressed() {
-        NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager()
-                .findFragmentById(R.id.nav_host_fragment);
 
-        NavController navController = navHostFragment.getNavController();
-        int currentDestinationId = navController.getCurrentDestination().getId();
-        int startDestinationId = R.id.homeFragment;
+        NavDestination currentDestination = navController.getCurrentDestination();
+        if(currentDestination!=null){
+            currentDestinationId = currentDestination.getId();
+
+        }
         if (currentDestinationId != startDestinationId) {
-            navController.popBackStack();
+            navController.navigateUp();
+
         } else {
             super.onBackPressed();
             finishAffinity();
         }
+
     }
 
     @Override

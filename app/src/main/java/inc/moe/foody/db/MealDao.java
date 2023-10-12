@@ -11,13 +11,15 @@ import java.util.List;
 
 import inc.moe.foody.model.Meal;
 import inc.moe.foody.model.PlannedMeal;
+import io.reactivex.rxjava3.core.Completable;
+import io.reactivex.rxjava3.core.Flowable;
 
 @Dao
 public interface MealDao {
     @Query("SELECT * FROM favourite_meal")
-    LiveData<List<Meal>> getAllFavMeals();
+    Flowable<List<Meal>> getAllFavMeals();
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    void insertMealToFav(Meal meal );
+    Completable insertMealToFav(Meal meal );
     @Delete
     void deleteMealFromFav(Meal meal);
     @Query("SELECT * FROM planned_meal")

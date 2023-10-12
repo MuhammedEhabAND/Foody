@@ -9,6 +9,8 @@ import java.util.List;
 
 import inc.moe.foody.model.Meal;
 import inc.moe.foody.model.PlannedMeal;
+import io.reactivex.rxjava3.core.Completable;
+import io.reactivex.rxjava3.core.Flowable;
 
 public class ConcreteLocalSource implements LocalSource{
 
@@ -31,8 +33,8 @@ public class ConcreteLocalSource implements LocalSource{
     }
 
     @Override
-    public void addMeal(Meal meal ) {
-        new Thread(()->mealDao.insertMealToFav(meal)).start();
+    public Completable addMeal(Meal meal ) {
+        return mealDao.insertMealToFav(meal);
     }
 
     @Override
@@ -42,8 +44,7 @@ public class ConcreteLocalSource implements LocalSource{
     }
 
     @Override
-    public LiveData<List<Meal>> getFavMealsLiveData() {
-
+    public Flowable<List<Meal>> getFavMealsLiveData() {
         return mealDao.getAllFavMeals();
     }
 

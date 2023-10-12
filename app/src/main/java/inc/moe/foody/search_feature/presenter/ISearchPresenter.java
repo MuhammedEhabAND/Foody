@@ -1,12 +1,13 @@
 package inc.moe.foody.search_feature.presenter;
 
-import java.util.List;
-
-import inc.moe.foody.model.Category;
+import inc.moe.foody.model.ListOfCategories;
+import inc.moe.foody.model.ListOfIngredients;
+import inc.moe.foody.model.ListOfMeals;
+import io.reactivex.rxjava3.core.Single;
 
 public interface ISearchPresenter {
 
-    void getMealsByCategoryOf( String categoryName);
+    void getMealsByCategoryOf(String categoryName);
     void getMealsByCountryOf( String countryName);
     void getMealsByIngredientOf( String ingredientName);
 

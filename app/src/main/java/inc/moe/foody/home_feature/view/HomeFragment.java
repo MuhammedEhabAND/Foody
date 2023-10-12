@@ -43,17 +43,17 @@ import inc.moe.foody.utils.NetworkConnection;
 
 
 public class HomeFragment extends Fragment implements IHome, OnRandomMealClickListener , OnCategoryClickListener ,OnImageClickListener ,OnCountryClickListener{
-    RecyclerView allCategoriesRV ,randomMealRV ,allMealsRV ,allCountriesRV;
-    ShimmerFrameLayout randomMealShimmer ,categoryMealShimmer , allMealsShimmer , allCountriesShimmer;
-    HomePresenter homePresenter;
-    CategoryAdapter categoryAdapter;
-    RandomMealAdapter randomMealAdapter;
-    AllMealsAdapter allMealsAdapter;
-    AllCountriesAdapter allCountriesAdapter ;
-    LinearLayoutManager categoryLayoutManager , randomMealsLayoutManager , allMealsLayoutManager ,allCountriesLayoutManger;
-    View myView ;
-    FirebaseAuth firebaseAuth;
-    FirebaseUser currentUser;
+    private RecyclerView allCategoriesRV ,randomMealRV ,allMealsRV ,allCountriesRV;
+    private ShimmerFrameLayout randomMealShimmer ,categoryMealShimmer , allMealsShimmer , allCountriesShimmer;
+    private HomePresenter homePresenter;
+    private CategoryAdapter categoryAdapter;
+    private RandomMealAdapter randomMealAdapter;
+    private AllMealsAdapter allMealsAdapter;
+    private AllCountriesAdapter allCountriesAdapter ;
+    private LinearLayoutManager categoryLayoutManager , randomMealsLayoutManager , allMealsLayoutManager ,allCountriesLayoutManger;
+    private View myView ;
+    private FirebaseAuth firebaseAuth;
+    private FirebaseUser currentUser;
     boolean isUser = false;
     public HomeFragment() {
         // Required empty public constructor
@@ -134,51 +134,50 @@ public class HomeFragment extends Fragment implements IHome, OnRandomMealClickLi
 
         }
 
+
     @Override
     public void onCategoryFetch(List<Category> categories) {
         categoryAdapter.setCategoryList(categories);
-        categoryAdapter.notifyDataSetChanged();
-        allCategoriesRV.setAdapter(categoryAdapter);
         categoryMealShimmer.setVisibility(View.GONE);
         allCategoriesRV.setVisibility(View.VISIBLE);
-
+        allCategoriesRV.setAdapter(categoryAdapter);
     }
 
     @Override
     public void onRandomMealFetch(List<Meal> meals) {
-
         randomMealAdapter.setMealList(meals);
-        randomMealAdapter.notifyDataSetChanged();
-        randomMealRV.setAdapter(randomMealAdapter);
         randomMealShimmer.setVisibility(View.GONE);
         randomMealRV.setVisibility(View.VISIBLE);
+        randomMealRV.setAdapter(randomMealAdapter);
+
     }
 
     @Override
     public void onCategoryFailed(String errorMessage) {
-        Toast.makeText(getContext(), errorMessage, Toast.LENGTH_SHORT).show();
+        Snackbar snackbar = Snackbar.make(requireView() ,errorMessage ,Snackbar.LENGTH_SHORT);
+        snackbar.show();
 
     }
 
     @Override
     public void onRandomMealFailed(String errorMessage) {
-        Toast.makeText(getContext(), errorMessage, Toast.LENGTH_SHORT).show();
+        Snackbar snackbar = Snackbar.make(requireView() ,errorMessage ,Snackbar.LENGTH_SHORT);
+        snackbar.show();
 
     }
 
     @Override
     public void onAllMealsFetch(List<Meal> meals) {
         allMealsAdapter.setMeals(meals);
-        allMealsAdapter.notifyDataSetChanged();
-        allMealsRV.setAdapter(allMealsAdapter);
         allMealsShimmer.setVisibility(View.GONE);
         allMealsRV.setVisibility(View.VISIBLE);
+        allMealsRV.setAdapter(allMealsAdapter);
 
     }
 
     @Override
     public void onAllMealsFailed(String errorMessage) {
-        Snackbar snackbar = Snackbar.make(myView ,errorMessage ,Snackbar.LENGTH_SHORT);
+        Snackbar snackbar = Snackbar.make(requireView() ,errorMessage ,Snackbar.LENGTH_SHORT);
         snackbar.show();
 
     }
@@ -186,29 +185,28 @@ public class HomeFragment extends Fragment implements IHome, OnRandomMealClickLi
     @Override
     public void onAllCountriesFetch(List<Meal> countries) {
         allCountriesAdapter.setCountries(countries);
-        allCountriesAdapter.notifyDataSetChanged();
-        allCountriesRV.setAdapter(allCountriesAdapter);
         allCountriesShimmer.setVisibility(View.GONE);
         allCountriesRV.setVisibility(View.VISIBLE);
+        allCountriesRV.setAdapter(allCountriesAdapter);
 
     }
 
     @Override
     public void onAllCountriesFailed(String errorMessage) {
-        Snackbar snackbar = Snackbar.make(myView , errorMessage ,Snackbar.LENGTH_SHORT);
+        Snackbar snackbar = Snackbar.make(requireView() ,errorMessage ,Snackbar.LENGTH_SHORT);
         snackbar.show();
     }
 
     @Override
     public void onAddedToFavFBSuccess(String addedMessage) {
-        Snackbar snackbar = Snackbar.make(myView ,addedMessage ,Snackbar.LENGTH_SHORT);
+        Snackbar snackbar = Snackbar.make(requireView() ,addedMessage ,Snackbar.LENGTH_SHORT);
         snackbar.show();
 
     }
 
     @Override
     public void onAddedToFavFBFailure(String errorMessage) {
-        Snackbar snackbar = Snackbar.make(myView ,errorMessage ,Snackbar.LENGTH_SHORT);
+        Snackbar snackbar = Snackbar.make(requireView() ,errorMessage ,Snackbar.LENGTH_SHORT);
         snackbar.show();
 
     }
@@ -218,7 +216,7 @@ public class HomeFragment extends Fragment implements IHome, OnRandomMealClickLi
     @Override
     public void insertToDatabase(Meal meal) {
         if(isUser){
-        homePresenter.addRandomMealToFav(meal);
+            homePresenter.addRandomMealToFav(meal).subscribe();
         }else{
             new MaterialAlertDialogBuilder(getContext())
                     .setTitle("Oops")

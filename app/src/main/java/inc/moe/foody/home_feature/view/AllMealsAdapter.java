@@ -24,6 +24,7 @@ public class AllMealsAdapter extends RecyclerView.Adapter<AllMealsAdapter.ViewHo
 
     public void setMeals(List<Meal> meals) {
         this.meals = meals;
+        notifyDataSetChanged();
         Log.i("TAG", "onBindViewHolder: " + meals.get(0).getStrMeal());
 
     }

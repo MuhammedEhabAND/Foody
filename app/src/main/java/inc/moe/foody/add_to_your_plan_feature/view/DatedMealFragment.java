@@ -156,7 +156,6 @@ public class DatedMealFragment extends Fragment implements IDatedMealView  , Dat
                     break;
                 case "lunch":
                     lunchChip.setChecked(true);
-
                     break;
 
             }
@@ -167,7 +166,7 @@ public class DatedMealFragment extends Fragment implements IDatedMealView  , Dat
 
     @Override
     public void onFullDetailedMealFailed(String errorMessage) {
-        Snackbar snackbar = Snackbar.make(getView() , errorMessage , Snackbar.LENGTH_SHORT);
+        Snackbar snackbar = Snackbar.make(requireView() , errorMessage , Snackbar.LENGTH_SHORT);
         snackbar.show();
 
     }
@@ -175,8 +174,8 @@ public class DatedMealFragment extends Fragment implements IDatedMealView  , Dat
     @Override
     public void onSuccessAddPlannedMeal(String addedMessage) {
 
-        Navigation.findNavController(getView()).navigate(DatedMealFragmentDirections.actionDatedMealFragmentToPlansFragment());
-        Snackbar snackbar = Snackbar.make(getView() , addedMessage , Snackbar.LENGTH_SHORT);
+        Navigation.findNavController(requireView()).navigate(DatedMealFragmentDirections.actionDatedMealFragmentToPlansFragment());
+        Snackbar snackbar = Snackbar.make(requireView() , addedMessage , Snackbar.LENGTH_SHORT);
         snackbar.show();
         }
 

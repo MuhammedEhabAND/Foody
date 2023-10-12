@@ -1,4 +1,4 @@
-package inc.moe.foody;
+package inc.moe.foody.model;
 
 public class User {
     String userId ,name , profile;

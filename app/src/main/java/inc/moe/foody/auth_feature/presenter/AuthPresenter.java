@@ -11,7 +11,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.database.FirebaseDatabase;
 
-import inc.moe.foody.User;
+import inc.moe.foody.model.User;
 import inc.moe.foody.auth_feature.view.IAuth;
 import inc.moe.foody.model.IRepo;
 import inc.moe.foody.utils.UserModel;

@@ -37,6 +37,8 @@ import inc.moe.foody.home_feature.view.OnRandomMealClickListener;
 import inc.moe.foody.model.Meal;
 import inc.moe.foody.model.Repo;
 import inc.moe.foody.network.MealClient;
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
+import io.reactivex.rxjava3.schedulers.Schedulers;
 
 
 public class FavFragment extends Fragment implements OnFavMealClickListener , OnImageClickListener  , IFav{
@@ -85,29 +87,21 @@ public class FavFragment extends Fragment implements OnFavMealClickListener , On
         favMealsRV.setLayoutManager(layoutManager);
 
         if(isUser) {
-//
+
             Log.i("TAG", "onViewCreated: ");
-            ArrayList<Meal> mealArrayList = new ArrayList<>();
-            favPresenter.getFavMeals().observe(getViewLifecycleOwner(), new Observer<List<Meal>>() {
 
-                @Override
-                public void onChanged(List<Meal> meals) {
+            favPresenter.getFavMeals()
+                    .subscribe(
+                    item ->
+                    {
 
-                    for(Meal meal : meals){
-
-                        if(meal.getUserId().equals(currentUser.getUid())){
-                            mealArrayList.add(meal);
-                        }
-                    }
-                    adapter.setMeals(mealArrayList);
-                    adapter.notifyDataSetChanged();
-                    favMealsRV.setAdapter(adapter);
-
-                }
-            });
-            if(mealArrayList.size()==0){
-                favPresenter.getMealsFromFirebase();
-            }
+                        Log.i("TAG", "onViewCreated: "+item.size());
+                       adapter.setMeals(item);
+                       adapter.notifyDataSetChanged();
+                       favMealsRV.setAdapter(adapter);
+                           },
+                    onError->{
+                    });
         }else{ new MaterialAlertDialogBuilder(getContext())
                 .setTitle("Oops")
                 .setMessage("It seems that you haven't logged in yet ,Umm what are waiting for?")
