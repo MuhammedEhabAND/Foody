@@ -40,6 +40,7 @@ import inc.moe.foody.model.Meal;
 import inc.moe.foody.model.Repo;
 import inc.moe.foody.network.MealClient;
 import inc.moe.foody.utils.Cache;
+import inc.moe.foody.utils.ShowingSnackbar;
 
 public class DetailedMeal extends Fragment implements IDetailedMeal  {
     private RadioGroup fullDetailedRadioGroup;
@@ -258,7 +259,7 @@ public class DetailedMeal extends Fragment implements IDetailedMeal  {
 
     @Override
     public void onFullDetailedMealFailed(String errorMessage) {
-        Toast.makeText(getContext(), errorMessage, Toast.LENGTH_SHORT).show();
+        ShowingSnackbar.showSnackbar(getView() , errorMessage);
     }
 
     @Override
@@ -269,17 +270,17 @@ public class DetailedMeal extends Fragment implements IDetailedMeal  {
 
     @Override
     public void navigateToCalendarFailure(String errorMessage) {
-//        Toast.makeText(getContext(), errorMessage, Toast.LENGTH_SHORT).show();
+        ShowingSnackbar.showSnackbar(getView(), errorMessage);
     }
 
     @Override
     public void onAddedToFavFBSuccess(String addedMessage) {
-//        Toast.makeText(getContext(), addedMessage, Toast.LENGTH_SHORT).show();
+        ShowingSnackbar.showSnackbar(getView() ,addedMessage);
     }
 
     @Override
     public void onAddedToFavFBFailure(String errorMessage) {
-//        Toast.makeText(getContext(), errorMessage, Toast.LENGTH_SHORT).show();
+        ShowingSnackbar.showSnackbar(getView() , errorMessage);
     }
 
 }

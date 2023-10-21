@@ -6,6 +6,8 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Lifecycle;
+import androidx.lifecycle.LifecycleOwner;
 import androidx.navigation.NavDirections;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -29,6 +31,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.List;
+import java.util.Objects;
 
 import inc.moe.foody.R;
 import inc.moe.foody.auth_feature.view.MainActivity;
@@ -40,6 +43,8 @@ import inc.moe.foody.model.Meal;
 import inc.moe.foody.model.Repo;
 import inc.moe.foody.network.MealClient;
 import inc.moe.foody.utils.NetworkConnection;
+import inc.moe.foody.utils.ShowingSnackbar;
+import io.reactivex.rxjava3.core.Observer;
 
 
 public class HomeFragment extends Fragment implements IHome, OnRandomMealClickListener , OnCategoryClickListener ,OnImageClickListener ,OnCountryClickListener{
@@ -154,16 +159,12 @@ public class HomeFragment extends Fragment implements IHome, OnRandomMealClickLi
 
     @Override
     public void onCategoryFailed(String errorMessage) {
-        Snackbar snackbar = Snackbar.make(requireView() ,errorMessage ,Snackbar.LENGTH_SHORT);
-        snackbar.show();
-
+        ShowingSnackbar.showSnackbar(getView() , errorMessage);
     }
 
     @Override
     public void onRandomMealFailed(String errorMessage) {
-        Snackbar snackbar = Snackbar.make(requireView() ,errorMessage ,Snackbar.LENGTH_SHORT);
-        snackbar.show();
-
+        ShowingSnackbar.showSnackbar(getView() , errorMessage);
     }
 
     @Override
@@ -177,9 +178,8 @@ public class HomeFragment extends Fragment implements IHome, OnRandomMealClickLi
 
     @Override
     public void onAllMealsFailed(String errorMessage) {
-        Snackbar snackbar = Snackbar.make(requireView() ,errorMessage ,Snackbar.LENGTH_SHORT);
-        snackbar.show();
 
+        ShowingSnackbar.showSnackbar(getView() ,errorMessage);
     }
 
     @Override
@@ -193,24 +193,13 @@ public class HomeFragment extends Fragment implements IHome, OnRandomMealClickLi
 
     @Override
     public void onAllCountriesFailed(String errorMessage) {
-        Snackbar snackbar = Snackbar.make(requireView() ,errorMessage ,Snackbar.LENGTH_SHORT);
-        snackbar.show();
+        ShowingSnackbar.showSnackbar(getView(),errorMessage);
     }
 
     @Override
     public void onAddedToFavFBSuccess(String addedMessage) {
-        Snackbar snackbar = Snackbar.make(requireView() ,addedMessage ,Snackbar.LENGTH_SHORT);
-        snackbar.show();
-
+     ShowingSnackbar.showSnackbar(getView(),addedMessage);
     }
-
-    @Override
-    public void onAddedToFavFBFailure(String errorMessage) {
-        Snackbar snackbar = Snackbar.make(requireView() ,errorMessage ,Snackbar.LENGTH_SHORT);
-        snackbar.show();
-
-    }
-
 
 
     @Override
@@ -264,4 +253,5 @@ public class HomeFragment extends Fragment implements IHome, OnRandomMealClickLi
         action.setCountryName(countryName);
         Navigation.findNavController(getView()).navigate((NavDirections) action);
     }
+
 }

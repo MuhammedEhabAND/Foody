@@ -31,7 +31,7 @@ import inc.moe.foody.search_feature.view.SearchFragment;
 
 
 public class HomeActivity extends AppCompatActivity  {
-    public static NavController navController;
+    private NavController navController;
     int currentDestinationId =0;
     int startDestinationId = R.id.homeFragment;
 

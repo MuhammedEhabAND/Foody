@@ -17,5 +17,4 @@ public interface IHome {
     void onAllCountriesFetch(List<Meal> countries);
     void onAllCountriesFailed(String errorMessage);
     void onAddedToFavFBSuccess(String addedMessage);
-    void onAddedToFavFBFailure(String errorMessage);
 }

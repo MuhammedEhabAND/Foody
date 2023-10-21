@@ -55,12 +55,12 @@ public class HomePresenter implements IHomePresenter {
     @Override
     public Completable addRandomMealToFav(Meal meal) {
 
-//        iRepo.addFavMealToFB(this , meal);
-//        Cache.getInstance().setFavMeals(null);
-         meal.setUserId(FirebaseAuth.getInstance().getCurrentUser().getUid());
+        meal.setUserId(FirebaseAuth.getInstance().getCurrentUser().getUid());
+        iHome.onAddedToFavFBSuccess(meal.getStrMeal() + " saved");
         return iRepo.insertMealToFav(meal)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
+
     }
 
     @Override

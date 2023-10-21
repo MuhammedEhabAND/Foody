@@ -24,19 +24,21 @@ public class DetailedMealPresenter implements IDetailedMealPresenter , FullDetai
 
     @Override
     public void getFullDetailedMeal(String idMeal) {
-        if(Cache.getInstance().getCurrentMeal()==null){
-        iRepo.makeNetworkCallForGetFullDetailedMeal( idMeal)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(
-                        item->{
-                            iDetailedMeal.onFullDetailedMealFetch(item.getMeals().get(0));
-                            Cache.getInstance().setCurrentMeal(item.getMeals().get(0));
-                            },
-                        onError->{iDetailedMeal.onFullDetailedMealFailed(onError.getMessage());}
-                );
-        }else {
+        if( Cache.getInstance().getCurrentMeal()!=null && idMeal.equals(Cache.getInstance().getCurrentMeal().getIdMeal())){
             iDetailedMeal.onFullDetailedMealFetch(Cache.instance.getCurrentMeal());
+
+        }else {
+            iRepo.makeNetworkCallForGetFullDetailedMeal( idMeal)
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(
+                            item->{
+                                iDetailedMeal.onFullDetailedMealFetch(item.getMeals().get(0));
+                                Cache.getInstance().setCurrentMeal(item.getMeals().get(0));
+                            },
+                            onError->{iDetailedMeal.onFullDetailedMealFailed(onError.getMessage());}
+                    );
+
         }
     }
 
